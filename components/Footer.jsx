@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import logoImg from "../public/logo.jpg";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear() || 2026;
@@ -14,7 +15,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-16 h-16 flex-shrink-0 bg-white rounded-2xl p-1 shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/logo.jpg"
+                  src={logoImg}
                   alt="Fundación Encuentros Para la Vida - FEPV"
                   fill
                   className="object-contain rounded-xl"

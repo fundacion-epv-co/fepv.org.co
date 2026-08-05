@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import logoImg from "../public/logo.jpg";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
@@ -61,7 +62,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 group focus:outline-none" aria-label="Volver a Inicio FEPV">
             <div className="relative w-14 h-14 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
               <Image
-                src="/logo.jpg"
+                src={logoImg}
                 alt="Fundación Encuentros Para la Vida - FEPV"
                 fill
                 className="object-contain"
