@@ -79,7 +79,7 @@ function ParticipaForms() {
         `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`;
     }
 
-    const whatsappUrl = `https://wa.me/573000000000?text=${encodeURIComponent(mensajeTexto)}`;
+    const whatsappUrl = `https://wa.me/573166899250?text=${encodeURIComponent(mensajeTexto)}`;
     window.open(whatsappUrl, "_blank");
 
     setSuccessMessage(true);

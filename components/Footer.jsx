@@ -12,14 +12,22 @@ export default function Footer() {
           
           {/* Columna 1: Identidad con LOGO REAL */}
           <div className="space-y-6">
-            <Link href="/" className="inline-block group">
-              <div className="relative w-56 sm:w-64 h-16 sm:h-20 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-3 shadow-lg group-hover:scale-105 transition-transform duration-300">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative w-16 h-16 flex-shrink-0 bg-white rounded-2xl p-1 shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src={logoImg}
                   alt="Fundación Encuentros Para la Vida - FEPV"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain rounded-xl"
                 />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-display font-bold text-lg text-white leading-none">
+                  Fundación Encuentros
+                </span>
+                <span className="font-sans text-xs font-semibold text-fepv-orange tracking-wider uppercase mt-0.5">
+                  Para la Vida
+                </span>
               </div>
             </Link>
             <p className="text-sm text-white/70 italic leading-relaxed">
@@ -28,7 +36,7 @@ export default function Footer() {
             {/* Redes Sociales */}
             <div className="flex items-center space-x-4 pt-2">
               <a
-                href="https://facebook.com"
+                href="https://facebook.com/fundacion.epv.co"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
@@ -39,7 +47,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/fundacion.epv.co"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
@@ -52,7 +60,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/573000000000"
+                href="https://wa.me/573166899250"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 hover:text-fepv-orange transition-colors duration-200"

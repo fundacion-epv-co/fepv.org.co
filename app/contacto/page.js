@@ -42,7 +42,7 @@ export default function Contacto() {
       `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`
     );
 
-    window.open(`https://wa.me/573000000000?text=${mensajeWA}`, "_blank");
+    window.open(`https://wa.me/573166899250?text=${mensajeWA}`, "_blank");
 
     setSuccess(true);
     setFormData({
@@ -112,7 +112,7 @@ export default function Contacto() {
               <div className="space-y-1">
                 <h4 className="font-bold text-fepv-darkblue">WhatsApp e Instagram</h4>
                 <p className="hover:underline">
-                  <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">WhatsApp Institucional</a>
+                  <a href="https://wa.me/573166899250" target="_blank" rel="noopener noreferrer">WhatsApp Institucional</a>
                 </p>
                 <p className="text-xs text-fepv-gray/70">Instagram/Facebook: @fundacion.epv.co</p>
               </div>

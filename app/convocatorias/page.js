@@ -140,7 +140,7 @@ export default function Convocatorias() {
       `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`
     );
 
-    window.open(`https://wa.me/573000000000?text=${mensaje}`, "_blank");
+    window.open(`https://wa.me/573166899250?text=${mensaje}`, "_blank");
 
     setSuccessMessage(true);
     setTimeout(() => {
