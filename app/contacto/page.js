@@ -23,7 +23,7 @@ export default function Contacto() {
     });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!formData.aceptaDatos) {
       alert("Debes aceptar la política de tratamiento de datos personales para enviar tu mensaje.");
@@ -32,31 +32,42 @@ export default function Contacto() {
 
     setSubmitting(true);
 
-    // Para GitHub Pages (estático): abrimos WhatsApp con el mensaje pre-llenado
-    const mensajeWA = encodeURIComponent(
-      `*CONTACTO FEPV — ${formData.tipoSolicitud.toUpperCase()}*\n\n` +
-      `👤 *Nombre:* ${formData.nombre}\n` +
-      `📧 *Correo:* ${formData.correo}\n` +
-      `📞 *Teléfono:* ${formData.telefono || "No indicado"}\n\n` +
-      `💬 *Mensaje:* ${formData.mensaje}\n\n` +
-      `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`
-    );
+    try {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbwqoAf39R46KFa7ylwO7KIWF5N5tZnJiMMdT2j3qpYKpeDwn873MuhXZ5XsEP5tK8H5/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tipo: formData.tipoSolicitud,
+          nombre: formData.nombre,
+          correo: formData.correo,
+          telefono: formData.telefono,
+          asunto: "Contacto desde fepv.org.co",
+          mensaje: formData.mensaje
+        }),
+      });
 
-    window.open(`https://wa.me/573166899250?text=${mensajeWA}`, "_blank");
-
-    setSuccess(true);
-    setFormData({
-      nombre: "",
-      correo: "",
-      telefono: "",
-      tipoSolicitud: "informacion",
-      mensaje: "",
-      aceptaDatos: false
-    });
-    setTimeout(() => {
-      setSuccess(false);
+      // Al usar no-cors, la respuesta es opaca, asumimos éxito si no lanza error de red
+      setSuccess(true);
+      setFormData({
+        nombre: "",
+        correo: "",
+        telefono: "",
+        tipoSolicitud: "informacion",
+        mensaje: "",
+        aceptaDatos: false
+      });
+    } catch (error) {
+      console.error("Error enviando el formulario:", error);
+      alert("Hubo un error al enviar el mensaje. Por favor intenta más tarde o escríbenos directamente a nuestro correo.");
+    } finally {
       setSubmitting(false);
-    }, 4000);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+    }
   };
 
   return (
@@ -127,11 +138,11 @@ export default function Contacto() {
           <div className="bg-white p-6 sm:p-10 rounded-3xl border border-gray-150 shadow-md">
             
             {success ? (
-              <div className="p-8 bg-fepv-light/60 border border-fepv-green/20 rounded-2xl text-center space-y-3 animate-in fade-in duration-300">
-                <span className="text-4xl block">📲</span>
-                <h3 className="font-display font-bold text-base text-fepv-darkblue">¡Mensaje enviado por WhatsApp!</h3>
+              <div className="p-8 bg-fepv-light/60 border border-fepv-vividgreen/20 rounded-2xl text-center space-y-3 animate-in fade-in duration-300">
+                <span className="text-4xl block">✅</span>
+                <h3 className="font-display font-bold text-base text-fepv-darkblue">¡Mensaje enviado con éxito!</h3>
                 <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                  Se abrió WhatsApp con tu mensaje pre-llenado. Envíalo para completar tu contacto con FEPV. Agradecemos tu interés y nos comunicaremos contigo a la brevedad.
+                  Hemos recibido tu solicitud y la hemos registrado en nuestro sistema. El equipo de la Fundación Encuentros Para la Vida se pondrá en contacto contigo muy pronto a través del correo o teléfono que nos proporcionaste.
                 </p>
               </div>
             ) : (
@@ -225,13 +236,13 @@ export default function Contacto() {
                   </label>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full fepv-btn fepv-btn-primary py-3.5 text-xs font-bold cursor-pointer disabled:opacity-55"
-                >
-                  {submitting ? "Abriendo WhatsApp..." : "📲 ENVIAR POR WHATSAPP"}
-                </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-4 rounded-xl font-bold text-white transition-colors bg-fepv-vividgreen hover:bg-green-600 disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    {submitting ? "Enviando mensaje..." : "✉️ ENVIAR MENSAJE A FEPV"}
+                  </button>
               </form>
             )}
 
