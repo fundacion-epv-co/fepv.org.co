@@ -2,8 +2,8 @@
 const nextConfig = {
   output: 'export',
   // Requerido para GitHub Pages con repositorio de proyecto (no usuario)
-  basePath: '/fundacion.epv.co.github.io',
-  assetPrefix: '/fundacion.epv.co.github.io/',
+  basePath: '/fepv.org.co',
+  assetPrefix: '/fepv.org.co/',
   images: {
     unoptimized: true,
   },

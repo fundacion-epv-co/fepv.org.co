@@ -5,12 +5,16 @@
   --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
   
   --color-fepv-green: #1B8A5A;
+  --color-fepv-vividgreen: #7AC142;
   --color-fepv-dark: #12613F;
+  --color-fepv-darkblue: #002D62;
   --color-fepv-light: #DDF3E8;
   --color-fepv-yellow: #F4C542;
+  --color-fepv-orange: #F39200;
   --color-fepv-blue: #2C6E91;
+  --color-fepv-lightblue: #0085CA;
   --color-fepv-white: #FFFFFF;
-  --color-fepv-gray: #263238;
+  --color-fepv-gray: #1E293B; /* Updated to a slightly more premium slate gray */
   
   --radius-fepv: 12px;
 }
@@ -25,10 +29,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   min-height: 100vh;
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 /* Custom Utilities for Transitions and Focus */

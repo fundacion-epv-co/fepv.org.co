@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import logoImg from "../public/logo.png";
 
@@ -6,7 +6,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear() || 2026;
 
   return (
-    <footer className="bg-fepv-dark text-white/90 border-t border-fepv-green/20">
+    <footer className="bg-fepv-darkblue text-white/90 border-t border-fepv-darkblue/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           
@@ -16,16 +16,16 @@ export default function Footer() {
               <div className="relative w-16 h-16 flex-shrink-0 bg-white rounded-2xl p-1 shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src={logoImg}
-                  alt="Fundación Encuentros Para la Vida - FEPV"
+                  alt="FundaciÃ³n Encuentros Para la Vida - FEPV"
                   fill
                   className="object-contain rounded-xl"
                 />
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-bold text-lg text-white leading-none">
-                  Fundación Encuentros
+                  FundaciÃ³n Encuentros
                 </span>
-                <span className="font-sans text-xs font-semibold text-fepv-yellow tracking-wider uppercase mt-0.5">
+                <span className="font-sans text-xs font-semibold text-fepv-orange tracking-wider uppercase mt-0.5">
                   Para la Vida
                 </span>
               </div>
@@ -39,7 +39,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/60 hover:text-fepv-yellow transition-colors duration-200"
+                className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
                 aria-label="Ir a Facebook de FEPV"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -50,7 +50,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/60 hover:text-fepv-yellow transition-colors duration-200"
+                className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
                 aria-label="Ir a Instagram de FEPV"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +63,7 @@ export default function Footer() {
                 href="https://wa.me/573000000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/60 hover:text-fepv-yellow transition-colors duration-200"
+                className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
                 aria-label="Escribir al WhatsApp institucional de FEPV"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -75,18 +75,18 @@ export default function Footer() {
 
           {/* Columna 2: Nosotros */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-yellow">
-              Fundación
+            <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-orange">
+              FundaciÃ³n
             </h3>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/nosotros#quienes-somos" className="hover:text-white transition-colors">
-                  ¿Quiénes Somos?
+                  Â¿QuiÃ©nes Somos?
                 </Link>
               </li>
               <li>
                 <Link href="/nosotros#mision-vision" className="hover:text-white transition-colors">
-                  Misión y Visión
+                  MisiÃ³n y VisiÃ³n
                 </Link>
               </li>
               <li>
@@ -109,23 +109,23 @@ export default function Footer() {
 
           {/* Columna 3: Programas */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-yellow">
+            <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-orange">
               Programas
             </h3>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/programas#salud-mental" className="hover:text-white transition-colors">
-                  Salud Mental y Psicología
+                  Salud Mental y PsicologÃ­a
                 </Link>
               </li>
               <li>
                 <Link href="/programas#educacion" className="hover:text-white transition-colors">
-                  Educación y Formación
+                  EducaciÃ³n y FormaciÃ³n
                 </Link>
               </li>
               <li>
                 <Link href="/programas#inclusion" className="hover:text-white transition-colors">
-                  Inclusión y Derechos
+                  InclusiÃ³n y Derechos
                 </Link>
               </li>
               <li>
@@ -141,15 +141,15 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna 4: Participación */}
+          {/* Columna 4: ParticipaciÃ³n */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-yellow">
+            <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-orange">
               Participa
             </h3>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/donaciones" className="hover:text-white transition-colors">
-                  Realizar una Donación
+                  Realizar una DonaciÃ³n
                 </Link>
               </li>
               <li>
@@ -159,7 +159,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/participa?rol=aliado" className="hover:text-white transition-colors">
-                  Ser Aliado Estratégico
+                  Ser Aliado EstratÃ©gico
                 </Link>
               </li>
               <li>
@@ -172,23 +172,23 @@ export default function Footer() {
 
         </div>
 
-        {/* Línea Divisoria */}
+        {/* LÃ­nea Divisoria */}
         <hr className="border-fepv-green/20 my-10" />
 
-        {/* Sección de Copyright y Enlaces Legales */}
+        {/* SecciÃ³n de Copyright y Enlaces Legales */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
           <div>
-            &copy; {currentYear} Fundación Encuentros Para la Vida (FEPV). Todos los derechos reservados.
+            &copy; {currentYear} FundaciÃ³n Encuentros Para la Vida (FEPV). Todos los derechos reservados.
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/politica-privacidad" className="hover:text-white transition-colors">
-              Política de Privacidad
+              PolÃ­tica de Privacidad
             </Link>
             <Link href="/tratamiento-datos" className="hover:text-white transition-colors">
               Tratamiento de Datos Personales
             </Link>
             <Link href="/terminos-condiciones" className="hover:text-white transition-colors">
-              Términos y Condiciones
+              TÃ©rminos y Condiciones
             </Link>
           </div>
         </div>

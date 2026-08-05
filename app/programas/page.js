@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -7,35 +7,35 @@ export default function Programas() {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   const categories = [
-    { id: "all", name: "Todos los programas", icon: "🌐" },
-    { id: "salud-mental", name: "Salud Mental", icon: "🧠" },
-    { id: "educacion", name: "Educación", icon: "📚" },
-    { id: "inclusion", name: "Inclusión & Derechos", icon: "🤝" },
-    { id: "ambiente", name: "Medio Ambiente", icon: "🌱" },
-    { id: "bienestar-animal", name: "Bienestar Animal", icon: "🐾" },
-    { id: "emprendimiento", name: "Emprendimiento", icon: "💼" }
+    { id: "all", name: "Todos los programas", icon: "ðŸŒ" },
+    { id: "salud-mental", name: "Salud Mental", icon: "ðŸ§ " },
+    { id: "educacion", name: "EducaciÃ³n", icon: "ðŸ“š" },
+    { id: "inclusion", name: "InclusiÃ³n & Derechos", icon: "ðŸ¤" },
+    { id: "ambiente", name: "Medio Ambiente", icon: "ðŸŒ±" },
+    { id: "bienestar-animal", name: "Bienestar Animal", icon: "ðŸ¾" },
+    { id: "emprendimiento", name: "Emprendimiento", icon: "ðŸ’¼" }
   ];
 
   const projects = [
     {
       id: "papsivi",
       category: "salud-mental",
-      title: "PAPSIVI (Programa de Atención Psicosocial y Salud Integral a Víctimas)",
-      desc: "Implementación del modelo de atención psicosocial a nivel individual, familiar y comunitario para la dignificación de víctimas en el departamento del Cesar.",
-      obj: "Mitigar las afectaciones psicosociales y los daños a la salud física y mental de las víctimas del conflicto armado.",
-      population: "Víctimas del conflicto armado, familias vulnerables",
-      location: "Agustín Codazzi, Becerril, San Diego, La Paz (Cesar)",
-      allies: "Cooperación nacional, entes territoriales de salud",
+      title: "PAPSIVI (Programa de AtenciÃ³n Psicosocial y Salud Integral a VÃ­ctimas)",
+      desc: "ImplementaciÃ³n del modelo de atenciÃ³n psicosocial a nivel individual, familiar y comunitario para la dignificaciÃ³n de vÃ­ctimas en el departamento del Cesar.",
+      obj: "Mitigar las afectaciones psicosociales y los daÃ±os a la salud fÃ­sica y mental de las vÃ­ctimas del conflicto armado.",
+      population: "VÃ­ctimas del conflicto armado, familias vulnerables",
+      location: "AgustÃ­n Codazzi, Becerril, San Diego, La Paz (Cesar)",
+      allies: "CooperaciÃ³n nacional, entes territoriales de salud",
       status: "Activo"
     },
     {
       id: "escuela-formacion",
       category: "educacion",
-      title: "Escuela de Formación y Competencias Ciudadanas",
-      desc: "Talleres y cursos continuos que empoderan a las comunidades con herramientas de liderazgo, resolución de conflictos, democracia participativa y habilidades blandas.",
-      obj: "Capacitar a líderes comunitarios y jóvenes en técnicas de autogestión territorial.",
-      population: "Líderes comunales, jóvenes de juntas de acción local",
-      location: "Agustín Codazzi (Cesar)",
+      title: "Escuela de FormaciÃ³n y Competencias Ciudadanas",
+      desc: "Talleres y cursos continuos que empoderan a las comunidades con herramientas de liderazgo, resoluciÃ³n de conflictos, democracia participativa y habilidades blandas.",
+      obj: "Capacitar a lÃ­deres comunitarios y jÃ³venes en tÃ©cnicas de autogestiÃ³n territorial.",
+      population: "LÃ­deres comunales, jÃ³venes de juntas de acciÃ³n local",
+      location: "AgustÃ­n Codazzi (Cesar)",
       allies: "Instituciones educativas locales, SENA",
       status: "Activo"
     },
@@ -43,44 +43,44 @@ export default function Programas() {
       id: "eco-encuentros",
       category: "ambiente",
       title: "Eco-Encuentros Para la Vida",
-      desc: "Acciones colectivas de educación ambiental escolar, reforestación de cuencas hidrográficas y capacitación sobre separación en la fuente y reciclaje en Codazzi.",
-      obj: "Promover la conciencia ecológica y recuperar zonas degradadas por la deforestación local.",
-      population: "Comunidad escolar, comités ambientales comunales",
-      location: "Agustín Codazzi y Serranía del Perijá (Zonas rurales)",
-      allies: "Organizaciones comunitarias y Corporación Autónoma Regional",
+      desc: "Acciones colectivas de educaciÃ³n ambiental escolar, reforestaciÃ³n de cuencas hidrogrÃ¡ficas y capacitaciÃ³n sobre separaciÃ³n en la fuente y reciclaje en Codazzi.",
+      obj: "Promover la conciencia ecolÃ³gica y recuperar zonas degradadas por la deforestaciÃ³n local.",
+      population: "Comunidad escolar, comitÃ©s ambientales comunales",
+      location: "AgustÃ­n Codazzi y SerranÃ­a del PerijÃ¡ (Zonas rurales)",
+      allies: "Organizaciones comunitarias y CorporaciÃ³n AutÃ³noma Regional",
       status: "Activo"
     },
     {
       id: "cuidado-huellas",
       category: "bienestar-animal",
       title: "Cuidado de Huellas & Salud Animal Comunitaria",
-      desc: "Sensibilización sobre tenencia responsable de mascotas, realización de jornadas de desparasitación y articulación de brigadas de esterilización animal.",
-      obj: "Reducir la proliferación de animales sin hogar y prevenir problemas de salud pública asociados en barrios vulnerables.",
+      desc: "SensibilizaciÃ³n sobre tenencia responsable de mascotas, realizaciÃ³n de jornadas de desparasitaciÃ³n y articulaciÃ³n de brigadas de esterilizaciÃ³n animal.",
+      obj: "Reducir la proliferaciÃ³n de animales sin hogar y prevenir problemas de salud pÃºblica asociados en barrios vulnerables.",
       population: "Familias con mascotas, animales callejeros de sectores vulnerables",
-      location: "Agustín Codazzi",
-      allies: "Clínicas veterinarias aliadas, fundaciones protectoras locales",
+      location: "AgustÃ­n Codazzi",
+      allies: "ClÃ­nicas veterinarias aliadas, fundaciones protectoras locales",
       status: "Activo"
     },
     {
       id: "autonomia-economica",
       category: "emprendimiento",
-      title: "Programa de Autonomía Económica & Emprendimiento Social",
-      desc: "Capacitación técnica y financiera a mujeres cabeza de hogar y jóvenes desempleados para formular planes de negocio y coordinar redes de comercio justo.",
-      obj: "Fortalecer la capacidad productiva e ingresos autónomos de las familias del municipio.",
-      population: "Mujeres cabeza de hogar, jóvenes emprendedores",
-      location: "Agustín Codazzi",
-      allies: "Cámara de Comercio de Valledupar, Cooperantes privados",
+      title: "Programa de AutonomÃ­a EconÃ³mica & Emprendimiento Social",
+      desc: "CapacitaciÃ³n tÃ©cnica y financiera a mujeres cabeza de hogar y jÃ³venes desempleados para formular planes de negocio y coordinar redes de comercio justo.",
+      obj: "Fortalecer la capacidad productiva e ingresos autÃ³nomos de las familias del municipio.",
+      population: "Mujeres cabeza de hogar, jÃ³venes emprendedores",
+      location: "AgustÃ­n Codazzi",
+      allies: "CÃ¡mara de Comercio de Valledupar, Cooperantes privados",
       status: "Activo"
     },
     {
       id: "red-apoyo-emocional",
       category: "salud-mental",
       title: "Red Comunitaria de Apoyo Emocional en Salud Mental",
-      desc: "Capacitación de primeros auxilios psicológicos a líderes comunitarios para la detección temprana de signos de riesgo emocional y remisión a redes de salud.",
-      obj: "Desestigmatizar la salud mental y crear una red de primera respuesta sensible y empática en los barrios.",
-      population: "Líderes de barrio, madres comunitarias, docentes",
-      location: "Agustín Codazzi",
-      allies: "Secretaría de Salud Municipal, profesionales voluntarios",
+      desc: "CapacitaciÃ³n de primeros auxilios psicolÃ³gicos a lÃ­deres comunitarios para la detecciÃ³n temprana de signos de riesgo emocional y remisiÃ³n a redes de salud.",
+      obj: "Desestigmatizar la salud mental y crear una red de primera respuesta sensible y empÃ¡tica en los barrios.",
+      population: "LÃ­deres de barrio, madres comunitarias, docentes",
+      location: "AgustÃ­n Codazzi",
+      allies: "SecretarÃ­a de Salud Municipal, profesionales voluntarios",
       status: "Activo"
     }
   ];
@@ -99,12 +99,12 @@ export default function Programas() {
             Programas y Proyectos
           </h1>
           <p className="font-sans text-sm sm:text-base text-fepv-light max-w-2xl mx-auto leading-relaxed">
-            Explora las iniciativas de impacto territorial que la FEPV implementa en salud mental, educación, ambiente, bienestar animal e inclusión.
+            Explora las iniciativas de impacto territorial que la FEPV implementa en salud mental, educaciÃ³n, ambiente, bienestar animal e inclusiÃ³n.
           </p>
         </div>
       </section>
 
-      {/* Navegación y Filtros */}
+      {/* NavegaciÃ³n y Filtros */}
       <section className="py-10 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-3">
@@ -126,14 +126,14 @@ export default function Programas() {
         </div>
       </section>
 
-      {/* Catálogo de Proyectos */}
+      {/* CatÃ¡logo de Proyectos */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {filteredProjects.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 rounded-3xl border border-gray-100 max-w-md mx-auto space-y-4">
-            <span className="text-5xl block">📂</span>
-            <h3 className="font-display font-bold text-lg text-fepv-dark">No se encontraron proyectos</h3>
+            <span className="text-5xl block">ðŸ“‚</span>
+            <h3 className="font-display font-bold text-lg text-fepv-darkblue">No se encontraron proyectos</h3>
             <p className="text-xs text-fepv-gray/70">
-              Estamos estructurando nuevos proyectos en esta categoría. Muy pronto estarán publicados.
+              Estamos estructurando nuevos proyectos en esta categorÃ­a. Muy pronto estarÃ¡n publicados.
             </p>
             <button 
               onClick={() => setSelectedCategory("all")}
@@ -156,12 +156,12 @@ export default function Programas() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Categoría badge */}
+                  {/* CategorÃ­a badge */}
                   <span className="inline-block text-[10px] font-bold text-fepv-blue uppercase tracking-widest bg-blue-50 px-2 py-1 rounded">
                     {categories.find(c => c.id === p.category)?.name}
                   </span>
                   
-                  <h3 className="font-display font-bold text-lg sm:text-xl text-fepv-dark pr-12 leading-tight">
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-fepv-darkblue pr-12 leading-tight">
                     {p.title}
                   </h3>
                   
@@ -171,16 +171,16 @@ export default function Programas() {
 
                   <div className="border-t border-gray-100 pt-4 space-y-3 text-xs text-fepv-gray/80">
                     <p>
-                      <strong>🎯 Objetivo:</strong> {p.obj}
+                      <strong>ðŸŽ¯ Objetivo:</strong> {p.obj}
                     </p>
                     <p>
-                      <strong>👥 Población:</strong> {p.population}
+                      <strong>ðŸ‘¥ PoblaciÃ³n:</strong> {p.population}
                     </p>
                     <p>
-                      <strong>📍 Municipio:</strong> {p.location}
+                      <strong>ðŸ“ Municipio:</strong> {p.location}
                     </p>
                     <p>
-                      <strong>🤝 Co-operantes / Aliados:</strong> {p.allies}
+                      <strong>ðŸ¤ Co-operantes / Aliados:</strong> {p.allies}
                     </p>
                   </div>
                 </div>
@@ -196,7 +196,7 @@ export default function Programas() {
                     href="/contacto"
                     className="text-xs text-fepv-green hover:underline font-semibold"
                   >
-                    Solicitar información
+                    Solicitar informaciÃ³n
                   </Link>
                 </div>
 
@@ -208,12 +208,12 @@ export default function Programas() {
 
       {/* Resumen Final de Incidencia */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 text-center py-10 bg-fepv-light/20 rounded-3xl border border-fepv-green/10">
-        <h3 className="font-display font-bold text-lg text-fepv-dark mb-2">¿Quieres presentar o financiar un proyecto con FEPV?</h3>
+        <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-2">Â¿Quieres presentar o financiar un proyecto con FEPV?</h3>
         <p className="text-xs text-fepv-gray/85 max-w-2xl mx-auto mb-6">
-          Contamos con capacidad legal, técnica y contable para celebrar convenios asociativos, contratos y alianzas de cofinanciación para el desarrollo sostenible.
+          Contamos con capacidad legal, tÃ©cnica y contable para celebrar convenios asociativos, contratos y alianzas de cofinanciaciÃ³n para el desarrollo sostenible.
         </p>
         <Link href="/participa?rol=aliado" className="fepv-btn fepv-btn-primary text-xs">
-          Contactar con Cooperación de FEPV
+          Contactar con CooperaciÃ³n de FEPV
         </Link>
       </section>
 

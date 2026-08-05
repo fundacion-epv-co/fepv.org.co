@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -40,19 +40,19 @@ export default function Home() {
 
   const testimonials = [
     {
-      text: "Participar en este proceso me permitió descubrir que sí podía volver a empezar, sanar mis heridas y liderar cambios en mi comunidad.",
-      author: "María Camila Restrepo",
+      text: "Participar en este proceso me permitiÃ³ descubrir que sÃ­ podÃ­a volver a empezar, sanar mis heridas y liderar cambios en mi comunidad.",
+      author: "MarÃ­a Camila Restrepo",
       role: "Participante del programa de salud mental",
-      location: "Agustín Codazzi, Cesar"
+      location: "AgustÃ­n Codazzi, Cesar"
     },
     {
-      text: "La Escuela de Formación de FEPV nos dio herramientas para emprender y asociarnos. Hoy lidero un proyecto productivo familiar.",
-      author: "José Luis González",
-      role: "Egresado de la línea de Emprendimiento",
+      text: "La Escuela de FormaciÃ³n de FEPV nos dio herramientas para emprender y asociarnos. Hoy lidero un proyecto productivo familiar.",
+      author: "JosÃ© Luis GonzÃ¡lez",
+      role: "Egresado de la lÃ­nea de Emprendimiento",
       location: "Codazzi, Cesar"
     },
     {
-      text: "El acompañamiento de FEPV en la conservación de nuestro entorno nos enseñó a amar y proteger la cuenca local. El cambio inicia en casa.",
+      text: "El acompaÃ±amiento de FEPV en la conservaciÃ³n de nuestro entorno nos enseÃ±Ã³ a amar y proteger la cuenca local. El cambio inicia en casa.",
       author: "Estela Araujo",
       role: "Voluntaria del programa Medio Ambiente",
       location: "Zona Rural de Codazzi"
@@ -62,87 +62,87 @@ export default function Home() {
   const categories = [
     {
       title: "Salud Mental",
-      icon: "🧠",
-      desc: "Promoción del bienestar emocional, atención psicosocial y fortalecimiento de capacidades.",
+      icon: "ðŸ§ ",
+      desc: "PromociÃ³n del bienestar emocional, atenciÃ³n psicosocial y fortalecimiento de capacidades.",
       color: "border-fepv-green bg-fepv-light/10"
     },
     {
       title: "Familias",
-      icon: "👨‍👩‍👧",
-      desc: "Fortalecimiento familiar, orientación y construcción de entornos protectores.",
+      icon: "ðŸ‘¨â€ðŸ‘©â€ðŸ‘§",
+      desc: "Fortalecimiento familiar, orientaciÃ³n y construcciÃ³n de entornos protectores.",
       color: "border-fepv-blue bg-blue-50/30"
     },
     {
-      title: "Educación",
-      icon: "📚",
-      desc: "Formación, talleres y oportunidades para aprender y desarrollar habilidades.",
-      color: "border-fepv-yellow bg-yellow-50/30"
+      title: "EducaciÃ³n",
+      icon: "ðŸ“š",
+      desc: "FormaciÃ³n, talleres y oportunidades para aprender y desarrollar habilidades.",
+      color: "border-fepv-orange bg-yellow-50/30"
     },
     {
-      title: "Inclusión y Derechos",
-      icon: "🤝",
-      desc: "Promoción de derechos, participación ciudadana e inclusión social activa.",
+      title: "InclusiÃ³n y Derechos",
+      icon: "ðŸ¤",
+      desc: "PromociÃ³n de derechos, participaciÃ³n ciudadana e inclusiÃ³n social activa.",
       color: "border-fepv-green bg-fepv-light/10"
     },
     {
       title: "Medio Ambiente",
-      icon: "🌱",
-      desc: "Educación ambiental, reforestación y conservación comunitaria sostenible.",
+      icon: "ðŸŒ±",
+      desc: "EducaciÃ³n ambiental, reforestaciÃ³n y conservaciÃ³n comunitaria sostenible.",
       color: "border-fepv-blue bg-blue-50/30"
     },
     {
       title: "Bienestar Animal",
-      icon: "🐾",
-      desc: "Protección animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
-      color: "border-fepv-yellow bg-yellow-50/30"
+      icon: "ðŸ¾",
+      desc: "ProtecciÃ³n animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
+      color: "border-fepv-orange bg-yellow-50/30"
     },
     {
       title: "Emprendimiento",
-      icon: "💼",
-      desc: "Autonomía económica, emprendimiento social y fortalecimiento de capacidades locales.",
+      icon: "ðŸ’¼",
+      desc: "AutonomÃ­a econÃ³mica, emprendimiento social y fortalecimiento de capacidades locales.",
       color: "border-fepv-green bg-fepv-light/10"
     },
     {
       title: "Cultura y Deporte",
-      icon: "⚽",
-      desc: "Actividades artísticas, recreativas y deportivas que integran y sanan el tejido social.",
+      icon: "âš½",
+      desc: "Actividades artÃ­sticas, recreativas y deportivas que integran y sanan el tejido social.",
       color: "border-fepv-blue bg-blue-50/30"
     }
   ];
 
   const beneficiaries = [
-    { name: "Niñas y Niños", img: "👧👦" },
-    { name: "Adolescentes", img: "🎒" },
-    { name: "Jóvenes", img: "⚡" },
-    { name: "Familias", img: "🏡" },
-    { name: "Personas con Discapacidad", img: "♿" },
-    { name: "Víctimas del Conflicto", img: "🕊️" },
-    { name: "Comunidades Rurales", img: "🌽" },
-    { name: "Organizaciones de Base", img: "📢" }
+    { name: "NiÃ±as y NiÃ±os", img: "ðŸ‘§ðŸ‘¦" },
+    { name: "Adolescentes", img: "ðŸŽ’" },
+    { name: "JÃ³venes", img: "âš¡" },
+    { name: "Familias", img: "ðŸ¡" },
+    { name: "Personas con Discapacidad", img: "â™¿" },
+    { name: "VÃ­ctimas del Conflicto", img: "ðŸ•Šï¸" },
+    { name: "Comunidades Rurales", img: "ðŸŒ½" },
+    { name: "Organizaciones de Base", img: "ðŸ“¢" }
   ];
 
   const activePrograms = [
     {
       title: "PAPSIVI",
-      desc: "Programa de Atención Psicosocial y Salud Integral a Víctimas del conflicto armado en el territorio.",
+      desc: "Programa de AtenciÃ³n Psicosocial y Salud Integral a VÃ­ctimas del conflicto armado en el territorio.",
       actionText: "Conocer programa",
       href: "/programas#salud-mental"
     },
     {
-      title: "Escuela de Formación",
+      title: "Escuela de FormaciÃ³n",
       desc: "Procesos educativos y comunitarios integrales para el desarrollo de competencias locales.",
       actionText: "Ver programas",
       href: "/programas#educacion"
     },
     {
       title: "Eco-Encuentros",
-      desc: "Iniciativas comunitarias orientadas a la educación ambiental y protección de microcuencas.",
+      desc: "Iniciativas comunitarias orientadas a la educaciÃ³n ambiental y protecciÃ³n de microcuencas.",
       actionText: "Conocer iniciativa",
       href: "/programas#ambiente"
     },
     {
       title: "Cuidado de Huellas",
-      desc: "Acciones territoriales de esterilización, concientización y tenencia responsable de mascotas.",
+      desc: "Acciones territoriales de esterilizaciÃ³n, concientizaciÃ³n y tenencia responsable de mascotas.",
       actionText: "Conocer iniciativa",
       href: "/programas#bienestar-animal"
     }
@@ -154,25 +154,25 @@ export default function Home() {
       badgeColor: "bg-fepv-green text-white",
       status: "ABIERTA",
       title: "Taller de Fortalecimiento Emocional y Resiliencia",
-      location: "Agustín Codazzi",
+      location: "AgustÃ­n Codazzi",
       deadline: "15/08/2026",
-      target: "Jóvenes y adultos"
+      target: "JÃ³venes y adultos"
     },
     {
       category: "Voluntariado",
       badgeColor: "bg-fepv-blue text-white",
       status: "ABIERTA",
-      title: "Campaña de Reforestación Comunitaria 'Siembre de Vida'",
+      title: "CampaÃ±a de ReforestaciÃ³n Comunitaria 'Siembre de Vida'",
       location: "Vereda Las Flores",
       deadline: "20/08/2026",
       target: "Toda la comunidad"
     },
     {
       category: "Convocatorias",
-      badgeColor: "bg-fepv-yellow text-fepv-gray",
+      badgeColor: "bg-fepv-orange text-fepv-gray",
       status: "ABIERTA",
       title: "Fondo de Emprendimiento Social: Capital Semilla FEPV 2026",
-      location: "Agustín Codazzi",
+      location: "AgustÃ­n Codazzi",
       deadline: "30/08/2026",
       target: "Emprendedores locales"
     }
@@ -192,7 +192,7 @@ export default function Home() {
     },
     {
       title: "Quiero donar",
-      desc: "Quiero apoyar económicamente y apadrinar procesos que transforman vidas.",
+      desc: "Quiero apoyar econÃ³micamente y apadrinar procesos que transforman vidas.",
       btnText: "Aportar ahora",
       href: "/donaciones",
       icon: (
@@ -214,11 +214,11 @@ export default function Home() {
     },
     {
       title: "Quiero ser voluntario",
-      desc: "Quiero aportar mi tiempo, capacidades y vocación de servicio social.",
+      desc: "Quiero aportar mi tiempo, capacidades y vocaciÃ³n de servicio social.",
       btnText: "Postularme",
       href: "/participa?rol=voluntario",
       icon: (
-        <svg className="w-8 h-8 text-fepv-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-8 h-8 text-fepv-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
         </svg>
       )
@@ -236,21 +236,21 @@ export default function Home() {
             {/* Lado Izquierdo (Textos y CTAs) */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <span className="inline-block text-xs font-bold tracking-widest text-fepv-green uppercase bg-fepv-green/10 px-3 py-1.5 rounded-full">
-                Fundación Encuentros Para la Vida
+                FundaciÃ³n Encuentros Para la Vida
               </span>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-fepv-dark leading-tight">
+              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-fepv-darkblue leading-tight">
                 Encuentros que <br />
-                <span className="text-fepv-green relative inline-block">
+                <span className="text-fepv-vividgreen relative inline-block">
                   transforman vidas
-                  <span className="absolute bottom-1 left-0 w-full h-2 bg-fepv-yellow/30 -z-10 rounded"></span>
+                  <span className="absolute bottom-1 left-0 w-full h-2 bg-fepv-orange/30 -z-10 rounded"></span>
                 </span>
               </h1>
               <p className="font-sans text-base sm:text-lg lg:text-xl text-fepv-gray/80 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Construimos oportunidades, fortalecemos comunidades y acompañamos procesos que generan bienestar emocional y transformación social en el territorio.
+                Construimos oportunidades, fortalecemos comunidades y acompaÃ±amos procesos que generan bienestar emocional y transformaciÃ³n social en el territorio.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
                 <Link href="/nosotros" className="fepv-btn fepv-btn-primary w-full sm:w-auto text-center cursor-pointer">
-                  Conoce nuestra Fundación
+                  Conoce nuestra FundaciÃ³n
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                   </svg>
@@ -293,17 +293,17 @@ export default function Home() {
                 
                 {/* Floating Micro-Badges */}
                 <div className="absolute -top-3 -right-3 bg-white px-4 py-2.5 rounded-2xl shadow-lg border border-gray-100 flex items-center gap-2">
-                  <span className="text-xl">🤝</span>
+                  <span className="text-xl">ðŸ¤</span>
                   <div className="flex flex-col">
-                    <span className="text-xs font-bold text-fepv-dark leading-tight">Cooperación</span>
+                    <span className="text-xs font-bold text-fepv-darkblue leading-tight">CooperaciÃ³n</span>
                     <span className="text-[10px] text-fepv-green font-semibold">Aliados Activos</span>
                   </div>
                 </div>
 
                 <div className="absolute -bottom-3 -left-3 bg-white px-4 py-2.5 rounded-2xl shadow-lg border border-gray-100 flex items-center gap-2">
-                  <span className="text-xl">🧠</span>
+                  <span className="text-xl">ðŸ§ </span>
                   <div className="flex flex-col">
-                    <span className="text-xs font-bold text-fepv-dark leading-tight">Salud Mental</span>
+                    <span className="text-xs font-bold text-fepv-darkblue leading-tight">Salud Mental</span>
                     <span className="text-[10px] text-fepv-blue font-semibold">Apoyo Psicosocial</span>
                   </div>
                 </div>
@@ -314,15 +314,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOQUE 2: ¿QUÉ HACEMOS? */}
+      {/* BLOQUE 2: Â¿QUÃ‰ HACEMOS? */}
       <section className="py-20 bg-white border-t border-gray-50" id="servicios">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-dark">
+            <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-darkblue">
               Transformamos desde diferentes caminos
             </h2>
             <p className="font-sans text-base text-fepv-gray/80 leading-relaxed">
-              Trabajamos de forma articulada en diversas áreas estratégicas que responden directamente a la misión y objeto social institucional de FEPV.
+              Trabajamos de forma articulada en diversas Ã¡reas estratÃ©gicas que responden directamente a la misiÃ³n y objeto social institucional de FEPV.
             </p>
           </div>
 
@@ -333,7 +333,7 @@ export default function Home() {
                 className={`p-6 rounded-2xl border-t-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${cat.color}`}
               >
                 <span className="text-4xl mb-4 block">{cat.icon}</span>
-                <h3 className="font-display font-bold text-lg text-fepv-dark mb-2">
+                <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-2">
                   {cat.title}
                 </h3>
                 <p className="text-sm text-fepv-gray/85 leading-relaxed">
@@ -345,7 +345,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOQUE 3: ¿A QUIÉNES ACOMPAÑAMOS? */}
+      {/* BLOQUE 3: Â¿A QUIÃ‰NES ACOMPAÃ‘AMOS? */}
       <section className="py-20 bg-fepv-light/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -354,16 +354,16 @@ export default function Home() {
               <span className="text-xs font-bold text-fepv-green uppercase tracking-wider block">
                 Enfoque Diferencial e Inclusivo
               </span>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-dark leading-tight">
-                ¿A quiénes acompañamos?
+              <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-darkblue leading-tight">
+                Â¿A quiÃ©nes acompaÃ±amos?
               </h2>
               <p className="text-fepv-gray/80 leading-relaxed">
-                Nuestras intervenciones están diseñadas desde la empatía y la inclusión. Reconocemos las realidades específicas de cada grupo poblacional, garantizando procesos sensibles y adaptados al territorio del Cesar.
+                Nuestras intervenciones estÃ¡n diseÃ±adas desde la empatÃ­a y la inclusiÃ³n. Reconocemos las realidades especÃ­ficas de cada grupo poblacional, garantizando procesos sensibles y adaptados al territorio del Cesar.
               </p>
               <div className="p-4 bg-white/80 rounded-2xl border border-fepv-green/10 flex items-start gap-3">
-                <span className="text-2xl mt-0.5">🕊️</span>
+                <span className="text-2xl mt-0.5">ðŸ•Šï¸</span>
                 <p className="text-xs text-fepv-gray/90 leading-normal">
-                  <strong>Compromiso Legal:</strong> Procesos estructurados en estricto cumplimiento con marcos de Derechos Humanos y protección del menor.
+                  <strong>Compromiso Legal:</strong> Procesos estructurados en estricto cumplimiento con marcos de Derechos Humanos y protecciÃ³n del menor.
                 </p>
               </div>
             </div>
@@ -376,7 +376,7 @@ export default function Home() {
                     className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center justify-center hover:border-fepv-green/30 hover:shadow-md transition-all duration-300"
                   >
                     <span className="text-3xl mb-3">{b.img}</span>
-                    <span className="font-sans font-semibold text-xs text-fepv-dark leading-tight">
+                    <span className="font-sans font-semibold text-xs text-fepv-darkblue leading-tight">
                       {b.name}
                     </span>
                   </div>
@@ -393,7 +393,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div className="space-y-4">
-              <h2 className="font-display font-bold text-3xl text-fepv-dark">
+              <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
                 Programas en el Territorio
               </h2>
               <p className="text-fepv-gray/80 max-w-xl">
@@ -412,7 +412,7 @@ export default function Home() {
                 className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow duration-300"
               >
                 <div>
-                  <div className="bg-fepv-light/40 text-fepv-dark font-display font-bold text-sm px-3.5 py-1.5 rounded-lg inline-block mb-4">
+                  <div className="bg-fepv-light/40 text-fepv-darkblue font-display font-bold text-sm px-3.5 py-1.5 rounded-lg inline-block mb-4">
                     {p.title}
                   </div>
                   <p className="text-sm text-fepv-gray/85 leading-relaxed mb-6">
@@ -421,10 +421,10 @@ export default function Home() {
                 </div>
                 <Link
                   href={p.href}
-                  className="text-xs font-bold text-fepv-green hover:text-fepv-dark flex items-center gap-1 group"
+                  className="text-xs font-bold text-fepv-green hover:text-fepv-darkblue flex items-center gap-1 group"
                 >
                   {p.actionText}
-                  <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
+                  <span className="transform group-hover:translate-x-1 transition-transform duration-200">â†’</span>
                 </Link>
               </div>
             ))}
@@ -438,38 +438,38 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             <div className="lg:col-span-4 text-center lg:text-left space-y-3">
-              <h2 className="font-display font-bold text-3xl text-fepv-yellow">
+              <h2 className="font-display font-bold text-3xl text-fepv-orange">
                 Nuestra huella de impacto
               </h2>
               <p className="text-sm text-white/70 leading-relaxed">
-                Estadísticas de gestión y actividades consolidadas en Agustín Codazzi y municipios del Cesar.
+                EstadÃ­sticas de gestiÃ³n y actividades consolidadas en AgustÃ­n Codazzi y municipios del Cesar.
               </p>
             </div>
 
             <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-yellow block mb-1">
+                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
                   +{stats.beneficiarios}
                 </span>
                 <span className="text-xs text-white/80 font-medium">Personas Participantes</span>
               </div>
               
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-yellow block mb-1">
+                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
                   +{stats.actividades}
                 </span>
                 <span className="text-xs text-white/80 font-medium">Actividades Desarrolladas</span>
               </div>
 
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-yellow block mb-1">
+                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
                   +{stats.aliados}
                 </span>
-                <span className="text-xs text-white/80 font-medium">Aliados Estratégicos</span>
+                <span className="text-xs text-white/80 font-medium">Aliados EstratÃ©gicos</span>
               </div>
 
               <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-yellow block mb-1">
+                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
                   +{stats.municipios}
                 </span>
                 <span className="text-xs text-white/80 font-medium">Municipios Impactados</span>
@@ -483,19 +483,19 @@ export default function Home() {
       {/* BLOQUE 6: HISTORIAS QUE TRANSFORMAN */}
       <section className="py-20 bg-gradient-to-b from-white to-fepv-light/20 overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-8">
-          <span className="text-4xl">✨</span>
-          <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-dark">
+          <span className="text-4xl">âœ¨</span>
+          <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
             Cada encuentro deja una huella
           </h2>
           
           {/* Testimonial Box */}
           <div className="relative bg-white p-8 sm:p-12 rounded-3xl shadow-xl shadow-fepv-green/5 border border-fepv-light/35 min-h-[220px] flex flex-col justify-center animate-in fade-in duration-500">
-            <span className="absolute top-4 left-6 text-6xl text-fepv-green/10 font-serif leading-none">“</span>
+            <span className="absolute top-4 left-6 text-6xl text-fepv-green/10 font-serif leading-none">â€œ</span>
             <p className="font-sans text-base sm:text-lg text-fepv-gray/95 italic leading-relaxed relative z-10">
               {testimonials[currentTestimonial].text}
             </p>
             <div className="mt-6 flex flex-col items-center">
-              <span className="font-display font-bold text-sm text-fepv-dark">
+              <span className="font-display font-bold text-sm text-fepv-darkblue">
                 {testimonials[currentTestimonial].author}
               </span>
               <span className="text-xs text-fepv-green font-semibold mt-0.5">
@@ -520,7 +520,7 @@ export default function Home() {
 
           <div>
             <Link href="/nosotros#historia" className="fepv-btn fepv-btn-secondary mt-4 cursor-pointer">
-              Conoce más historias de impacto
+              Conoce mÃ¡s historias de impacto
             </Link>
           </div>
         </div>
@@ -531,7 +531,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div className="space-y-4">
-              <h2 className="font-display font-bold text-3xl text-fepv-dark">
+              <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
                 Oportunidades Abiertas
               </h2>
               <p className="text-fepv-gray/80 max-w-xl">
@@ -559,21 +559,21 @@ export default function Home() {
                       {op.status}
                     </span>
                   </div>
-                  <h3 className="font-display font-bold text-lg text-fepv-dark mb-4 leading-snug">
+                  <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-4 leading-snug">
                     {op.title}
                   </h3>
                   
                   <div className="space-y-2 text-xs text-fepv-gray/85 border-t border-gray-50 pt-4 mb-6">
                     <div className="flex items-center gap-2">
-                      <span>📍</span>
+                      <span>ðŸ“</span>
                       <span><strong>Municipio:</strong> {op.location}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span>📅</span>
-                      <span><strong>Fecha límite:</strong> {op.deadline}</span>
+                      <span>ðŸ“…</span>
+                      <span><strong>Fecha lÃ­mite:</strong> {op.deadline}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span>👥</span>
+                      <span>ðŸ‘¥</span>
                       <span><strong>Dirigido a:</strong> {op.target}</span>
                     </div>
                   </div>
@@ -591,15 +591,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOQUE 8: ¿QUIERES HACER PARTE? */}
+      {/* BLOQUE 8: Â¿QUIERES HACER PARTE? */}
       <section className="py-20 bg-fepv-light/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="font-display font-bold text-3xl text-fepv-dark">
-              ¿Cómo quieres sumarte a FEPV?
+            <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
+              Â¿CÃ³mo quieres sumarte a FEPV?
             </h2>
             <p className="font-sans text-base text-fepv-gray/80">
-              La transformación social es un esfuerzo colectivo. Elige el camino que mejor se adapte a ti y participa.
+              La transformaciÃ³n social es un esfuerzo colectivo. Elige el camino que mejor se adapte a ti y participa.
             </p>
           </div>
 
@@ -613,7 +613,7 @@ export default function Home() {
                   <div className="bg-fepv-light/50 p-4 rounded-full mb-6">
                     {path.icon}
                   </div>
-                  <h3 className="font-display font-bold text-lg text-fepv-dark mb-3">
+                  <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-3">
                     {path.title}
                   </h3>
                   <p className="text-xs text-fepv-gray/80 leading-relaxed mb-6">
@@ -632,30 +632,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOQUE 9: COOPERACIÓN INTERNACIONAL */}
+      {/* BLOQUE 9: COOPERACIÃ“N INTERNACIONAL */}
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-8">
           <span className="text-xs font-bold text-fepv-blue uppercase tracking-wider block">
-            Cooperación y Alianzas Estratégicas
+            CooperaciÃ³n y Alianzas EstratÃ©gicas
           </span>
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-dark max-w-2xl mx-auto leading-tight">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-darkblue max-w-2xl mx-auto leading-tight">
             Creemos en las alianzas para lograr transformaciones sostenibles
           </h2>
           <p className="font-sans text-base text-fepv-gray/85 max-w-3xl mx-auto leading-relaxed">
-            Nuestros estatutos y objeto social facultan a la Fundación Encuentros Para la Vida para cooperar de manera directa con entidades públicas, empresas privadas, agencias internacionales, y organismos multilaterales en pro del desarrollo integral de las comunidades en Colombia.
+            Nuestros estatutos y objeto social facultan a la FundaciÃ³n Encuentros Para la Vida para cooperar de manera directa con entidades pÃºblicas, empresas privadas, agencias internacionales, y organismos multilaterales en pro del desarrollo integral de las comunidades en Colombia.
           </p>
           
           <div className="p-8 bg-fepv-light/30 rounded-3xl border border-fepv-green/10 max-w-3xl mx-auto text-left">
-            <h4 className="font-display font-bold text-sm text-fepv-dark mb-4 uppercase tracking-wider">
-              Buscamos alianzas y cooperación en:
+            <h4 className="font-display font-bold text-sm text-fepv-darkblue mb-4 uppercase tracking-wider">
+              Buscamos alianzas y cooperaciÃ³n en:
             </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs font-semibold text-fepv-dark/90">
-              <div className="flex items-center gap-2">🟢 Cofinanciación de proyectos</div>
-              <div className="flex items-center gap-2">🟢 Cooperación Técnica</div>
-              <div className="flex items-center gap-2">🟢 Voluntariado Profesional</div>
-              <div className="flex items-center gap-2">🟢 Transferencia de Saberes</div>
-              <div className="flex items-center gap-2">🟢 Ejecución de Convenios</div>
-              <div className="flex items-center gap-2">🟢 Proyectos de Impacto Social</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs font-semibold text-fepv-darkblue/90">
+              <div className="flex items-center gap-2">ðŸŸ¢ CofinanciaciÃ³n de proyectos</div>
+              <div className="flex items-center gap-2">ðŸŸ¢ CooperaciÃ³n TÃ©cnica</div>
+              <div className="flex items-center gap-2">ðŸŸ¢ Voluntariado Profesional</div>
+              <div className="flex items-center gap-2">ðŸŸ¢ Transferencia de Saberes</div>
+              <div className="flex items-center gap-2">ðŸŸ¢ EjecuciÃ³n de Convenios</div>
+              <div className="flex items-center gap-2">ðŸŸ¢ Proyectos de Impacto Social</div>
             </div>
           </div>
 
@@ -667,23 +667,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOQUE 10: ACTUALIDAD Y BOLETÍN */}
+      {/* BLOQUE 10: ACTUALIDAD Y BOLETÃN */}
       <section className="py-20 bg-fepv-light/10 border-t border-gray-100" id="actualidad">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Boletín Informativo */}
+            {/* BoletÃ­n Informativo */}
             <div className="lg:col-span-5 space-y-6 bg-white p-8 sm:p-10 rounded-3xl border border-gray-100 shadow-sm">
-              <h3 className="font-display font-bold text-2xl text-fepv-dark">
-                Boletín FEPV en Acción
+              <h3 className="font-display font-bold text-2xl text-fepv-darkblue">
+                BoletÃ­n FEPV en AcciÃ³n
               </h3>
               <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                Suscríbete para recibir informes trimestrales de actividades, resultados, rendición de cuentas e historias del territorio en tu correo electrónico.
+                SuscrÃ­bete para recibir informes trimestrales de actividades, resultados, rendiciÃ³n de cuentas e historias del territorio en tu correo electrÃ³nico.
               </p>
               <form 
                 onSubmit={(e) => {
                   e.preventDefault();
-                  alert("¡Gracias por suscribirte al boletín de FEPV!");
+                  alert("Â¡Gracias por suscribirte al boletÃ­n de FEPV!");
                 }}
                 className="space-y-3"
               >
@@ -691,7 +691,7 @@ export default function Home() {
                   <input
                     type="email"
                     required
-                    placeholder="Correo electrónico *"
+                    placeholder="Correo electrÃ³nico *"
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-fepv-green bg-gray-50"
                   />
                 </div>
@@ -699,40 +699,40 @@ export default function Home() {
                   type="submit"
                   className="w-full fepv-btn fepv-btn-primary py-3 text-sm cursor-pointer"
                 >
-                  Suscribirme al Boletín
+                  Suscribirme al BoletÃ­n
                 </button>
               </form>
             </div>
 
-            {/* Últimas Noticias */}
+            {/* Ãšltimas Noticias */}
             <div className="lg:col-span-7 space-y-6">
-              <h3 className="font-display font-bold text-2xl text-fepv-dark">
+              <h3 className="font-display font-bold text-2xl text-fepv-darkblue">
                 Actualidad e Hitos FEPV
               </h3>
               
               <div className="space-y-4">
                 <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
-                  <span className="text-3xl bg-fepv-light/50 p-3 rounded-xl flex items-center justify-center">📰</span>
+                  <span className="text-3xl bg-fepv-light/50 p-3 rounded-xl flex items-center justify-center">ðŸ“°</span>
                   <div className="space-y-1">
                     <span className="text-[10px] text-fepv-green font-bold">12 JUNIO, 2026 &bull; INSTITUCIONAL</span>
-                    <h4 className="font-display font-bold text-base text-fepv-dark">
-                      Registro oficial ante la Cámara de Comercio de Valledupar
+                    <h4 className="font-display font-bold text-base text-fepv-darkblue">
+                      Registro oficial ante la CÃ¡mara de Comercio de Valledupar
                     </h4>
                     <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                      FEPV consolida su registro legal y personería jurídica para operar a nivel nacional.
+                      FEPV consolida su registro legal y personerÃ­a jurÃ­dica para operar a nivel nacional.
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
-                  <span className="text-3xl bg-fepv-light/50 p-3 rounded-xl flex items-center justify-center">🤝</span>
+                  <span className="text-3xl bg-fepv-light/50 p-3 rounded-xl flex items-center justify-center">ðŸ¤</span>
                   <div className="space-y-1">
                     <span className="text-[10px] text-fepv-green font-bold">02 JULIO, 2026 &bull; ALIANZAS</span>
-                    <h4 className="font-display font-bold text-base text-fepv-dark">
-                      Firma de primer pre-acuerdo de cooperación en Salud Mental
+                    <h4 className="font-display font-bold text-base text-fepv-darkblue">
+                      Firma de primer pre-acuerdo de cooperaciÃ³n en Salud Mental
                     </h4>
                     <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                      Consolidamos mesas técnicas con profesionales locales para lanzar la red de apoyo psicosocial.
+                      Consolidamos mesas tÃ©cnicas con profesionales locales para lanzar la red de apoyo psicosocial.
                     </p>
                   </div>
                 </div>
