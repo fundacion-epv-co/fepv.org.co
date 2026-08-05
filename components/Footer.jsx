@@ -12,22 +12,14 @@ export default function Footer() {
           
           {/* Columna 1: Identidad con LOGO REAL */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-16 h-16 flex-shrink-0 bg-white rounded-2xl p-1 shadow-lg group-hover:scale-105 transition-transform duration-300">
+            <Link href="/" className="inline-block group">
+              <div className="relative w-56 sm:w-64 h-16 sm:h-20 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-3 shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src={logoImg}
                   alt="Fundación Encuentros Para la Vida - FEPV"
                   fill
-                  className="object-contain rounded-xl"
+                  className="object-contain object-left"
                 />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-display font-bold text-lg text-white leading-none">
-                  Fundación Encuentros
-                </span>
-                <span className="font-sans text-xs font-semibold text-fepv-orange tracking-wider uppercase mt-0.5">
-                  Para la Vida
-                </span>
               </div>
             </Link>
             <p className="text-sm text-white/70 italic leading-relaxed">

@@ -60,22 +60,14 @@ export default function Header() {
           
           {/* LOGO FEPV — IMAGEN REAL */}
           <Link href="/" className="flex items-center gap-3 group focus:outline-none" aria-label="Volver a Inicio FEPV">
-            <div className="relative w-14 h-14 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
+            <div className="relative w-48 sm:w-56 h-14 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
               <Image
                 src={logoImg}
                 alt="Fundación Encuentros Para la Vida - FEPV"
                 fill
-                className="object-contain"
+                className="object-contain object-left"
                 priority
               />
-            </div>
-            <div className="flex flex-col hidden sm:flex">
-              <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none">
-                Fundación Encuentros
-              </span>
-              <span className="font-sans text-xs font-semibold text-fepv-vividgreen tracking-wider mt-0.5">
-                Para la Vida — FEPV
-              </span>
             </div>
           </Link>
 
