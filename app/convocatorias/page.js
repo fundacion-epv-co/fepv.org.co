@@ -1,160 +1,95 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV } from "../../lib/api";
 
-// Convocatorias estáticas embebidas (sin necesidad de API)
-const CONVOCATORIAS_ESTATICAS = [
-  {
-    id: "CONV-001",
-    title: "Curso de Primeros Auxilios Psicológicos — Nivel Básico",
-    category: "cursos",
-    status: "ABIERTA",
-    location: "Agustín Codazzi, Cesar",
-    deadline: "2026-09-30",
-    target: "Líderes comunitarios, docentes y cuidadores",
-    desc: "Formación certificada en técnicas de apoyo emocional de primera respuesta. Aprende a acompañar a personas en crisis, duelos y situaciones de emergencia psicosocial. Avalado por FEPV con intensidad de 40 horas.",
-    requirements: [
-      "Mayor de 18 años",
-      "Interés en salud comunitaria",
-      "Disponibilidad de 2 días por semana"
-    ],
-    documents: [
-      "Copia de documento de identidad",
-      "Foto tipo documento",
-      "Carta de motivación (opcional)"
-    ],
-    schedule: "Sábados y domingos, 8:00 a.m. – 12:00 m."
-  },
-  {
-    id: "CONV-002",
-    title: "Voluntariado Ambiental — Jornada de Siembra y Limpieza",
-    category: "voluntariado",
-    status: "ABIERTA",
-    location: "Zona rural, Codazzi – Cesar",
-    deadline: "2026-08-25",
-    target: "Toda la comunidad, estudiantes y familias",
-    desc: "Jornada comunitaria de reforestación y limpieza de fuentes hídricas en cuencas del municipio. Actividad libre, sin costo y familiar. Transporte desde el casco urbano disponible para grupos mayores de 10 personas.",
-    requirements: [
-      "Inscripción previa obligatoria",
-      "Ropa cómoda y botas",
-      "Disposición de compartir"
-    ],
-    documents: [
-      "Nombre completo",
-      "Número de contacto"
-    ],
-    schedule: "Domingo 25 de agosto, 7:00 a.m. – 1:00 p.m."
-  },
-  {
-    id: "CONV-003",
-    title: "Programa de Apoyo Psicosocial PAPSIVI — Nuevo Proceso",
-    category: "cursos",
-    status: "ABIERTA",
-    location: "Agustín Codazzi, Cesar",
-    deadline: "2026-10-15",
-    target: "Víctimas del conflicto armado registradas en el RUV",
-    desc: "Proceso de atención psicosocial individual y grupal para personas víctimas del conflicto armado, en marco del Programa de Atención Psicosocial y Salud Integral a Víctimas (PAPSIVI). Confidencial y gratuito.",
-    requirements: [
-      "Estar registrado en el RUV (Registro Único de Víctimas)",
-      "Residir en Agustín Codazzi o municipios aledaños",
-      "Voluntariedad de participación"
-    ],
-    documents: [
-      "Documento de identidad",
-      "Constancia del RUV (si aplica)",
-      "Formulario de inscripción"
-    ],
-    schedule: "Lunes a viernes, previa cita. Horario flexible."
-  },
-  {
-    id: "CONV-004",
-    title: "Convocatoria de Emprendimiento Social — Cohorte II",
-    category: "becas",
-    status: "ABIERTA",
-    location: "Agustín Codazzi, Cesar (presencial + virtual)",
-    deadline: "2026-09-10",
-    target: "Jóvenes entre 18 y 35 años con idea de negocio",
-    desc: "Programa intensivo de 8 semanas para el desarrollo de habilidades empresariales, diseño de modelo de negocio, acceso a financiación y mentoría individual. Cupos limitados a 25 participantes por cohorte.",
-    requirements: [
-      "Jóvenes entre 18 y 35 años",
-      "Tener una idea de negocio (no necesita estar formalizada)",
-      "Comprometerse con el 80% de asistencia"
-    ],
-    documents: [
-      "Copia de cédula de ciudadanía",
-      "Resumen ejecutivo de la idea (máx. 1 página)",
-      "Carta de motivación"
-    ],
-    schedule: "Martes y jueves, 6:00 p.m. – 8:00 p.m."
-  }
+const categories = [
+  { id: "all", name: "Todas" },
+  { id: "cursos", name: "Cursos" },
+  { id: "voluntariado", name: "Voluntariado" },
+  { id: "becas", name: "Becas & Apoyos" },
+  { id: "general", name: "General" }
 ];
 
 export default function Convocatorias() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
+  const [convocatorias, setConvocatorias] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [formData, setFormData] = useState({
     nombre: "",
     correo: "",
     telefono: "",
     documento: "",
     motivo: "",
-    aceptaDatos: false
   });
+  const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
 
-  const categories = [
-    { id: "all", name: "Todas" },
-    { id: "cursos", name: "Cursos" },
-    { id: "becas", name: "Becas / Emprendimiento" },
-    { id: "voluntariado", name: "Voluntariado" }
-  ];
+  useEffect(() => {
+    async function loadData() {
+      const data = await fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV);
+      // Mapear los datos del CSV (id, titulo, descripcion, fecha_cierre, enlace_drive, estado)
+      const mapped = data.map((item, index) => ({
+        id: item.id || `CONV-${index + 1}`,
+        title: item.titulo || 'Sin título',
+        desc: item.descripcion || '',
+        deadline: item.fecha_cierre || '',
+        status: (item.estado || 'CERRADA').toUpperCase(),
+        category: 'general', // Por defecto, o se podría añadir una columna categoría en el futuro
+        location: "Sede FEPV / Virtual", // Por defecto
+        enlace_drive: item.enlace_drive || null
+      }));
+      setConvocatorias(mapped);
+      setIsLoading(false);
+    }
+    loadData();
+  }, []);
 
-  const filteredConvocatorias = filterCategory === "all"
-    ? CONVOCATORIAS_ESTATICAS
-    : CONVOCATORIAS_ESTATICAS.filter(c => c.category === filterCategory);
+  const filteredConvocatorias = convocatorias.filter((c) =>
+    filterCategory === "all" ? true : c.category === filterCategory
+  );
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleApplySubmit = (e) => {
     e.preventDefault();
-    if (!formData.aceptaDatos) {
-      alert("Debes aceptar la política de tratamiento de datos personales para continuar.");
-      return;
-    }
-
-    // Para GitHub Pages (estático): enviar por WhatsApp
-    const mensaje = encodeURIComponent(
-      `*INSCRIPCIÓN FEPV — ${selectedConvocatoria.title}*\n\n` +
-      `👤 *Nombre:* ${formData.nombre}\n` +
-      `🪪 *Documento:* ${formData.documento}\n` +
-      `📧 *Correo:* ${formData.correo}\n` +
-      `📞 *Teléfono:* ${formData.telefono}\n\n` +
-      `💬 *Motivación:* ${formData.motivo}\n\n` +
-      `_Código convocatoria: ${selectedConvocatoria.id}_\n` +
-      `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`
-    );
-
-    window.open(`https://wa.me/573166899250?text=${mensaje}`, "_blank");
-
-    setSuccessMessage(true);
+    setSubmitting(true);
+    
     setTimeout(() => {
-      setSuccessMessage(false);
-      setSelectedConvocatoria(null);
-      setFormData({ nombre: "", correo: "", telefono: "", documento: "", motivo: "", aceptaDatos: false });
-    }, 4000);
+      setSubmitting(false);
+      setSuccessMessage(true);
+
+      const mensaje = `Hola Fundación FEPV, quiero inscribirme en la convocatoria:
+Código: ${selectedConvocatoria.id}
+Título: ${selectedConvocatoria.title}
+
+Mis datos:
+- Nombre: ${formData.nombre}
+- Documento: ${formData.documento}
+- Correo: ${formData.correo}
+- WhatsApp: ${formData.telefono}
+- Motivo: ${formData.motivo}`;
+
+      window.open(`https://wa.me/573166899250?text=${encodeURIComponent(mensaje)}`, "_blank");
+      
+      setTimeout(() => {
+        setSuccessMessage(false);
+        setSelectedConvocatoria(null);
+        setFormData({ nombre: "", correo: "", telefono: "", documento: "", motivo: "" });
+      }, 4000);
+    }, 1500);
   };
 
   return (
     <div className="w-full bg-white pb-20">
       
       {/* Banner Superior */}
-      <section className="bg-fepv-dark text-white py-16">
+      <section className="bg-fepv-darkblue text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <h1 className="font-display font-bold text-3xl sm:text-5xl">
             Convocatorias y Oportunidades
@@ -175,7 +110,7 @@ export default function Convocatorias() {
                 onClick={() => setFilterCategory(cat.id)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer border transition-colors ${
                   filterCategory === cat.id
-                    ? "bg-fepv-green text-white border-fepv-green shadow-sm"
+                    ? "bg-fepv-vividgreen text-white border-fepv-vividgreen shadow-sm"
                     : "bg-white text-fepv-gray hover:bg-gray-50 border-gray-200"
                 }`}
               >
@@ -191,7 +126,12 @@ export default function Convocatorias() {
 
       {/* Lista de Convocatorias */}
       <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {filteredConvocatorias.length === 0 ? (
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <div className="w-12 h-12 border-4 border-fepv-light border-t-fepv-vividgreen rounded-full animate-spin"></div>
+            <p className="text-sm font-semibold text-fepv-darkblue">Cargando datos desde el sistema...</p>
+          </div>
+        ) : filteredConvocatorias.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 rounded-3xl border border-gray-100 max-w-md mx-auto space-y-4">
             <span className="text-5xl block">📢</span>
             <h3 className="font-display font-bold text-lg text-fepv-darkblue">No hay convocatorias activas</h3>
@@ -210,18 +150,14 @@ export default function Convocatorias() {
                 >
                   <div className="space-y-3 max-w-2xl">
                     <div className="flex items-center gap-3 flex-wrap">
-                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                        c.category === "cursos" ? "bg-green-100 text-fepv-darkblue" :
-                        c.category === "voluntariado" ? "bg-blue-100 text-fepv-blue" :
-                        c.category === "becas" ? "bg-purple-100 text-purple-700" : "bg-orange-100 text-orange-700"
-                      }`}>
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-fepv-gray">
                         {c.category}
                       </span>
                       <span className="text-[10px] text-fepv-gray/50">Código: {c.id}</span>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                        isOpen ? "bg-fepv-light/60 text-fepv-green" : "bg-red-50 text-red-600"
+                        isOpen ? "bg-fepv-light/60 text-fepv-vividgreen" : "bg-red-50 text-red-600"
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-fepv-green animate-pulse" : "bg-red-600"}`}></span>
+                        <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-fepv-vividgreen animate-pulse" : "bg-red-600"}`}></span>
                         {c.status}
                       </span>
                     </div>
@@ -230,22 +166,18 @@ export default function Convocatorias() {
                       {c.title}
                     </h3>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4 text-xs text-fepv-gray/80">
-                      <p>📍 <strong>Municipio:</strong> {c.location}</p>
-                      <p>📅 <strong>Cierre:</strong> {new Date(c.deadline).toLocaleDateString("es-CO")}</p>
-                      <p className="col-span-2 md:col-span-1">👥 <strong>Dirigido a:</strong> {c.target}</p>
+                    <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs text-fepv-gray/80">
+                      <p>📍 <strong>Lugar:</strong> {c.location}</p>
+                      <p>📅 <strong>Cierre:</strong> {c.deadline}</p>
                     </div>
                   </div>
 
                   <div>
                     <button
-                      onClick={() => isOpen && setSelectedConvocatoria(c)}
-                      disabled={!isOpen}
-                      className={`fepv-btn text-xs py-3 px-6 w-full md:w-auto text-center cursor-pointer ${
-                        isOpen ? "fepv-btn-primary" : "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
-                      }`}
+                      onClick={() => setSelectedConvocatoria(c)}
+                      className="fepv-btn text-xs py-3 px-6 w-full md:w-auto text-center cursor-pointer bg-fepv-orange text-white hover:bg-orange-600 transition-colors rounded-xl"
                     >
-                      VER CONVOCATORIA
+                      VER DETALLES
                     </button>
                   </div>
                 </div>
@@ -260,7 +192,6 @@ export default function Convocatorias() {
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 space-y-6 relative border border-gray-150">
             
-            {/* Cerrar */}
             <button
               onClick={() => setSelectedConvocatoria(null)}
               className="absolute top-4 right-4 text-fepv-gray/60 hover:text-fepv-darkblue cursor-pointer p-1.5 rounded-full hover:bg-gray-100 transition-colors"
@@ -271,9 +202,8 @@ export default function Convocatorias() {
               </svg>
             </button>
 
-            {/* Encabezado */}
             <div className="space-y-2 pr-8">
-              <span className="text-[10px] font-bold text-fepv-green bg-fepv-light/60 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-bold text-fepv-vividgreen bg-fepv-light/60 px-2 py-0.5 rounded">
                 Código: {selectedConvocatoria.id}
               </span>
               <h2 className="font-display font-bold text-xl sm:text-2xl text-fepv-darkblue leading-snug">
@@ -281,48 +211,45 @@ export default function Convocatorias() {
               </h2>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-fepv-gray/70">
                 <p>📍 <strong>Lugar:</strong> {selectedConvocatoria.location}</p>
-                <p>📅 <strong>Cierre:</strong> {new Date(selectedConvocatoria.deadline).toLocaleDateString("es-CO")}</p>
+                <p>📅 <strong>Cierre:</strong> {selectedConvocatoria.deadline}</p>
               </div>
             </div>
 
-            {/* Detalles */}
             <div className="space-y-4 border-t border-b border-gray-100 py-4 text-xs sm:text-sm text-fepv-gray/90">
               <div>
                 <h4 className="font-bold text-fepv-darkblue mb-1">Descripción de la oportunidad:</h4>
                 <p className="leading-relaxed text-xs">{selectedConvocatoria.desc}</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div>
-                  <h4 className="font-bold text-fepv-darkblue mb-1.5">Requisitos obligatorios:</h4>
-                  <ul className="list-disc pl-4 space-y-1">
-                    {selectedConvocatoria.requirements.map((r, i) => <li key={i}>{r}</li>)}
-                  </ul>
+              
+              {selectedConvocatoria.enlace_drive && (
+                <div className="mt-4">
+                  <a 
+                    href={selectedConvocatoria.enlace_drive} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-200"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                    </svg>
+                    Descargar / Ver Documento Adjunto
+                  </a>
                 </div>
-                <div>
-                  <h4 className="font-bold text-fepv-darkblue mb-1.5">Documentos requeridos:</h4>
-                  <ul className="list-disc pl-4 space-y-1">
-                    {selectedConvocatoria.documents.map((d, i) => <li key={i}>{d}</li>)}
-                  </ul>
-                </div>
-              </div>
-              <div>
-                <p>⏰ <strong>Horarios:</strong> {selectedConvocatoria.schedule}</p>
-              </div>
+              )}
             </div>
 
-            {/* Formulario de Inscripción */}
-            {selectedConvocatoria.status === "ABIERTA" && (
+            {selectedConvocatoria.status === "ABIERTA" ? (
               <div className="space-y-4">
                 <h3 className="font-display font-bold text-base text-fepv-darkblue">
                   Formulario de Inscripción
                 </h3>
 
                 {successMessage ? (
-                  <div className="p-4 bg-fepv-light/60 border border-fepv-green/20 rounded-2xl text-center space-y-2">
+                  <div className="p-4 bg-fepv-light/60 border border-fepv-vividgreen/20 rounded-2xl text-center space-y-2">
                     <span className="text-3xl block">🎉</span>
                     <h4 className="font-display font-bold text-sm text-fepv-darkblue">¡Inscripción Enviada por WhatsApp!</h4>
                     <p className="text-[11px] text-fepv-gray/80">
-                      Se abrió WhatsApp con tu información pre-llenada. Envía el mensaje para confirmar tu inscripción. ¡Gracias por participar!
+                      Se abrió WhatsApp con tu información pre-llenada. Envía el mensaje para confirmar tu inscripción.
                     </p>
                   </div>
                 ) : (
@@ -331,13 +258,13 @@ export default function Convocatorias() {
                       <div>
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo *</label>
                         <input type="text" required name="nombre" value={formData.nombre} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
                           placeholder="Ej. Juan Pérez" />
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Documento de Identidad *</label>
                         <input type="text" required name="documento" value={formData.documento} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
                           placeholder="C.C. o T.I." />
                       </div>
                     </div>
@@ -346,50 +273,45 @@ export default function Convocatorias() {
                       <div>
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Correo Electrónico *</label>
                         <input type="email" required name="correo" value={formData.correo} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
                           placeholder="juan@ejemplo.com" />
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">WhatsApp de contacto *</label>
                         <input type="tel" required name="telefono" value={formData.telefono} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
-                          placeholder="300 000 0000" />
+                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
+                          placeholder="Ej. 300 123 4567" />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">¿Por qué deseas participar? *</label>
-                      <textarea required name="motivo" rows="2" value={formData.motivo} onChange={handleInputChange}
-                        className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green resize-none text-xs"
-                        placeholder="Describe brevemente tus motivos de postulación..." />
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Motivo de postulación *</label>
+                      <textarea required name="motivo" value={formData.motivo} onChange={handleInputChange} rows="3"
+                        className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen resize-none"
+                        placeholder="Cuéntanos brevemente por qué te interesa participar..."></textarea>
                     </div>
 
-                    <div className="flex items-start gap-2 pt-1">
-                      <input type="checkbox" required id="aceptaDatos" name="aceptaDatos" checked={formData.aceptaDatos}
-                        onChange={handleInputChange} className="mt-0.5 cursor-pointer w-4 h-4 text-fepv-green" />
-                      <label htmlFor="aceptaDatos" className="text-[10px] text-fepv-gray/80 leading-snug cursor-pointer select-none">
-                        Autorizo el tratamiento de mis datos personales para fines de registro y contacto de FEPV, conforme a la Ley 1581 de 2012 de Colombia.
-                      </label>
-                    </div>
-
-                    <div className="flex items-center gap-3 pt-3">
-                      <button type="submit" className="fepv-btn fepv-btn-primary w-full sm:w-auto text-xs py-3 px-8 cursor-pointer">
-                        📲 ENVIAR POR WHATSAPP
-                      </button>
-                      <button type="button" onClick={() => setSelectedConvocatoria(null)}
-                        className="fepv-btn fepv-btn-secondary w-full sm:w-auto text-xs py-3 px-8 cursor-pointer">
-                        Cancelar
-                      </button>
-                    </div>
+                    <button type="submit" disabled={submitting} className="w-full py-3 rounded-xl font-bold text-white transition-colors bg-fepv-vividgreen hover:bg-green-600 disabled:opacity-50 flex items-center justify-center gap-2">
+                      {submitting ? "Abriendo WhatsApp..." : "💬 ENVIAR POR WHATSAPP"}
+                    </button>
+                    <p className="text-[10px] text-center text-fepv-gray/50">
+                      Tus datos están seguros y serán tratados según nuestra Política de Privacidad.
+                    </p>
                   </form>
                 )}
               </div>
+            ) : (
+              <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl text-center space-y-2">
+                <span className="text-3xl block">⏳</span>
+                <h4 className="font-display font-bold text-sm text-fepv-darkblue">Esta convocatoria ya cerró</h4>
+                <p className="text-[11px] text-fepv-gray/80">
+                  El periodo de inscripción para esta oportunidad ha finalizado. Te invitamos a estar atento a nuestras próximas convocatorias en las redes sociales de FEPV.
+                </p>
+              </div>
             )}
-
           </div>
         </div>
       )}
-
     </div>
   );
 }
