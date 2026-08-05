@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -25,8 +25,8 @@ export default function Header() {
       name: "Nosotros",
       href: "/nosotros",
       submenu: [
-        { name: "QuiÃ©nes Somos", href: "/nosotros#quienes-somos" },
-        { name: "MisiÃ³n y VisiÃ³n", href: "/nosotros#mision-vision" },
+        { name: "Quiénes Somos", href: "/nosotros#quienes-somos" },
+        { name: "Misión y Visión", href: "/nosotros#mision-vision" },
         { name: "Enfoques", href: "/nosotros#enfoques" },
         { name: "Nuestra Historia", href: "/nosotros#historia" },
         { name: "Equipo", href: "/nosotros#equipo" },
@@ -39,8 +39,8 @@ export default function Header() {
       submenu: [
         { name: "Salud Mental", href: "/programas#salud-mental" },
         { name: "Familias", href: "/programas#familias" },
-        { name: "EducaciÃ³n", href: "/programas#educacion" },
-        { name: "InclusiÃ³n y Derechos", href: "/programas#inclusion" },
+        { name: "Educación", href: "/programas#educacion" },
+        { name: "Inclusión y Derechos", href: "/programas#inclusion" },
         { name: "Medio Ambiente", href: "/programas#ambiente" },
         { name: "Bienestar Animal", href: "/programas#bienestar-animal" },
         { name: "Emprendimiento", href: "/programas#emprendimiento" },
@@ -58,12 +58,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* LOGO FEPV â€” IMAGEN REAL */}
+          {/* LOGO FEPV — IMAGEN REAL */}
           <Link href="/" className="flex items-center gap-3 group focus:outline-none" aria-label="Volver a Inicio FEPV">
             <div className="relative w-14 h-14 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
               <Image
                 src={logoImg}
-                alt="FundaciÃ³n Encuentros Para la Vida - FEPV"
+                alt="Fundación Encuentros Para la Vida - FEPV"
                 fill
                 className="object-contain"
                 priority
@@ -71,16 +71,16 @@ export default function Header() {
             </div>
             <div className="flex flex-col hidden sm:flex">
               <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none">
-                FundaciÃ³n Encuentros
+                Fundación Encuentros
               </span>
               <span className="font-sans text-xs font-semibold text-fepv-vividgreen tracking-wider mt-0.5">
-                Para la Vida â€” FEPV
+                Para la Vida — FEPV
               </span>
             </div>
           </Link>
 
           {/* DESKTOP NAVIGATION */}
-          <nav className="hidden lg:flex items-center space-x-1" aria-label="NavegaciÃ³n principal">
+          <nav className="hidden lg:flex items-center space-x-1" aria-label="Navegación principal">
             {navLinks.map((link) => {
               const hasSubmenu = !!link.submenu;
               const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
@@ -92,7 +92,7 @@ export default function Header() {
                     <button
                       onClick={() => handleDropdownToggle(link.name.toLowerCase())}
                       className={`px-3 py-2 rounded-lg text-[15px] font-medium flex items-center gap-1 transition-colors duration-200 cursor-pointer ${
-                        isActive ? "text-fepv-darkblue" : "text-fepv-gray/80 hover:text-fepv-darkblue hover:bg-fepv-light/30"
+                        isActive ? "text-fepv-green" : "text-fepv-gray/80 hover:text-fepv-green hover:bg-fepv-light/30"
                       }`}
                       aria-expanded={isDropdownOpen}
                       aria-haspopup="true"
@@ -127,7 +127,7 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   className={`px-3 py-2 rounded-lg text-[15px] font-medium transition-colors duration-200 ${
-                    isActive ? "text-fepv-darkblue" : "text-fepv-gray/80 hover:text-fepv-darkblue hover:bg-fepv-light/30"
+                    isActive ? "text-fepv-green" : "text-fepv-gray/80 hover:text-fepv-green hover:bg-fepv-light/30"
                   }`}
                 >
                   {link.name}
@@ -142,14 +142,14 @@ export default function Header() {
               href="/donaciones"
               className="hidden sm:inline-flex fepv-btn fepv-btn-donate flex items-center gap-1.5"
             >
-              DONAR <span className="text-red-500">â¤ï¸</span>
+              DONAR <span className="text-red-500">❤️</span>
             </Link>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg text-fepv-darkblue hover:bg-fepv-light/30 focus:outline-none cursor-pointer"
-              aria-label={mobileMenuOpen ? "Cerrar menÃº" : "Abrir menÃº"}
+              aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
@@ -229,7 +229,7 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full fepv-btn fepv-btn-donate flex items-center justify-center gap-1.5 py-3 text-center"
               >
-                DONAR <span className="text-red-500">â¤ï¸</span>
+                DONAR <span className="text-red-500">❤️</span>
               </Link>
             </div>
           </div>

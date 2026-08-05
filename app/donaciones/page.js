@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -38,9 +38,9 @@ export default function Donaciones() {
 
   const budgetAllocation = [
     { area: "Programas de Salud Mental y Apoyo Psicosocial", pct: 60, color: "bg-fepv-green" },
-    { area: "Material PedagÃ³gico y CapacitaciÃ³n", pct: 20, color: "bg-fepv-blue" },
-    { area: "Actividades Comunitarias y ConservaciÃ³n", pct: 10, color: "bg-fepv-orange" },
-    { area: "Bienestar y ProtecciÃ³n Animal", pct: 10, color: "bg-red-400" }
+    { area: "Material Pedagógico y Capacitación", pct: 20, color: "bg-fepv-blue" },
+    { area: "Actividades Comunitarias y Conservación", pct: 10, color: "bg-fepv-orange" },
+    { area: "Bienestar y Protección Animal", pct: 10, color: "bg-red-400" }
   ];
 
   return (
@@ -53,14 +53,14 @@ export default function Donaciones() {
             Tu Aporte Transforma Vidas
           </h1>
           <p className="font-sans text-sm sm:text-base text-fepv-light max-w-2xl mx-auto leading-relaxed">
-            Cada aporte econÃ³mico nos permite sostener y ampliar las acciones terapÃ©uticas, formativas e inclusivas de FEPV en AgustÃ­n Codazzi.
+            Cada aporte económico nos permite sostener y ampliar las acciones terapéuticas, formativas e inclusivas de FEPV en Agustín Codazzi.
           </p>
         </div>
       </section>
 
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
         
-        {/* Formulario de DonaciÃ³n (Lado Izquierdo) */}
+        {/* Formulario de Donación (Lado Izquierdo) */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white p-6 sm:p-10 rounded-3xl border border-gray-150 shadow-md space-y-6">
             <h2 className="font-display font-bold text-xl text-fepv-darkblue">
@@ -69,17 +69,17 @@ export default function Donaciones() {
 
             {simulatedSubmit ? (
               <div className="p-8 bg-fepv-light/60 border border-fepv-green/20 rounded-2xl text-center space-y-4 animate-in fade-in duration-300">
-                <span className="text-4xl block">ðŸ™Œ</span>
-                <h3 className="font-display font-bold text-base text-fepv-darkblue">Â¡Gracias por tu intenciÃ³n de apoyo!</h3>
+                <span className="text-4xl block">🙌</span>
+                <h3 className="font-display font-bold text-base text-fepv-darkblue">¡Gracias por tu intención de apoyo!</h3>
                 <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                  Has seleccionado una donaciÃ³n {frequency === "unica" ? "Ãºnica" : "mensual"} por valor de <strong>${finalAmount.toLocaleString("es-CO")} COP</strong>. 
+                  Has seleccionado una donación {frequency === "unica" ? "única" : "mensual"} por valor de <strong>${finalAmount.toLocaleString("es-CO")} COP</strong>. 
                 </p>
                 <div className="p-4 bg-white rounded-xl text-left border border-fepv-green/10 text-xs space-y-2 max-w-md mx-auto">
                   <p className="font-bold text-fepv-darkblue text-center mb-1">Para completar tu transferencia bancaria directa:</p>
-                  <p>ðŸ¦ <strong>Banco:</strong> Bancolombia (Ahorros)</p>
-                  <p>ðŸ”¢ <strong>Cuenta:</strong> 123-456789-01 (FEPV)</p>
-                  <p>ðŸ“± <strong>Nequi / Daviplata:</strong> 300 000 0000</p>
-                  <p>ðŸ“§ <strong>ConfirmaciÃ³n:</strong> EnvÃ­a tu comprobante a <strong>fundacion.epv.co@gmail.com</strong> para emitir tu certificado de donaciÃ³n deducible de impuestos.</p>
+                  <p>🏦 <strong>Banco:</strong> Bancolombia (Ahorros)</p>
+                  <p>🔢 <strong>Cuenta:</strong> 123-456789-01 (FEPV)</p>
+                  <p>📱 <strong>Nequi / Daviplata:</strong> 300 000 0000</p>
+                  <p>📧 <strong>Confirmación:</strong> Envía tu comprobante a <strong>fundacion.epv.co@gmail.com</strong> para emitir tu certificado de donación deducible de impuestos.</p>
                 </div>
                 <button
                   type="button"
@@ -101,7 +101,7 @@ export default function Donaciones() {
                       frequency === "unica" ? "bg-white text-fepv-green shadow-sm" : "text-fepv-gray/60 hover:text-fepv-darkblue"
                     }`}
                   >
-                    DonaciÃ³n Ãšnica
+                    Donación Única
                   </button>
                   <button
                     type="button"
@@ -166,20 +166,20 @@ export default function Donaciones() {
                   disabled={finalAmount <= 0}
                   className="w-full fepv-btn fepv-btn-donate flex items-center justify-center gap-1.5 py-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  PROCEDER A DONAR <span className="text-red-500">â¤ï¸</span>
+                  PROCEDER A DONAR <span className="text-red-500">❤️</span>
                 </button>
               </form>
             )}
           </div>
         </div>
 
-        {/* Impacto de DonaciÃ³n (Lado Derecho) */}
+        {/* Impacto de Donación (Lado Derecho) */}
         <div className="lg:col-span-5 space-y-6">
           
           {/* Destino de los recursos */}
           <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-150 shadow-sm space-y-6">
             <h3 className="font-display font-bold text-lg text-fepv-darkblue">
-              Â¿A dÃ³nde van tus recursos?
+              ¿A dónde van tus recursos?
             </h3>
             <p className="text-xs text-fepv-gray/80 leading-relaxed">
               En FEPV la transparencia es un enfoque fundamental. Exponemos el destino promedio de cada peso recibido mediante donaciones de particulares.
@@ -204,14 +204,14 @@ export default function Donaciones() {
             </div>
           </div>
 
-          {/* DeducciÃ³n tributaria */}
+          {/* Deducción tributaria */}
           <div className="bg-fepv-light/20 p-6 rounded-3xl border border-fepv-green/10 space-y-3">
-            <h4 className="font-display font-bold text-sm text-fepv-darkblue">ðŸ›¡ï¸ DeducciÃ³n de Impuestos</h4>
+            <h4 className="font-display font-bold text-sm text-fepv-darkblue">🛡️ Deducción de Impuestos</h4>
             <p className="text-xs text-fepv-gray/80 leading-relaxed">
-              Como Entidad Sin Ãnimo de Lucro (ESAL) inscrita, todas las donaciones a la FundaciÃ³n Encuentros Para la Vida otorgan derecho a un descuento tributario en el impuesto sobre la renta en Colombia de conformidad con el ArtÃ­culo 257 del Estatuto Tributario.
+              Como Entidad Sin Ánimo de Lucro (ESAL) inscrita, todas las donaciones a la Fundación Encuentros Para la Vida otorgan derecho a un descuento tributario en el impuesto sobre la renta en Colombia de conformidad con el Artículo 257 del Estatuto Tributario.
             </p>
             <p className="text-[10px] text-fepv-green font-bold">
-              &bull; Emitimos certificados anuales de donaciÃ³n.
+              &bull; Emitimos certificados anuales de donación.
             </p>
           </div>
 

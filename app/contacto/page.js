@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 
@@ -26,20 +26,20 @@ export default function Contacto() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!formData.aceptaDatos) {
-      alert("Debes aceptar la polÃ­tica de tratamiento de datos personales para enviar tu mensaje.");
+      alert("Debes aceptar la política de tratamiento de datos personales para enviar tu mensaje.");
       return;
     }
 
     setSubmitting(true);
 
-    // Para GitHub Pages (estÃ¡tico): abrimos WhatsApp con el mensaje pre-llenado
+    // Para GitHub Pages (estático): abrimos WhatsApp con el mensaje pre-llenado
     const mensajeWA = encodeURIComponent(
-      `*CONTACTO FEPV â€” ${formData.tipoSolicitud.toUpperCase()}*\n\n` +
-      `ðŸ‘¤ *Nombre:* ${formData.nombre}\n` +
-      `ðŸ“§ *Correo:* ${formData.correo}\n` +
-      `ðŸ“ž *TelÃ©fono:* ${formData.telefono || "No indicado"}\n\n` +
-      `ðŸ’¬ *Mensaje:* ${formData.mensaje}\n\n` +
-      `_Acepta tratamiento de datos: SÃ­ (Ley 1581/2012)_`
+      `*CONTACTO FEPV — ${formData.tipoSolicitud.toUpperCase()}*\n\n` +
+      `👤 *Nombre:* ${formData.nombre}\n` +
+      `📧 *Correo:* ${formData.correo}\n` +
+      `📞 *Teléfono:* ${formData.telefono || "No indicado"}\n\n` +
+      `💬 *Mensaje:* ${formData.mensaje}\n\n` +
+      `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`
     );
 
     window.open(`https://wa.me/573000000000?text=${mensajeWA}`, "_blank");
@@ -69,7 +69,7 @@ export default function Contacto() {
             Contacto Institucional
           </h1>
           <p className="font-sans text-sm sm:text-base text-fepv-light max-w-2xl mx-auto leading-relaxed">
-            Â¿Tienes preguntas, propuestas o deseas sumarte a nuestras iniciativas? EscrÃ­benos y nos pondremos en contacto contigo.
+            ¿Tienes preguntas, propuestas o deseas sumarte a nuestras iniciativas? Escríbenos y nos pondremos en contacto contigo.
           </p>
         </div>
       </section>
@@ -80,26 +80,26 @@ export default function Contacto() {
         <div className="lg:col-span-5 space-y-8">
           <div className="space-y-4">
             <h2 className="font-display font-bold text-2xl text-fepv-darkblue">
-              FundaciÃ³n Encuentros Para la Vida
+              Fundación Encuentros Para la Vida
             </h2>
             <p className="text-sm text-fepv-gray/80 leading-relaxed">
-              Estamos a tu disposiciÃ³n en la sede principal en el departamento del Cesar o a travÃ©s de nuestros canales digitales.
+              Estamos a tu disposición en la sede principal en el departamento del Cesar o a través de nuestros canales digitales.
             </p>
           </div>
 
           <div className="space-y-6 text-xs sm:text-sm text-fepv-gray/90">
             <div className="flex items-start gap-4">
-              <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">ðŸ“</span>
+              <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">📍</span>
               <div className="space-y-1">
-                <h4 className="font-bold text-fepv-darkblue">DirecciÃ³n FÃ­sica</h4>
-                <p>AgustÃ­n Codazzi, Cesar, Colombia</p>
+                <h4 className="font-bold text-fepv-darkblue">Dirección Física</h4>
+                <p>Agustín Codazzi, Cesar, Colombia</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">ðŸ“§</span>
+              <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">📧</span>
               <div className="space-y-1">
-                <h4 className="font-bold text-fepv-darkblue">Correo ElectrÃ³nico</h4>
+                <h4 className="font-bold text-fepv-darkblue">Correo Electrónico</h4>
                 <p className="hover:underline">
                   <a href="mailto:fundacion.epv.co@gmail.com">fundacion.epv.co@gmail.com</a>
                 </p>
@@ -108,7 +108,7 @@ export default function Contacto() {
             </div>
 
             <div className="flex items-start gap-4">
-              <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">ðŸ“±</span>
+              <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">📱</span>
               <div className="space-y-1">
                 <h4 className="font-bold text-fepv-darkblue">WhatsApp e Instagram</h4>
                 <p className="hover:underline">
@@ -126,10 +126,10 @@ export default function Contacto() {
             
             {success ? (
               <div className="p-8 bg-fepv-light/60 border border-fepv-green/20 rounded-2xl text-center space-y-3 animate-in fade-in duration-300">
-                <span className="text-4xl block">ðŸ“²</span>
-                <h3 className="font-display font-bold text-base text-fepv-darkblue">Â¡Mensaje enviado por WhatsApp!</h3>
+                <span className="text-4xl block">📲</span>
+                <h3 className="font-display font-bold text-base text-fepv-darkblue">¡Mensaje enviado por WhatsApp!</h3>
                 <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                  Se abriÃ³ WhatsApp con tu mensaje pre-llenado. EnvÃ­alo para completar tu contacto con FEPV. Agradecemos tu interÃ©s y nos comunicaremos contigo a la brevedad.
+                  Se abrió WhatsApp con tu mensaje pre-llenado. Envíalo para completar tu contacto con FEPV. Agradecemos tu interés y nos comunicaremos contigo a la brevedad.
                 </p>
               </div>
             ) : (
@@ -145,11 +145,11 @@ export default function Contacto() {
                       value={formData.nombre}
                       onChange={handleInputChange}
                       className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
-                      placeholder="Ej. Ana MarÃ­a Castro"
+                      placeholder="Ej. Ana María Castro"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-fepv-darkblue mb-1">Correo ElectrÃ³nico *</label>
+                    <label className="block text-xs font-bold text-fepv-darkblue mb-1">Correo Electrónico *</label>
                     <input
                       type="email"
                       required
@@ -164,7 +164,7 @@ export default function Contacto() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-fepv-darkblue mb-1">NÃºmero de TelÃ©fono</label>
+                    <label className="block text-xs font-bold text-fepv-darkblue mb-1">Número de Teléfono</label>
                     <input
                       type="tel"
                       name="telefono"
@@ -182,12 +182,12 @@ export default function Contacto() {
                       onChange={handleInputChange}
                       className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white text-xs sm:text-sm"
                     >
-                      <option value="informacion">InformaciÃ³n General</option>
-                      <option value="programa">InscripciÃ³n a Programa / Proyecto</option>
+                      <option value="informacion">Información General</option>
+                      <option value="programa">Inscripción a Programa / Proyecto</option>
                       <option value="alianza">Alianzas y Convenios</option>
-                      <option value="donacion">DonaciÃ³n y Apadrinamiento</option>
+                      <option value="donacion">Donación y Apadrinamiento</option>
                       <option value="voluntariado">Voluntariado</option>
-                      <option value="cooperacion">CooperaciÃ³n TÃ©cnica/Financiera</option>
+                      <option value="cooperacion">Cooperación Técnica/Financiera</option>
                       <option value="prensa">Prensa / Comunicados</option>
                       <option value="otra">Otra Solicitud</option>
                     </select>
@@ -203,7 +203,7 @@ export default function Contacto() {
                     value={formData.mensaje}
                     onChange={handleInputChange}
                     className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green resize-none text-xs"
-                    placeholder="Escribe aquÃ­ tu mensaje en detalle..."
+                    placeholder="Escribe aquí tu mensaje en detalle..."
                   />
                 </div>
 
@@ -219,7 +219,7 @@ export default function Contacto() {
                     className="mt-0.5 cursor-pointer w-4 h-4 text-fepv-green"
                   />
                   <label htmlFor="aceptaDatos" className="text-[10px] sm:text-xs text-fepv-gray/80 leading-normal cursor-pointer select-none">
-                    Autorizo el tratamiento de mis datos personales para fines de registro, verificaciÃ³n y contacto de FEPV, de conformidad con la Ley 1581 de 2012 de Colombia.
+                    Autorizo el tratamiento de mis datos personales para fines de registro, verificación y contacto de FEPV, de conformidad con la Ley 1581 de 2012 de Colombia.
                   </label>
                 </div>
 
@@ -228,7 +228,7 @@ export default function Contacto() {
                   disabled={submitting}
                   className="w-full fepv-btn fepv-btn-primary py-3.5 text-xs font-bold cursor-pointer disabled:opacity-55"
                 >
-                  {submitting ? "Abriendo WhatsApp..." : "ðŸ“² ENVIAR POR WHATSAPP"}
+                  {submitting ? "Abriendo WhatsApp..." : "📲 ENVIAR POR WHATSAPP"}
                 </button>
               </form>
             )}
