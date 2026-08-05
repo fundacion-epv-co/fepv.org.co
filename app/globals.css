@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  
+  --color-fepv-green: #1B8A5A;
+  --color-fepv-dark: #12613F;
+  --color-fepv-light: #DDF3E8;
+  --color-fepv-yellow: #F4C542;
+  --color-fepv-blue: #2C6E91;
+  --color-fepv-white: #FFFFFF;
+  --color-fepv-gray: #263238;
+  
+  --radius-fepv: 12px;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #263238;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Custom Utilities for Transitions and Focus */
+.fepv-btn {
+  transition: all 0.3s ease;
+  border-radius: var(--radius-fepv);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+}
+
+.fepv-btn-primary {
+  background-color: var(--color-fepv-green);
+  color: var(--color-fepv-white);
+  box-shadow: 0 4px 6px -1px rgba(27, 138, 90, 0.1), 0 2px 4px -1px rgba(27, 138, 90, 0.06);
+}
+
+.fepv-btn-primary:hover {
+  background-color: var(--color-fepv-dark);
+}
+
+.fepv-btn-secondary {
+  background-color: var(--color-fepv-white);
+  color: var(--color-fepv-green);
+  border: 2px solid var(--color-fepv-green);
+}
+
+.fepv-btn-secondary:hover {
+  background-color: var(--color-fepv-light);
+}
+
+.fepv-btn-donate {
+  background-color: var(--color-fepv-yellow);
+  color: var(--color-fepv-gray);
+  font-weight: 700;
+  box-shadow: 0 4px 6px -1px rgba(244, 197, 66, 0.15);
+}
+
+.fepv-btn-donate:hover {
+  transform: scale(1.05);
+}
+
+/* Focus indicator for Accessibility (WCAG 2.1 AA) */
+*:focus-visible {
+  outline: 3px solid var(--color-fepv-yellow);
+  outline-offset: 2px;
+}
