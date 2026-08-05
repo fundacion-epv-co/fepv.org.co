@@ -114,7 +114,9 @@ export default function Contacto() {
                 <p className="hover:underline">
                   <a href="https://wa.me/573166899250" target="_blank" rel="noopener noreferrer">WhatsApp Institucional</a>
                 </p>
-                <p className="text-xs text-fepv-gray/70">Instagram/Facebook: @fundacion.epv.co</p>
+                <p className="text-xs text-fepv-gray/70">
+                  <a href="https://instagram.com/fundacion.epv.co" target="_blank" rel="noopener noreferrer" className="hover:text-fepv-orange transition-colors">Instagram</a> / <a href="https://facebook.com/fundacion.epv.co" target="_blank" rel="noopener noreferrer" className="hover:text-fepv-orange transition-colors">Facebook</a>: @fundacion.epv.co
+                </p>
               </div>
             </div>
           </div>
