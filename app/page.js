@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV } from "../lib/api";
 
 export default function Home() {
+  // Banner state
+  const [bannerItems, setBannerItems] = useState([]);
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+
   // Testimonial slider state
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
@@ -73,6 +77,32 @@ export default function Home() {
 
     loadStats();
   }, []);
+
+  // Fetch Banner
+  useEffect(() => {
+    async function loadBanner() {
+      if (GOOGLE_SHEETS_BANNER_CSV !== "PENDIENTE_DE_URL_BANNER") {
+        try {
+          const data = await fetchGoogleSheetData(GOOGLE_SHEETS_BANNER_CSV);
+          if (data && data.length > 0) {
+            setBannerItems(data);
+          }
+        } catch (e) {
+          console.error("Error cargando banner", e);
+        }
+      }
+    }
+    loadBanner();
+  }, []);
+
+  // Auto-slide Banner
+  useEffect(() => {
+    if (bannerItems.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % bannerItems.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [bannerItems.length]);
 
   const testimonials = [
     {
@@ -264,8 +294,63 @@ export default function Home() {
   return (
     <div className="w-full">
       
+      {/* BLOQUE 0: BANNER DINÁMICO */}
+      {bannerItems.length > 0 && (
+        <section className="relative w-full pt-12 pb-4 bg-gradient-to-b from-white to-fepv-light/20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative w-full h-[350px] md:h-[450px] overflow-hidden rounded-3xl shadow-2xl border-4 border-white bg-fepv-darkblue">
+              {bannerItems.map((item, idx) => (
+                <div 
+                  key={idx}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentBannerIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                >
+                  {/* Imagen de fondo */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center" 
+                    style={{ backgroundImage: `url(${item.imagen})` }}
+                  >
+                    <div className="absolute inset-0 bg-fepv-darkblue/50 mix-blend-multiply"></div>
+                  </div>
+                  
+                  {/* Contenido (Textos y Link) */}
+                  <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-6 max-w-3xl mx-auto">
+                    <span className="inline-block px-4 py-1.5 bg-fepv-green text-white text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-full mb-4 shadow-sm">
+                      Novedades FEPV
+                    </span>
+                    <h2 className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-4 drop-shadow-md leading-tight">
+                      {item.titulo}
+                    </h2>
+                    <p className="text-base md:text-lg text-gray-100 mb-6 drop-shadow font-light line-clamp-2 md:line-clamp-none">
+                      {item.descripcion}
+                    </p>
+                    
+                    {item.enlace && (
+                      <Link href={item.enlace} className="fepv-btn fepv-btn-primary hover:scale-105 transition-transform shadow-xl shadow-fepv-green/40 py-2.5 px-6 text-sm">
+                        Ver más información
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+              
+              {/* Indicadores (Puntos) */}
+              <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-3 z-20">
+                {bannerItems.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentBannerIndex(idx)}
+                    className={`transition-all rounded-full ${idx === currentBannerIndex ? 'w-8 h-2.5 bg-fepv-vividgreen' : 'w-2.5 h-2.5 bg-white/50 hover:bg-white/80'}`}
+                    aria-label={`Ir al slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* BLOQUE 1: HERO PRINCIPAL */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fepv-light/40 via-white to-white py-20 lg:py-32">
+      <section className="relative overflow-hidden bg-gradient-to-br from-fepv-light/40 via-white to-white py-12 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
@@ -297,38 +382,17 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Lado Derecho (SVG Abstract Premium Illustration) */}
+            {/* Lado Derecho (Fotografía Comunitaria Premium) */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-[420px] aspect-square bg-white rounded-3xl p-6 shadow-xl shadow-fepv-green/5 border border-fepv-light/40">
-                <svg className="w-full h-full" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Background circles */}
-                  <circle cx="200" cy="200" r="160" fill="#DDF3E8" fillOpacity="0.4" />
-                  <circle cx="200" cy="200" r="120" fill="#2C6E91" fillOpacity="0.1" />
-                  
-                  {/* Sprout of Life (Crecimiento/Sostenibilidad) */}
-                  <path d="M200 320V160" stroke="#12613F" strokeWidth="6" strokeLinecap="round" />
-                  <path d="M200 240C200 240 150 220 150 180C150 140 200 160 200 160" fill="#1B8A5A" />
-                  <path d="M200 240C200 240 150 220 150 180C150 140 200 160 200 160" stroke="#12613F" strokeWidth="3" strokeLinejoin="round" />
-                  
-                  <path d="M200 200C200 200 250 180 250 140C250 100 200 120 200 120" fill="#F4C542" />
-                  <path d="M200 200C200 200 250 180 250 140C250 100 200 120 200 120" stroke="#12613F" strokeWidth="3" strokeLinejoin="round" />
-
-                  {/* Connected Community Dots (Encuentros) */}
-                  <circle cx="150" cy="180" r="10" fill="#1B8A5A" />
-                  <circle cx="250" cy="140" r="10" fill="#F4C542" />
-                  <circle cx="200" cy="120" r="8" fill="#2C6E91" />
-                  
-                  {/* Decorative Elements */}
-                  <path d="M120 280C150 290 250 290 280 280" stroke="#1B8A5A" strokeWidth="4" strokeLinecap="round" strokeDasharray="6 6" />
-                  <circle cx="120" cy="280" r="6" fill="#1B8A5A" />
-                  <circle cx="280" cy="280" r="6" fill="#1B8A5A" />
-                  
-                  <path d="M100 150A60 60 0 01130 90" stroke="#2C6E91" strokeWidth="3" strokeLinecap="round" strokeDasharray="4 4" />
-                  <path d="M300 220A80 80 0 01270 290" stroke="#F4C542" strokeWidth="3" strokeLinecap="round" strokeDasharray="4 4" />
-                </svg>
+              <div className="relative w-full max-w-[420px] aspect-[4/5] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1593113563332-f109af368e43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  alt="Comunidad FEPV" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
                 
                 {/* Floating Micro-Badges */}
-                <div className="absolute -top-3 -right-3 bg-white px-4 py-2.5 rounded-2xl shadow-lg border border-gray-100 flex items-center gap-2">
+                <div className="absolute top-6 -right-2 md:right-[-20px] bg-white px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-2">
                   <span className="text-xl">🤝</span>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-fepv-darkblue leading-tight">Cooperación</span>
