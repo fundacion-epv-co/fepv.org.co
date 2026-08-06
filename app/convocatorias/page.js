@@ -17,20 +17,10 @@ export default function Convocatorias() {
   const [convocatorias, setConvocatorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [formData, setFormData] = useState({
-    nombre: "",
-    correo: "",
-    telefono: "",
-    documento: "",
-    motivo: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(false);
-
   useEffect(() => {
     async function loadData() {
       const data = await fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV);
-      // Mapear los datos del CSV (id, titulo, descripcion, fecha_cierre, enlace_drive, estado)
+      // Mapear los datos del CSV (id, titulo, descripcion, fecha_cierre, enlace_drive, estado, enlace_formulario)
       const mapped = data.map((item, index) => ({
         id: item.id || `CONV-${index + 1}`,
         title: item.titulo || 'Sin título',
@@ -39,7 +29,8 @@ export default function Convocatorias() {
         status: (item.estado || 'CERRADA').toUpperCase(),
         category: 'general', // Por defecto, o se podría añadir una columna categoría en el futuro
         location: "Sede FEPV / Virtual", // Por defecto
-        enlace_drive: item.enlace_drive || null
+        enlace_drive: item.enlace_drive || null,
+        enlace_formulario: item.enlace_formulario || null
       }));
       setConvocatorias(mapped);
       setIsLoading(false);
@@ -47,43 +38,9 @@ export default function Convocatorias() {
     loadData();
   }, []);
 
-  const filteredConvocatorias = convocatorias.filter((c) =>
-    filterCategory === "all" ? true : c.category === filterCategory
-  );
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleApplySubmit = (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    
-    setTimeout(() => {
-      setSubmitting(false);
-      setSuccessMessage(true);
-
-      const mensaje = `Hola Fundación FEPV, quiero inscribirme en la convocatoria:
-Código: ${selectedConvocatoria.id}
-Título: ${selectedConvocatoria.title}
-
-Mis datos:
-- Nombre: ${formData.nombre}
-- Documento: ${formData.documento}
-- Correo: ${formData.correo}
-- WhatsApp: ${formData.telefono}
-- Motivo: ${formData.motivo}`;
-
-      window.open(`https://wa.me/573166899250?text=${encodeURIComponent(mensaje)}`, "_blank");
-      
-      setTimeout(() => {
-        setSuccessMessage(false);
-        setSelectedConvocatoria(null);
-        setFormData({ nombre: "", correo: "", telefono: "", documento: "", motivo: "" });
-      }, 4000);
-    }, 1500);
-  };
+  const filteredConvocatorias = filterCategory === "all" 
+    ? convocatorias 
+    : convocatorias.filter(c => c.category === filterCategory);
 
   return (
     <div className="w-full bg-white pb-20">
@@ -243,61 +200,26 @@ Mis datos:
                 <h3 className="font-display font-bold text-base text-fepv-darkblue">
                   Formulario de Inscripción
                 </h3>
+                
+                <p className="text-sm text-fepv-gray/80">
+                  Para participar en esta convocatoria, debes completar el Registro Único de Beneficiarios oficial de la Fundación.
+                </p>
 
-                {successMessage ? (
-                  <div className="p-4 bg-fepv-light/60 border border-fepv-vividgreen/20 rounded-2xl text-center space-y-2">
-                    <span className="text-3xl block">🎉</span>
-                    <h4 className="font-display font-bold text-sm text-fepv-darkblue">¡Inscripción Enviada por WhatsApp!</h4>
-                    <p className="text-[11px] text-fepv-gray/80">
-                      Se abrió WhatsApp con tu información pre-llenada. Envía el mensaje para confirmar tu inscripción.
+                {selectedConvocatoria.enlace_formulario ? (
+                  <a 
+                    href={selectedConvocatoria.enlace_formulario} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full py-3 rounded-xl font-bold text-white transition-colors bg-fepv-vividgreen hover:bg-green-600 flex items-center justify-center gap-2"
+                  >
+                    📝 IR AL FORMULARIO OFICIAL
+                  </a>
+                ) : (
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                    <p className="text-xs text-yellow-700 text-center">
+                      El enlace de inscripción aún no ha sido publicado. Revisa nuevamente más tarde o contáctanos.
                     </p>
                   </div>
-                ) : (
-                  <form onSubmit={handleApplySubmit} className="space-y-3 text-xs sm:text-sm">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo *</label>
-                        <input type="text" required name="nombre" value={formData.nombre} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
-                          placeholder="Ej. Juan Pérez" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Documento de Identidad *</label>
-                        <input type="text" required name="documento" value={formData.documento} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
-                          placeholder="C.C. o T.I." />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Correo Electrónico *</label>
-                        <input type="email" required name="correo" value={formData.correo} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
-                          placeholder="juan@ejemplo.com" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">WhatsApp de contacto *</label>
-                        <input type="tel" required name="telefono" value={formData.telefono} onChange={handleInputChange}
-                          className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen"
-                          placeholder="Ej. 300 123 4567" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Motivo de postulación *</label>
-                      <textarea required name="motivo" value={formData.motivo} onChange={handleInputChange} rows="3"
-                        className="w-full p-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-vividgreen resize-none"
-                        placeholder="Cuéntanos brevemente por qué te interesa participar..."></textarea>
-                    </div>
-
-                    <button type="submit" disabled={submitting} className="w-full py-3 rounded-xl font-bold text-white transition-colors bg-fepv-vividgreen hover:bg-green-600 disabled:opacity-50 flex items-center justify-center gap-2">
-                      {submitting ? "Abriendo WhatsApp..." : "💬 ENVIAR POR WHATSAPP"}
-                    </button>
-                    <p className="text-[10px] text-center text-fepv-gray/50">
-                      Tus datos están seguros y serán tratados según nuestra Política de Privacidad.
-                    </p>
-                  </form>
                 )}
               </div>
             ) : (
