@@ -7,7 +7,7 @@ export default function Contacto() {
     nombre: "",
     correo: "",
     telefono: "",
-    tipoSolicitud: "informacion",
+    tipoSolicitud: "peticion",
     mensaje: "",
     aceptaDatos: false
   });
@@ -45,7 +45,8 @@ export default function Contacto() {
           correo: formData.correo,
           telefono: formData.telefono,
           asunto: "Contacto desde fepv.org.co",
-          mensaje: formData.mensaje
+          mensaje: formData.mensaje,
+          aceptaDatos: formData.aceptaDatos ? "SÍ" : "NO"
         }),
       });
 
@@ -55,7 +56,7 @@ export default function Contacto() {
         nombre: "",
         correo: "",
         telefono: "",
-        tipoSolicitud: "informacion",
+        tipoSolicitud: "peticion",
         mensaje: "",
         aceptaDatos: false
       });
@@ -195,13 +196,14 @@ export default function Contacto() {
                       onChange={handleInputChange}
                       className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white text-xs sm:text-sm"
                     >
-                      <option value="informacion">Información General</option>
-                      <option value="programa">Inscripción a Programa / Proyecto</option>
-                      <option value="alianza">Alianzas y Convenios</option>
-                      <option value="donacion">Donación y Apadrinamiento</option>
+                      <option value="peticion">Petición</option>
+                      <option value="queja">Queja</option>
+                      <option value="reclamo">Reclamo</option>
+                      <option value="sugerencia">Sugerencia</option>
+                      <option value="felicitacion">Felicitación</option>
                       <option value="voluntariado">Voluntariado</option>
-                      <option value="cooperacion">Cooperación Técnica/Financiera</option>
-                      <option value="prensa">Prensa / Comunicados</option>
+                      <option value="alianza_donacion">Alianzas y Donaciones</option>
+                      <option value="informacion">Información General</option>
                       <option value="otra">Otra Solicitud</option>
                     </select>
                   </div>
