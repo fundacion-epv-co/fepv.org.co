@@ -3,18 +3,11 @@
 import { useState, useEffect } from "react";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV } from "../../lib/api";
 
-const categories = [
-  { id: "all", name: "Todas" },
-  { id: "cursos", name: "Cursos" },
-  { id: "voluntariado", name: "Voluntariado" },
-  { id: "becas", name: "Becas & Apoyos" },
-  { id: "general", name: "General" }
-];
-
 export default function Convocatorias() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
   const [convocatorias, setConvocatorias] = useState([]);
+  const [categories, setCategories] = useState([{ id: "all", name: "Todas" }]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,14 +18,27 @@ export default function Convocatorias() {
         id: item.id || `CONV-${index + 1}`,
         title: item.titulo || 'Sin título',
         desc: item.descripcion || '',
-        deadline: item.fecha_cierre || '',
+        deadline: item.cierre || item.fecha_cierre || '',
         status: (item.estado || 'CERRADA').toUpperCase(),
-        category: 'general', // Por defecto, o se podría añadir una columna categoría en el futuro
-        location: "Sede FEPV / Virtual", // Por defecto
+        category: item.categoria || 'general',
+        location: item.lugar || "Sede FEPV / Virtual",
         enlace_drive: item.enlace_drive || null,
         enlace_formulario: item.enlace_formulario || null
       }));
       setConvocatorias(mapped);
+
+      // Generar categorías dinámicas a partir de los datos
+      const uniqueCats = ["Todas"];
+      mapped.forEach(c => {
+        if (c.category && !uniqueCats.includes(c.category)) {
+          uniqueCats.push(c.category);
+        }
+      });
+      setCategories(uniqueCats.map(c => ({
+        id: c === "Todas" ? "all" : c,
+        name: c
+      })));
+
       setIsLoading(false);
     }
     loadData();
