@@ -49,6 +49,7 @@ export default function Header() {
     },
     { name: "Impacto", href: "/#impacto" },
     { name: "Convocatorias", href: "/convocatorias" },
+    { name: "Noticias", href: "/noticias" },
     { name: "Participa", href: "/participa" },
     { name: "Contacto", href: "/contacto" },
   ];

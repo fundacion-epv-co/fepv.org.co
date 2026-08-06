@@ -167,6 +167,11 @@ export default function Footer() {
                   Convocatorias Abiertas
                 </Link>
               </li>
+              <li>
+                <Link href="/noticias" className="hover:text-white transition-colors">
+                  Noticias y Novedades
+                </Link>
+              </li>
             </ul>
           </div>
 
