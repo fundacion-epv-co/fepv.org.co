@@ -89,9 +89,13 @@ export default function Header() {
               if (hasSubmenu) {
                 const isDropdownOpen = activeDropdown === link.name.toLowerCase();
                 return (
-                  <div key={link.name} className="relative">
+                  <div 
+                    key={link.name} 
+                    className="relative"
+                    onMouseEnter={() => setActiveDropdown(link.name.toLowerCase())}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
                     <button
-                      onClick={() => handleDropdownToggle(link.name.toLowerCase())}
                       className={`px-3 py-2 rounded-lg text-[15px] font-medium flex items-center gap-1 transition-colors duration-200 cursor-pointer ${
                         isActive ? "text-fepv-green" : "text-fepv-gray/80 hover:text-fepv-green hover:bg-fepv-light/30"
                       }`}

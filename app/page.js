@@ -2,40 +2,70 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV } from "../lib/api";
 
 export default function Home() {
   // Testimonial slider state
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // Stats counting animation simulation
-  const [stats, setStats] = useState({
-    beneficiarios: 0,
-    actividades: 0,
-    aliados: 0,
-    municipios: 0
-  });
+  const [stats, setStats] = useState([
+    { id: "1", titulo: "Personas Participantes", valor: 0, _target: 250 },
+    { id: "2", titulo: "Actividades Desarrolladas", valor: 0, _target: 15 },
+    { id: "3", titulo: "Aliados Estratégicos", valor: 0, _target: 8 },
+    { id: "4", titulo: "Municipios Impactados", valor: 0, _target: 4 }
+  ]);
 
   useEffect(() => {
-    const duration = 2000; // 2 seconds
-    const steps = 50;
-    const intervalTime = duration / steps;
-    let step = 0;
+    async function loadStats() {
+      let targetStats = [
+        { id: "1", titulo: "Personas Participantes", valor: 0, _target: 250 },
+        { id: "2", titulo: "Actividades Desarrolladas", valor: 0, _target: 15 },
+        { id: "3", titulo: "Aliados Estratégicos", valor: 0, _target: 8 },
+        { id: "4", titulo: "Municipios Impactados", valor: 0, _target: 4 }
+      ];
 
-    const timer = setInterval(() => {
-      step++;
-      setStats({
-        beneficiarios: Math.min(Math.round((250 / steps) * step), 250),
-        actividades: Math.min(Math.round((15 / steps) * step), 15),
-        aliados: Math.min(Math.round((8 / steps) * step), 8),
-        municipios: Math.min(Math.round((4 / steps) * step), 4)
-      });
-
-      if (step >= steps) {
-        clearInterval(timer);
+      if (GOOGLE_SHEETS_METRICAS_CSV !== "PENDIENTE_DE_URL_METRICAS") {
+        try {
+          const data = await fetchGoogleSheetData(GOOGLE_SHEETS_METRICAS_CSV);
+          if (data && data.length > 0) {
+            targetStats = data.map((row, idx) => ({
+              id: row.id || String(idx),
+              titulo: row.titulo || 'Métrica',
+              _target: parseInt(row.valor, 10) || 0,
+              valor: 0
+            }));
+          }
+        } catch (e) {
+          console.error("Error cargando métricas", e);
+        }
       }
-    }, intervalTime);
 
-    return () => clearInterval(timer);
+      setStats(targetStats);
+
+      const duration = 2000; // 2 seconds
+      const steps = 50;
+      const intervalTime = duration / steps;
+      let step = 0;
+      let timer;
+
+      timer = setInterval(() => {
+        step++;
+        setStats(prevStats => prevStats.map(s => ({
+          ...s,
+          valor: Math.min(Math.round((s._target / steps) * step), s._target)
+        })));
+
+        if (step >= steps) {
+          clearInterval(timer);
+        }
+      }, intervalTime);
+
+      return () => {
+        if (timer) clearInterval(timer);
+      };
+    }
+
+    loadStats();
   }, []);
 
   const testimonials = [
@@ -447,33 +477,14 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
-              <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
-                  +{stats.beneficiarios}
-                </span>
-                <span className="text-xs text-white/80 font-medium">Personas Participantes</span>
-              </div>
-              
-              <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
-                  +{stats.actividades}
-                </span>
-                <span className="text-xs text-white/80 font-medium">Actividades Desarrolladas</span>
-              </div>
-
-              <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
-                  +{stats.aliados}
-                </span>
-                <span className="text-xs text-white/80 font-medium">Aliados Estratégicos</span>
-              </div>
-
-              <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
-                <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
-                  +{stats.municipios}
-                </span>
-                <span className="text-xs text-white/80 font-medium">Municipios Impactados</span>
-              </div>
+              {stats.map((stat, idx) => (
+                <div key={idx} className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center">
+                  <span className="font-display font-bold text-4xl text-fepv-orange block mb-1">
+                    +{stat.valor}
+                  </span>
+                  <span className="text-xs text-white/80 font-medium">{stat.titulo}</span>
+                </div>
+              ))}
             </div>
 
           </div>
