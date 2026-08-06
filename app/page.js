@@ -28,9 +28,15 @@ export default function Home() {
         try {
           const data = await fetchGoogleSheetData(GOOGLE_SHEETS_METRICAS_CSV);
           if (data && data.length > 0) {
+            const defaultTitles = {
+              beneficiarios: "Personas Participantes",
+              actividades: "Actividades Desarrolladas",
+              aliados: "Aliados Estratégicos",
+              municipios: "Municipios Impactados"
+            };
             targetStats = data.map((row, idx) => ({
               id: row.id || String(idx),
-              titulo: row.titulo || 'Métrica',
+              titulo: row.titulo || defaultTitles[row.id] || 'Métrica',
               _target: parseInt(row.valor, 10) || 0,
               valor: 0
             }));
