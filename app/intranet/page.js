@@ -21,7 +21,7 @@ export default function Intranet() {
   const [successMsg, setSuccessMsg] = useState("");
 
   // Tabs State
-  const [activeTab, setActiveTab] = useState("formatos"); // 'formatos', 'usuarios', 'subir'
+  const [activeTab, setActiveTab] = useState("formatos"); // 'formatos', 'usuarios', 'subir', 'perfil'
 
   // Data State
   const [documentos, setDocumentos] = useState([]);
@@ -34,6 +34,15 @@ export default function Intranet() {
   const [docFile, setDocFile] = useState(null);
   const [docTitle, setDocTitle] = useState("");
   const [docType, setDocType] = useState("Plantilla");
+
+  // Perfil State
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPasswordProfile, setNewPasswordProfile] = useState("");
+
+  // Edit User State (Admin)
+  const [editingUserEmail, setEditingUserEmail] = useState("");
+  const [editUserPassword, setEditUserPassword] = useState("");
+  const [editUserRol, setEditUserRol] = useState("");
 
   const isPending = GOOGLE_APPS_SCRIPT_INTRANET_URL === "PENDIENTE_DE_URL_SCRIPT_INTRANET";
 
@@ -175,6 +184,77 @@ export default function Intranet() {
     setIsLoading(false);
   };
 
+  const handleUpdateOwnPassword = async (e) => {
+    e.preventDefault();
+    if (isPending) return setError("Conecta Google Apps Script primero");
+    setIsLoading(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      const hashedOld = await hashPassword(oldPassword);
+      const hashedNew = await hashPassword(newPasswordProfile);
+      
+      const res = await postToIntranetAPI("updateOwnPassword", {
+        email: session.email,
+        oldPassword: hashedOld,
+        newPassword: hashedNew
+      });
+
+      if (res.success) {
+        setSuccessMsg("¡Tu contraseña ha sido actualizada con éxito!");
+        setOldPassword("");
+        setNewPasswordProfile("");
+      } else {
+        setError(res.message);
+      }
+    } catch (err) {
+      setError("Error de conexión");
+    }
+    setIsLoading(false);
+  };
+
+  const startEditingUser = (u) => {
+    setEditingUserEmail(u.email);
+    setEditUserPassword("");
+    setEditUserRol(u.rol);
+  };
+
+  const cancelEditingUser = () => {
+    setEditingUserEmail("");
+    setEditUserPassword("");
+    setEditUserRol("");
+  };
+
+  const saveEditUser = async () => {
+    if (isPending) return;
+    setIsLoading(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      const hashedNew = editUserPassword ? await hashPassword(editUserPassword) : "";
+      
+      const res = await postToIntranetAPI("adminUpdateUser", {
+        adminEmail: session.email,
+        targetEmail: editingUserEmail,
+        newPassword: hashedNew,
+        newRol: editUserRol
+      });
+
+      if (res.success) {
+        setSuccessMsg(`Usuario ${editingUserEmail} actualizado con éxito.`);
+        cancelEditingUser();
+        loadUsuarios();
+      } else {
+        setError(res.message);
+      }
+    } catch (err) {
+      setError("Error de conexión al actualizar usuario");
+    }
+    setIsLoading(false);
+  };
+
   const handleFileUpload = async (e) => {
     e.preventDefault();
     if (isPending) return setError("Conecta Google Apps Script primero");
@@ -296,6 +376,12 @@ export default function Intranet() {
               >
                 Formatos Institucionales
               </button>
+              <button
+                onClick={() => setActiveTab("perfil")}
+                className={`px-6 py-4 text-sm font-bold whitespace-nowrap transition-colors cursor-pointer ${activeTab === "perfil" ? "text-fepv-green border-b-2 border-fepv-green bg-white" : "text-fepv-gray hover:text-fepv-darkblue"}`}
+              >
+                Mi Perfil
+              </button>
               {session.rol === "admin" && (
                 <>
                   <button
@@ -375,18 +461,50 @@ export default function Intranet() {
                           </thead>
                           <tbody>
                             {usuarios.map((u, i) => (
-                              <tr key={i} className="hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                              <tr key={i} className={`border-b border-gray-100 last:border-0 ${editingUserEmail === u.email ? 'bg-fepv-green/5' : 'hover:bg-gray-50'}`}>
                                 <td className="p-4">{u.email}</td>
                                 <td className="p-4">
-                                  <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${u.rol === 'admin' ? 'bg-fepv-darkblue text-white' : 'bg-fepv-light/30 text-fepv-green'}`}>
-                                    {u.rol}
-                                  </span>
+                                  {editingUserEmail === u.email ? (
+                                    <select
+                                      value={editUserRol}
+                                      onChange={(e) => setEditUserRol(e.target.value)}
+                                      className="p-1 border border-gray-300 rounded text-xs bg-white"
+                                    >
+                                      <option value="empleado">Empleado</option>
+                                      <option value="admin">Administrador</option>
+                                    </select>
+                                  ) : (
+                                    <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${u.rol === 'admin' ? 'bg-fepv-darkblue text-white' : 'bg-fepv-light/30 text-fepv-green'}`}>
+                                      {u.rol}
+                                    </span>
+                                  )}
                                 </td>
                                 <td className="p-4 text-right">
-                                  {u.email !== session.email && (
-                                    <button onClick={() => handleRemoveUser(u.email)} className="text-red-500 hover:text-red-700 text-xs font-bold underline cursor-pointer">
-                                      Eliminar
-                                    </button>
+                                  {editingUserEmail === u.email ? (
+                                    <div className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
+                                      <input 
+                                        type="password" 
+                                        placeholder="Nueva Clave (opcional)" 
+                                        value={editUserPassword}
+                                        onChange={(e) => setEditUserPassword(e.target.value)}
+                                        className="p-1 border border-gray-300 rounded text-xs w-32 bg-white"
+                                      />
+                                      <div className="flex gap-2">
+                                        <button onClick={saveEditUser} className="text-green-600 hover:text-green-800 text-xs font-bold cursor-pointer">Guardar</button>
+                                        <button onClick={cancelEditingUser} className="text-gray-500 hover:text-gray-700 text-xs font-bold cursor-pointer">Cancelar</button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="flex justify-end gap-3">
+                                      <button onClick={() => startEditingUser(u)} className="text-blue-500 hover:text-blue-700 text-xs font-bold underline cursor-pointer">
+                                        Editar
+                                      </button>
+                                      {u.email !== session.email && (
+                                        <button onClick={() => handleRemoveUser(u.email)} className="text-red-500 hover:text-red-700 text-xs font-bold underline cursor-pointer">
+                                          Eliminar
+                                        </button>
+                                      )}
+                                    </div>
                                   )}
                                 </td>
                               </tr>
@@ -396,28 +514,27 @@ export default function Intranet() {
                       </div>
                     )}
                   </div>
-
-                  <div className="bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
-                    <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-4">Agregar Nuevo Usuario</h3>
-                    <form onSubmit={handleAddUser} className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                      <div>
+                        <div className="bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
+                    <h3 className="font-bold text-lg text-fepv-darkblue mb-4">Añadir Nuevo Usuario</h3>
+                    <form onSubmit={handleAddUser} className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+                      <div className="sm:col-span-1">
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Email</label>
-                        <input type="email" required value={newUserEmail} onChange={e=>setNewUserEmail(e.target.value)} className="w-full p-2.5 border border-gray-300 rounded-lg text-sm" placeholder="nuevo@fepv.org.co" />
+                        <input type="email" required value={newUserEmail} onChange={(e) => setNewUserEmail(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg text-sm" />
                       </div>
-                      <div>
+                      <div className="sm:col-span-1">
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Contraseña</label>
-                        <input type="text" required value={newUserPassword} onChange={e=>setNewUserPassword(e.target.value)} className="w-full p-2.5 border border-gray-300 rounded-lg text-sm" placeholder="Escribe una contraseña" />
+                        <input type="password" required value={newUserPassword} onChange={(e) => setNewUserPassword(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg text-sm" />
                       </div>
-                      <div>
+                      <div className="sm:col-span-1">
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Rol</label>
-                        <select value={newUserRol} onChange={e=>setNewUserRol(e.target.value)} className="w-full p-2.5 border border-gray-300 rounded-lg text-sm cursor-pointer">
+                        <select value={newUserRol} onChange={(e) => setNewUserRol(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
                           <option value="empleado">Empleado</option>
                           <option value="admin">Administrador</option>
                         </select>
                       </div>
-                      <div className="sm:col-span-3">
-                        <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-secondary text-sm py-2 px-6 cursor-pointer disabled:opacity-50">
-                          {isLoading ? "Guardando..." : "+ Crear Usuario"}
+                      <div className="sm:col-span-1">
+                        <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-primary w-full py-2 text-sm cursor-pointer disabled:opacity-50">
+                          Crear
                         </button>
                       </div>
                     </form>
