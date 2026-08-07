@@ -306,7 +306,7 @@ export default function Home() {
       
       {/* BLOQUE 0: BANNER DINÁMICO ESTILO SENA */}
       {bannerItems.length > 0 && (
-        <section className="relative w-full h-[350px] md:h-[420px] bg-fepv-darkblue group">
+        <section className="relative w-full h-[385px] md:h-[460px] bg-fepv-darkblue group">
           {bannerItems.map((item, idx) => (
             <div 
               key={idx}
@@ -320,24 +320,32 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-fepv-darkblue/90 via-fepv-darkblue/40 to-transparent mix-blend-multiply"></div>
               </div>
               
-              {/* Contenido (Textos y Link) centrado */}
+              {/* Contenido (Textos) centrado */}
               <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-12 md:px-24 max-w-5xl mx-auto">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-3 drop-shadow-lg leading-tight">
-                  {item.titulo}
-                </h2>
-                <p className="text-sm md:text-lg text-gray-100 mb-6 max-w-3xl drop-shadow-md font-medium">
-                  {item.descripcion}
-                </p>
-                
-                {item.enlace && (
-                  <Link href={item.enlace} className="inline-flex items-center gap-2 bg-[#429900] hover:bg-[#347A00] text-white font-bold py-2.5 px-6 rounded-full transition-colors shadow-lg text-sm">
-                    Contacto
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                  </Link>
+                {item.titulo && (
+                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-3 drop-shadow-lg leading-tight">
+                    {item.titulo}
+                  </h2>
+                )}
+                {item.descripcion && (
+                  <p className="text-sm md:text-lg text-gray-100 mb-6 max-w-3xl drop-shadow-md font-medium">
+                    {item.descripcion}
+                  </p>
                 )}
               </div>
+
+              {/* Botón de Contacto - Siempre al fondo del banner */}
+              {item.enlace && (
+                <Link 
+                  href={item.enlace} 
+                  className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 inline-flex items-center gap-2 bg-[#429900] hover:bg-[#347A00] text-white font-bold py-2.5 px-6 rounded-full transition-colors shadow-lg text-sm cursor-pointer"
+                >
+                  Contacto
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </Link>
+              )}
             </div>
           ))}
 
