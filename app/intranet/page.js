@@ -58,6 +58,10 @@ export default function Intranet() {
   const SESSION_TIMEOUT = 30 * 60; // 30 minutos
   const [timeLeft, setTimeLeft] = useState(SESSION_TIMEOUT);
 
+  // Estados para Modal de Confirmación de Salida
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [pendingNavigationUrl, setPendingNavigationUrl] = useState(null);
+
   const isPending = GOOGLE_APPS_SCRIPT_INTRANET_URL === "PENDIENTE_DE_URL_SCRIPT_INTRANET";
 
   const getDisplayName = (email) => {
@@ -146,15 +150,10 @@ export default function Intranet() {
           const url = new URL(target.href);
           // Si intenta navegar fuera de la intranet en la misma web
           if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
-            const confirmLeave = window.confirm(
-              "Tienes una sesión activa en la Intranet. Navegar a otra página cerrará tu sesión por seguridad.\n\n¿Deseas cerrar sesión y continuar?"
-            );
-            if (!confirmLeave) {
-              e.preventDefault();
-              e.stopPropagation();
-            } else {
-              handleLogout();
-            }
+            e.preventDefault();
+            e.stopPropagation();
+            setPendingNavigationUrl(target.href);
+            setShowLeaveModal(true);
           }
         } catch (err) {
           // Ignorar errores de URL
@@ -918,6 +917,56 @@ export default function Intranet() {
           </div>
         )}
       </div>
+
+      {/* MODAL PERSONALIZADO DE CONFIRMACIÓN DE SALIDA */}
+      {showLeaveModal && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-fepv-darkblue/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 transform scale-100 transition-all duration-300 animate-in zoom-in-95">
+            <div className="text-center">
+              <span className="text-4xl block mb-3">🛡️</span>
+              <h3 className="font-display font-extrabold text-lg text-fepv-darkblue mb-1 tracking-tight">
+                FUNDACIÓN ENCUENTROS PARA LA VIDA
+              </h3>
+              <p className="text-[11px] font-bold text-fepv-vividgreen uppercase tracking-wider mb-4">
+                Control de Seguridad de Sesión
+              </p>
+              
+              <div className="bg-gray-50 border border-gray-150 rounded-2xl p-4 mb-6 text-left">
+                <p className="text-sm text-fepv-gray/85 leading-relaxed">
+                  Tienes una sesión activa en la Intranet de la Fundación. Navegar a otra página del sitio **cerrará tu sesión** automáticamente por políticas de seguridad.
+                </p>
+                <p className="text-xs text-fepv-gray/60 font-semibold mt-3 flex items-center gap-1.5">
+                  ⚠️ ¿Deseas cerrar la sesión y continuar con la navegación?
+                </p>
+              </div>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => {
+                    setPendingNavigationUrl(null);
+                    setShowLeaveModal(false);
+                  }}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-gray-100 hover:bg-gray-200 text-fepv-gray transition-colors cursor-pointer"
+                >
+                  Permanecer en Intranet
+                </button>
+                <button
+                  onClick={() => {
+                    setShowLeaveModal(false);
+                    handleLogout();
+                    if (pendingNavigationUrl) {
+                      window.location.href = pendingNavigationUrl;
+                    }
+                  }}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg transition-all cursor-pointer"
+                >
+                  Cerrar Sesión y Salir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
