@@ -48,20 +48,88 @@ export default function Intranet() {
   const [consNombre, setConsNombre] = useState("");
   const [consTipo, setConsTipo] = useState("Carta");
   const [consResponsable, setConsResponsable] = useState("");
+  const [consEmail, setConsEmail] = useState("");
   const [consConservacion, setConsConservacion] = useState("Digital");
   const [consObservaciones, setConsObservaciones] = useState("");
   const [generatedConsecutivo, setGeneratedConsecutivo] = useState("");
 
+  // Reloj y Sesión State
+  const [currentTime, setCurrentTime] = useState("");
+  const SESSION_TIMEOUT = 30 * 60; // 30 minutos
+  const [timeLeft, setTimeLeft] = useState(SESSION_TIMEOUT);
+
   const isPending = GOOGLE_APPS_SCRIPT_INTRANET_URL === "PENDIENTE_DE_URL_SCRIPT_INTRANET";
+
+  const getDisplayName = (email) => {
+    if (!email) return "Usuario";
+    const localPart = email.split("@")[0];
+    return localPart
+      .split(/[\._-]/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const formatTimeLeft = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Efecto para mantener sesión
   useEffect(() => {
     const savedSession = sessionStorage.getItem("fepv_session");
     if (savedSession) {
-      setSession(JSON.parse(savedSession));
+      const parsed = JSON.parse(savedSession);
+      setSession(parsed);
+      setConsEmail(parsed.email || "");
       loadDocumentos();
     }
   }, []);
+
+  // Reloj en tiempo real
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const fechaStr = now.toLocaleDateString('es-ES', opcionesFecha);
+      const horaStr = now.toLocaleTimeString('es-ES', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+      const fechaCapitalizada = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
+      setCurrentTime(`${fechaCapitalizada} — ${horaStr}`);
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Temporizador de sesión activa e inactividad
+  useEffect(() => {
+    if (!session) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleLogout();
+          alert("Tu sesión ha expirado por inactividad. Por favor, ingresa de nuevo.");
+          return SESSION_TIMEOUT;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    const resetTimer = () => setTimeLeft(SESSION_TIMEOUT);
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keypress", resetTimer);
+    window.addEventListener("click", resetTimer);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keypress", resetTimer);
+      window.removeEventListener("click", resetTimer);
+    };
+  }, [session]);
 
   const loadDocumentos = async () => {
     try {
@@ -106,6 +174,7 @@ export default function Intranet() {
       if (email === "admin@fepv.org" && password === "admin123") {
         const mockSession = { email, rol: "admin" };
         setSession(mockSession);
+        setConsEmail(email);
         sessionStorage.setItem("fepv_session", JSON.stringify(mockSession));
         loadDocumentos();
       } else {
@@ -121,6 +190,7 @@ export default function Intranet() {
       if (res.success) {
         const newSession = { email, rol: res.rol };
         setSession(newSession);
+        setConsEmail(email);
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
         loadDocumentos();
       } else {
@@ -273,7 +343,7 @@ export default function Intranet() {
 
     try {
       const res = await postToIntranetAPI("generateConsecutivo", {
-        email: session.email,
+        email: consEmail,
         nd: consNombre,
         td: consTipo,
         rd: consResponsable,
@@ -345,19 +415,40 @@ export default function Intranet() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* HEADER DE INTRANET */}
-      <div className="bg-fepv-darkblue text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">🛡️</span>
+      <div className="bg-fepv-darkblue text-white py-6 shadow-md border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <span className="text-3xl select-none">🛡️</span>
             <div>
               <h1 className="font-display font-bold text-xl leading-tight">Intranet FEPV</h1>
-              {session && <p className="text-xs text-white/60">Conectado como {session.email} ({session.rol.toUpperCase()})</p>}
+              {currentTime && <p className="text-xs text-white/60 font-medium font-sans mt-0.5">{currentTime}</p>}
             </div>
           </div>
+
           {session && (
-            <button onClick={handleLogout} className="text-xs font-bold bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors cursor-pointer">
-              Cerrar Sesión
-            </button>
+            <div className="flex flex-wrap items-center justify-between md:justify-end gap-4 w-full md:w-auto">
+              <div className="text-left md:text-right">
+                <p className="text-sm font-bold text-fepv-vividgreen">
+                  ¡Hola, {getDisplayName(session.email)}! 👋
+                </p>
+                <p className="text-[11px] text-white/60 font-medium mt-0.5">
+                  {session.email} ({session.rol.toUpperCase()})
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div 
+                  className="bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold font-mono text-white/95 shadow-sm"
+                  title="Tu sesión se cerrará automáticamente por inactividad"
+                >
+                  <span className="animate-pulse">⏱️</span> {formatTimeLeft(timeLeft)}
+                </div>
+
+                <button onClick={handleLogout} className="text-xs font-bold bg-white/15 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition-all duration-300 shadow-sm cursor-pointer">
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
@@ -701,6 +792,20 @@ export default function Intranet() {
                           />
                         </div>
 
+                        <div>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Correo del Solicitante (para envío)</label>
+                          <input 
+                            type="email" 
+                            required 
+                            value={consEmail} 
+                            onChange={(e) => setConsEmail(e.target.value)} 
+                            className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white" 
+                            placeholder="correo@encuentrosparalavida.org" 
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-xs font-bold text-fepv-darkblue mb-2">Modo de Conservación</label>
                           <select 
