@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl } from "../lib/api";
 
 export default function Home() {
   // Banner state
@@ -306,7 +306,7 @@ export default function Home() {
       
       {/* BLOQUE 0: BANNER DINÁMICO ESTILO SENA */}
       {bannerItems.length > 0 && (
-        <section className="relative w-full h-[500px] md:h-[600px] bg-fepv-darkblue group">
+        <section className="relative w-full h-[350px] md:h-[420px] bg-fepv-darkblue group">
           {bannerItems.map((item, idx) => (
             <div 
               key={idx}
@@ -315,24 +315,24 @@ export default function Home() {
               {/* Imagen de fondo */}
               <div 
                 className="absolute inset-0 bg-cover bg-center" 
-                style={{ backgroundImage: `url(${item.imagen})` }}
+                style={{ backgroundImage: `url(${getDirectDriveImageUrl(item.imagen)})` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-fepv-darkblue/90 via-fepv-darkblue/40 to-transparent mix-blend-multiply"></div>
               </div>
               
               {/* Contenido (Textos y Link) centrado */}
               <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-12 md:px-24 max-w-5xl mx-auto">
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-4 drop-shadow-lg leading-tight">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-3 drop-shadow-lg leading-tight">
                   {item.titulo}
                 </h2>
-                <p className="text-base md:text-xl text-gray-100 mb-8 max-w-3xl drop-shadow-md font-medium">
+                <p className="text-sm md:text-lg text-gray-100 mb-6 max-w-3xl drop-shadow-md font-medium">
                   {item.descripcion}
                 </p>
                 
                 {item.enlace && (
-                  <Link href={item.enlace} className="inline-flex items-center gap-2 bg-[#429900] hover:bg-[#347A00] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                  <Link href={item.enlace} className="inline-flex items-center gap-2 bg-[#429900] hover:bg-[#347A00] text-white font-bold py-2.5 px-6 rounded-full transition-colors shadow-lg text-sm">
                     Contacto
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
                   </Link>
@@ -345,10 +345,10 @@ export default function Home() {
           {bannerItems.length > 1 && (
             <button 
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-[#429900] hover:bg-[#347A00] text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 flex items-center justify-center bg-[#429900] hover:bg-[#347A00] text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
               aria-label="Anterior"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path>
               </svg>
             </button>
@@ -358,29 +358,29 @@ export default function Home() {
           {bannerItems.length > 1 && (
             <button 
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-[#429900] hover:bg-[#347A00] text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 flex items-center justify-center bg-[#429900] hover:bg-[#347A00] text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
               aria-label="Siguiente"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path>
               </svg>
             </button>
           )}
           
           {/* Indicadores (Puntos) */}
-          <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-3 z-20">
+          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2.5 z-20">
             {bannerItems.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentBannerIndex(idx)}
-                className={`transition-all rounded-full ${idx === currentBannerIndex ? 'w-4 h-4 bg-white' : 'w-3 h-3 bg-white/40 hover:bg-white/70'} border-2 border-transparent hover:border-white`}
+                className={`transition-all rounded-full ${idx === currentBannerIndex ? 'w-3 h-3 bg-white' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'} border border-transparent hover:border-white`}
                 aria-label={`Ir al slide ${idx + 1}`}
               />
             ))}
           </div>
           
           {/* Curva decorativa en la parte inferior simulando el diseño redondo */}
-          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none rounded-t-[50%] scale-110 translate-y-6"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none rounded-t-[50%] scale-110 translate-y-4"></div>
         </section>
       )}
 

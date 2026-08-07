@@ -110,17 +110,19 @@ export default function Header() {
 
                     {/* Dropdown Menu */}
                     {isDropdownOpen && (
-                      <div className="absolute left-0 mt-2 w-56 rounded-xl bg-white border border-gray-100 shadow-lg py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-200">
-                        {link.submenu.map((subitem) => (
-                          <Link
-                            key={subitem.name}
-                            href={subitem.href}
-                            onClick={() => setActiveDropdown(null)}
-                            className="block px-4 py-2 text-[14px] text-fepv-gray hover:bg-fepv-light/40 hover:text-fepv-darkblue transition-colors duration-150"
-                          >
-                            {subitem.name}
-                          </Link>
-                        ))}
+                      <div className="absolute left-0 pt-2 w-56 z-50">
+                        <div className="rounded-xl bg-white border border-gray-100 shadow-lg py-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                          {link.submenu.map((subitem) => (
+                            <Link
+                              key={subitem.name}
+                              href={subitem.href}
+                              onClick={() => setActiveDropdown(null)}
+                              className="block px-4 py-2 text-[14px] text-fepv-gray hover:bg-fepv-light/40 hover:text-fepv-darkblue transition-colors duration-150"
+                            >
+                              {subitem.name}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
