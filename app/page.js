@@ -373,6 +373,8 @@ export default function Home() {
               {item.enlace && (
                 <Link 
                   href={item.enlace} 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 inline-flex items-center gap-2 bg-[#429900] hover:bg-[#347A00] text-white font-bold py-2.5 px-6 rounded-full transition-colors shadow-lg text-sm cursor-pointer"
                 >
                   Contacto
@@ -430,7 +432,7 @@ export default function Home() {
       {/* BLOQUE 1: HERO PRINCIPAL */}
       <section className="relative overflow-hidden bg-gradient-to-br from-fepv-light/40 via-white to-white py-12 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
             
             {/* Lado Izquierdo (Textos y CTAs) */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">

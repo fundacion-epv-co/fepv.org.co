@@ -119,15 +119,15 @@ export default function Header() {
                     {isDropdownOpen && (
                       <div className="absolute left-0 pt-2 w-56 z-50">
                         <div className="rounded-xl bg-white border border-gray-100 shadow-lg py-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                          {link.submenu.map((subitem) => (
-                            <Link
+                           {link.submenu.map((subitem) => (
+                            <a
                               key={subitem.name}
                               href={subitem.href}
                               onClick={() => setActiveDropdown(null)}
                               className="block px-4 py-2 text-[14px] text-fepv-gray hover:bg-fepv-light/40 hover:text-fepv-darkblue transition-colors duration-150"
                             >
                               {subitem.name}
-                            </Link>
+                            </a>
                           ))}
                         </div>
                       </div>
@@ -137,7 +137,7 @@ export default function Header() {
               }
 
               return (
-                <Link
+                <a
                   key={link.name}
                   href={link.href}
                   className={`px-3 py-2 rounded-lg text-[15px] font-medium transition-colors duration-200 ${
@@ -145,19 +145,19 @@ export default function Header() {
                   }`}
                 >
                   {link.name}
-                </Link>
+                </a>
               );
             })}
           </nav>
 
           {/* DONATE BUTTON & MOBILE TOGGLE */}
           <div className="flex items-center gap-4">
-            <Link
+            <a
               href="/donaciones"
               className="hidden sm:inline-flex fepv-btn fepv-btn-donate flex items-center gap-1.5"
             >
               DONAR <span className="text-red-500">❤️</span>
-            </Link>
+            </a>
 
             {/* Mobile Menu Button */}
             <button
@@ -205,7 +205,7 @@ export default function Header() {
                     {isDropdownOpen && (
                       <div className="pl-6 mt-1 space-y-1 border-l-2 border-fepv-green/30">
                         {link.submenu.map((subitem) => (
-                          <Link
+                          <a
                             key={subitem.name}
                             href={subitem.href}
                             onClick={() => {
@@ -215,7 +215,7 @@ export default function Header() {
                             className="block px-3 py-2 text-sm text-fepv-gray/80 hover:text-fepv-green"
                           >
                             {subitem.name}
-                          </Link>
+                          </a>
                         ))}
                       </div>
                     )}
@@ -224,7 +224,7 @@ export default function Header() {
               }
 
               return (
-                <Link
+                <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
@@ -233,18 +233,18 @@ export default function Header() {
                   }`}
                 >
                   {link.name}
-                </Link>
+                </a>
               );
             })}
 
             <div className="pt-4 pb-2">
-              <Link
+              <a
                 href="/donaciones"
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full fepv-btn fepv-btn-donate flex items-center justify-center gap-1.5 py-3 text-center"
               >
                 DONAR <span className="text-red-500">❤️</span>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
