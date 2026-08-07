@@ -942,8 +942,8 @@ export default function Intranet() {
                 <p className="text-[13px] text-gray-700 leading-relaxed font-medium">
                   Detectamos una sesión activa en la Intranet. Por políticas de seguridad institucional, navegar fuera de este portal <strong className="text-amber-900 font-bold">cerrará tu sesión</strong> de forma automática.
                 </p>
-                <p className="text-xs text-amber-800 font-semibold mt-3 flex items-center gap-1.5">
-                  ❓ ¿Deseas cerrar la sesión y continuar con la navegación?
+                <p className="text-xs text-amber-800 font-semibold mt-3">
+                  Deseas cerrar la sesión y continuar con la navegación?
                 </p>
               </div>
 

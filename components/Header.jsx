@@ -57,6 +57,7 @@ export default function Header() {
       ],
     },
     { name: "Noticias", href: "/noticias" },
+    { name: "Galería", href: "/galeria" },
     { name: "Participa", href: "/participa" },
     { name: "Contacto", href: "/contacto" },
   ];
