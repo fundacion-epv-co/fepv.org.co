@@ -71,15 +71,20 @@ export default function Header() {
             <div className="relative w-14 h-14 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
               <Image
                 src={logoImg}
-                alt="Fundación Encuentros Para la Vida - FEPV"
+                alt="Fundación Encuentros Para la Vida"
                 fill
                 className="object-contain"
                 priority
               />
             </div>
             <div className="flex flex-col hidden sm:flex">
+<<<<<<< HEAD
               <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none uppercase">
                 Fundación Encuentros
+=======
+              <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none">
+                FUNDACIÓN ENCUENTROS
+>>>>>>> 3b2f064967ab0d56068b9d7178ce2aba62dc9c65
               </span>
               <span className="font-sans text-xs font-semibold text-fepv-vividgreen tracking-wider mt-0.5">
                 Para la Vida
