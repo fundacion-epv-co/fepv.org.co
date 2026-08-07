@@ -1,0 +1,42 @@
+1:"$Sreact.fragment"
+2:I[22016,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],""]
+3:I[97367,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+8:I[97367,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],"ViewportBoundary"]
+9:I[97367,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],"MetadataBoundary"]
+7:X
+21:X
+21:C
+0:{"buildId":"YoLT35ZoPjhBHkKn6TZb2","data":[{"rsc":["$","$1","c",{"children":[["$","main",null,{"className":"flex-grow pt-32 pb-20","children":["$","div",null,{"className":"max-w-4xl mx-auto px-4 sm:px-6 lg:px-8","children":["$","div",null,{"className":"bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100","children":[["$","div",null,{"className":"mb-10 text-center","children":[["$","span",null,{"className":"inline-block text-xs font-bold tracking-widest text-fepv-green uppercase bg-fepv-green/10 px-3 py-1.5 rounded-full mb-4","children":"Legal"}],["$","h1",null,{"className":"font-display font-bold text-3xl md:text-4xl text-fepv-darkblue mb-4","children":"Términos y Condiciones"}],["$","p",null,{"className":"text-fepv-gray/80","children":["Última actualización: ","7/8/2026"]}]]}],["$","div",null,{"className":"prose prose-lg prose-fepv max-w-none text-fepv-gray","children":[["$","p",null,{"children":["Bienvenido al sitio web de la ",["$","strong",null,{"children":"Fundación Encuentros Para la Vida (FEPV)"}],". Al acceder y utilizar este sitio web, usted acepta cumplir y estar sujeto a los siguientes Términos y Condiciones de uso."]}],["$","h2",null,{"className":"font-display font-bold text-2xl text-fepv-darkblue mt-8 mb-4","children":"1. Uso del Sitio Web"}],["$","p",null,{"children":"El contenido de las páginas de este sitio web es para su información y uso general únicamente. Está sujeto a cambios sin previo aviso. Usted se compromete a utilizar el sitio web únicamente con fines lícitos y de una manera que no infrinja los derechos, ni restrinja o inhiba el uso y disfrute del sitio web por parte de cualquier tercero."}],["$","h2",null,{"className":"font-display font-bold text-2xl text-fepv-darkblue mt-8 mb-4","children":"2. Propiedad Intelectual"}],["$","p",null,{"children":"Este sitio web contiene material que es propiedad nuestra o nos ha sido licenciado. Este material incluye, pero no se limita a, el diseño, la disposición, el aspecto, la apariencia y los gráficos. La reproducción está prohibida salvo de acuerdo con el aviso de derechos de autor, que forma parte de estos términos y condiciones."}],["$","h2",null,{"className":"font-display font-bold text-2xl text-fepv-darkblue mt-8 mb-4","children":"3. Enlaces a Otros Sitios Web"}],["$","p",null,{"children":"De vez en cuando, este sitio web también puede incluir enlaces a otros sitios web. Estos enlaces se proporcionan para su conveniencia para proporcionar más información. No significan que respaldamos el(los) sitio(s) web. No tenemos responsabilidad por el contenido de los sitios web vinculados."}],["$","h2",null,{"className":"font-display font-bold text-2xl text-fepv-darkblue mt-8 mb-4","children":"4. Limitación de Responsabilidad"}],["$","p",null,{"children":"Ni nosotros ni terceros ofrecemos ninguna garantía sobre la exactitud, puntualidad, rendimiento, integridad o idoneidad de la información y los materiales que se encuentran u ofrecen en este sitio web para cualquier propósito particular."}],["$","div",null,{"className":"mt-12 pt-8 border-t border-gray-100 flex justify-center","children":["$","$L2",null,{"href":"/","className":"fepv-btn fepv-btn-secondary","children":"Volver al Inicio"}]}]]}]]}]}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":"$@6","staleTime":"$7","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L8",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L9",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Términos y Condiciones | FEPV"}],["$","meta","1",{"name":"description","content":"Términos y Condiciones de la Fundación Encuentros Para la Vida (FEPV)"}],["$","meta","2",{"name":"keywords","content":"Fundación Encuentros Para la Vida, FEPV, Fundación en Cesar, Fundación Agustín Codazzi, programas sociales, salud mental, atención psicosocial, inclusión social, educación comunitaria, cooperación internacional"}],"$La","$Lb","$Lc","$Ld","$Le","$Lf","$L10","$L11","$L12","$L13","$L14","$L15","$L16","$L17","$L18","$L19","$L1a","$L1b","$L1c"]}]}]}],"$L1d"]}],"isPartial":"$@1e","staleTime":"$7","varyParams":null},{"rsc":"$L1f","isPartial":"$@20","staleTime":"$7","varyParams":"$21"}],"isUpgradeableISRFallback":false,"a":"$@22","rootVaryParams":null,"needsRuntimeRequest":"$@23"}
+24:I[27201,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],"IconMark"]
+25:I[39756,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],"default"]
+26:I[37457,["/fepv.org.co/_next/static/chunks/3fntmmi971322.js","/fepv.org.co/_next/static/chunks/21x0hjmrgy6zz.js"],"default"]
+5:null
+a:["$","meta","3",{"property":"og:title","content":"Fundación Encuentros Para la Vida | FEPV"}]
+b:["$","meta","4",{"property":"og:description","content":"Construimos oportunidades, fortalecemos comunidades y generamos transformación social en el territorio."}]
+c:["$","meta","5",{"property":"og:url","content":"https://fundacion-epv-co.github.io/fepv.org.co/"}]
+d:["$","meta","6",{"property":"og:site_name","content":"Fundación Encuentros Para la Vida"}]
+e:["$","meta","7",{"property":"og:locale","content":"es_ES"}]
+f:["$","meta","8",{"property":"og:image","content":"https://fundacion-epv-co.github.io/fepv.org.co/logo.png"}]
+10:["$","meta","9",{"property":"og:image:width","content":"512"}]
+11:["$","meta","10",{"property":"og:image:height","content":"512"}]
+12:["$","meta","11",{"property":"og:image:alt","content":"Logo FEPV"}]
+13:["$","meta","12",{"property":"og:type","content":"website"}]
+14:["$","meta","13",{"name":"twitter:card","content":"summary_large_image"}]
+15:["$","meta","14",{"name":"twitter:title","content":"Fundación Encuentros Para la Vida | FEPV"}]
+16:["$","meta","15",{"name":"twitter:description","content":"Construimos oportunidades, fortalecemos comunidades y generamos transformación social en el territorio."}]
+17:["$","meta","16",{"name":"twitter:image","content":"https://fundacion-epv-co.github.io/fepv.org.co/logo.png"}]
+18:["$","meta","17",{"name":"twitter:image:alt","content":"Logo FEPV"}]
+19:["$","meta","18",{"name":"twitter:image:width","content":"512"}]
+1a:["$","meta","19",{"name":"twitter:image:height","content":"512"}]
+1b:["$","link","20",{"rel":"icon","href":"/fepv.org.co/icon.png?icon.2atf52u58-ukh.png","sizes":"1024x1024","type":"image/png"}]
+1c:["$","$L24","21",{}]
+1d:["$","meta",null,{"name":"next-size-adjust","content":""}]
+1f:["$","$1","c",{"children":[null,["$","$L25",null,{"parallelRouterKey":"children","template":["$","$L26",null,{}]}]]}]
+23:true
+7:300
+7:C
+22:0
+1e:"$undefined"
+20:"$undefined"
+6:"$undefined"
