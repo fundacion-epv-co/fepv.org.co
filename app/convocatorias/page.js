@@ -1,14 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV } from "../../lib/api";
 
-export default function Convocatorias() {
+function ConvocatoriasContent() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
   const [convocatorias, setConvocatorias] = useState([]);
   const [categories, setCategories] = useState([{ id: "all", name: "Todas" }]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const searchParams = useSearchParams();
+  const catParam = searchParams.get("cat");
+
+  // Efecto para escuchar la categoría en la URL (?cat=Categoria)
+  useEffect(() => {
+    if (catParam) {
+      setFilterCategory(catParam);
+    } else {
+      setFilterCategory("all");
+    }
+  }, [catParam]);
 
   useEffect(() => {
     async function loadData() {
@@ -241,5 +254,18 @@ export default function Convocatorias() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Convocatorias() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center py-40 space-y-4">
+        <div className="w-12 h-12 border-4 border-fepv-light border-t-fepv-vividgreen rounded-full animate-spin"></div>
+        <p className="text-sm font-semibold text-fepv-darkblue">Cargando oportunidades...</p>
+      </div>
+    }>
+      <ConvocatoriasContent />
+    </Suspense>
   );
 }

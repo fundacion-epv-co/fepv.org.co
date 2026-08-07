@@ -44,6 +44,14 @@ export default function Intranet() {
   const [editUserPassword, setEditUserPassword] = useState("");
   const [editUserRol, setEditUserRol] = useState("");
 
+  // Consecutivos State
+  const [consNombre, setConsNombre] = useState("");
+  const [consTipo, setConsTipo] = useState("Carta");
+  const [consResponsable, setConsResponsable] = useState("");
+  const [consConservacion, setConsConservacion] = useState("Digital");
+  const [consObservaciones, setConsObservaciones] = useState("");
+  const [generatedConsecutivo, setGeneratedConsecutivo] = useState("");
+
   const isPending = GOOGLE_APPS_SCRIPT_INTRANET_URL === "PENDIENTE_DE_URL_SCRIPT_INTRANET";
 
   // Efecto para mantener sesión
@@ -255,6 +263,39 @@ export default function Intranet() {
     setIsLoading(false);
   };
 
+  const handleGenerateConsecutivo = async (e) => {
+    e.preventDefault();
+    if (isPending) return setError("Conecta Google Apps Script primero");
+    setIsLoading(true);
+    setError("");
+    setSuccessMsg("");
+    setGeneratedConsecutivo("");
+
+    try {
+      const res = await postToIntranetAPI("generateConsecutivo", {
+        email: session.email,
+        nd: consNombre,
+        td: consTipo,
+        rd: consResponsable,
+        mc: consConservacion,
+        o: consObservaciones
+      });
+
+      if (res.success) {
+        setGeneratedConsecutivo(res.consecutivo);
+        setSuccessMsg(`¡Consecutivo generado con éxito: ${res.consecutivo}! Se envió una confirmación al correo.`);
+        setConsNombre("");
+        setConsResponsable("");
+        setConsObservaciones("");
+      } else {
+        setError(res.message);
+      }
+    } catch (err) {
+      setError("Error de conexión al generar consecutivo");
+    }
+    setIsLoading(false);
+  };
+
   const handleFileUpload = async (e) => {
     e.preventDefault();
     if (isPending) return setError("Conecta Google Apps Script primero");
@@ -381,6 +422,12 @@ export default function Intranet() {
                 className={`px-6 py-4 text-sm font-bold whitespace-nowrap transition-colors cursor-pointer ${activeTab === "perfil" ? "text-fepv-green border-b-2 border-fepv-green bg-white" : "text-fepv-gray hover:text-fepv-darkblue"}`}
               >
                 Mi Perfil
+              </button>
+              <button
+                onClick={() => setActiveTab("consecutivos")}
+                className={`px-6 py-4 text-sm font-bold whitespace-nowrap transition-colors cursor-pointer ${activeTab === "consecutivos" ? "text-fepv-green border-b-2 border-fepv-green bg-white" : "text-fepv-gray hover:text-fepv-darkblue"}`}
+              >
+                Generar Consecutivo
               </button>
               {session.rol === "admin" && (
                 <>
@@ -539,6 +586,150 @@ export default function Intranet() {
                       </div>
                     </form>
                   </div>
+                </div>
+              )}
+
+              {/* VISTA: MI PERFIL */}
+              {activeTab === "perfil" && (
+                <div className="max-w-md">
+                  <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Mi Perfil</h2>
+                  <p className="text-sm text-fepv-gray/70 mb-8">Actualiza tu contraseña de acceso a la Intranet.</p>
+
+                  <form onSubmit={handleUpdateOwnPassword} className="space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
+                    <div>
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Contraseña Actual</label>
+                      <input 
+                        type="password" 
+                        required 
+                        value={oldPassword} 
+                        onChange={(e) => setOldPassword(e.target.value)} 
+                        className="w-full p-3 border border-gray-200 rounded-xl text-sm bg-white" 
+                        placeholder="••••••••" 
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Nueva Contraseña</label>
+                      <input 
+                        type="password" 
+                        required 
+                        value={newPasswordProfile} 
+                        onChange={(e) => setNewPasswordProfile(e.target.value)} 
+                        className="w-full p-3 border border-gray-200 rounded-xl text-sm bg-white" 
+                        placeholder="Mínimo 6 caracteres" 
+                      />
+                    </div>
+
+                    <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-primary w-full py-3 cursor-pointer disabled:opacity-50">
+                      {isLoading ? "Actualizando..." : "Cambiar Contraseña"}
+                    </button>
+                  </form>
+                </div>
+              )}
+
+              {/* VISTA: GENERADOR DE CONSECUTIVOS */}
+              {activeTab === "consecutivos" && (
+                <div className="max-w-2xl">
+                  <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Generar Número de Consecutivo</h2>
+                  <p className="text-sm text-fepv-gray/70 mb-8">
+                    Crea un consecutivo oficial con nomenclatura para tus oficios. Al enviarlo se guardará en la base de datos y se notificará a tu correo electrónico.
+                  </p>
+
+                  {/* Alerta de Éxito de Consecutivo */}
+                  {generatedConsecutivo && (
+                    <div className="mb-6 p-6 bg-green-50 border-2 border-green-200 rounded-2xl text-center space-y-4 animate-in zoom-in duration-300">
+                      <span className="text-4xl block">🎉</span>
+                      <h3 className="font-display font-bold text-lg text-fepv-darkblue">¡Consecutivo Generado Exitosamente!</h3>
+                      <div className="bg-white px-6 py-4 rounded-xl border border-green-100 inline-block font-mono text-xl font-bold tracking-wider text-green-700 select-all shadow-sm">
+                        {generatedConsecutivo}
+                      </div>
+                      <p className="text-xs text-fepv-gray/80 max-w-md mx-auto">
+                        Copia este código y úsalo en tu documento. Se ha enviado una copia detallada del registro a tu correo: <strong>{session.email}</strong>.
+                      </p>
+                      <button 
+                        onClick={() => setGeneratedConsecutivo("")} 
+                        className="text-xs font-bold bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        Generar Otro
+                      </button>
+                    </div>
+                  )}
+
+                  {!generatedConsecutivo && (
+                    <form onSubmit={handleGenerateConsecutivo} className="space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Nombre del Documento / Asunto</label>
+                          <input 
+                            type="text" 
+                            required 
+                            value={consNombre} 
+                            onChange={(e) => setConsNombre(e.target.value)} 
+                            className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white" 
+                            placeholder="Ej. Solicitud de Viáticos Agustín Codazzi" 
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Tipo de Documento</label>
+                          <select 
+                            value={consTipo} 
+                            onChange={(e) => setConsTipo(e.target.value)} 
+                            className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white cursor-pointer"
+                          >
+                            <option value="Carta">Carta</option>
+                            <option value="Acta">Acta</option>
+                            <option value="Convenio">Convenio</option>
+                            <option value="Informe">Informe</option>
+                            <option value="Circular">Circular</option>
+                            <option value="Memorando">Memorando</option>
+                            <option value="Otro">Otro</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Responsable / Remitente</label>
+                          <input 
+                            type="text" 
+                            required 
+                            value={consResponsable} 
+                            onChange={(e) => setConsResponsable(e.target.value)} 
+                            className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white" 
+                            placeholder="Tu nombre y cargo" 
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Modo de Conservación</label>
+                          <select 
+                            value={consConservacion} 
+                            onChange={(e) => setConsConservacion(e.target.value)} 
+                            className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white cursor-pointer"
+                          >
+                            <option value="Digital">Digital</option>
+                            <option value="Físico">Físico</option>
+                            <option value="Ambos">Ambos (Digital y Físico)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-fepv-darkblue mb-2">Observaciones (Opcional)</label>
+                        <textarea 
+                          value={consObservaciones} 
+                          onChange={(e) => setConsObservaciones(e.target.value)} 
+                          className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white h-24 focus:outline-none focus:border-fepv-green" 
+                          placeholder="Agrega cualquier detalle o nota del radicado aquí..."
+                        />
+                      </div>
+
+                      <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-primary w-full py-3 cursor-pointer disabled:opacity-50">
+                        {isLoading ? "Generando consecutivo..." : "Generar Consecutivo Oficial"}
+                      </button>
+                    </form>
+                  )}
                 </div>
               )}
 

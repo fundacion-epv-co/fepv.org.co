@@ -2,14 +2,36 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV } from "../lib/api";
+
+const INITIAL_TESTIMONIALS = [
+  {
+    text: "Participar en este proceso me permitió descubrir que sí podía volver a empezar, sanar mis heridas y liderar cambios en mi comunidad.",
+    author: "María Camila Restrepo",
+    role: "Participante del programa de salud mental",
+    location: "Agustín Codazzi, Cesar"
+  },
+  {
+    text: "La Escuela de Formación nos dio herramientas para emprender y asociarnos. Hoy lidero un proyecto productivo familiar.",
+    author: "José Luis González",
+    role: "Egresado de la línea de Emprendimiento",
+    location: "Codazzi, Cesar"
+  },
+  {
+    text: "El acompañamiento en la conservación de nuestro entorno nos enseñó a amar y proteger la cuenca local. El cambio inicia en casa.",
+    author: "Estela Araujo",
+    role: "Voluntaria del programa Medio Ambiente",
+    location: "Zona Rural de Codazzi"
+  }
+];
 
 export default function Home() {
   // Banner state
   const [bannerItems, setBannerItems] = useState([]);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
-  // Testimonial slider state
+  // Testimonials state
+  const [testimonialsList, setTestimonialsList] = useState(INITIAL_TESTIMONIALS);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   const [stats, setStats] = useState([
@@ -95,6 +117,31 @@ export default function Home() {
     loadBanner();
   }, []);
 
+  // Fetch Testimonios
+  useEffect(() => {
+    async function loadTestimonios() {
+      if (GOOGLE_SHEETS_TESTIMONIOS_CSV !== "PENDIENTE_DE_URL_TESTIMONIOS") {
+        try {
+          const data = await fetchGoogleSheetData(GOOGLE_SHEETS_TESTIMONIOS_CSV);
+          if (data && data.length > 0) {
+            const mapped = data.map(item => ({
+              text: item.texto || item.text || "",
+              author: item.autor || item.author || "",
+              role: item.rol || item.role || "",
+              location: item.ubicacion || item.location || ""
+            })).filter(t => t.text);
+            if (mapped.length > 0) {
+              setTestimonialsList(mapped);
+            }
+          }
+        } catch (e) {
+          console.error("Error cargando testimonios", e);
+        }
+      }
+    }
+    loadTestimonios();
+  }, []);
+
   // Auto-slide Banner
   useEffect(() => {
     if (bannerItems.length <= 1) return;
@@ -103,6 +150,15 @@ export default function Home() {
     }, 10000);
     return () => clearInterval(interval);
   }, [bannerItems.length]);
+
+  // Auto-slide Testimonios
+  useEffect(() => {
+    if (testimonialsList.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonialsList.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [testimonialsList.length]);
 
   const nextSlide = () => {
     if (bannerItems.length <= 1) return;
@@ -113,27 +169,6 @@ export default function Home() {
     if (bannerItems.length <= 1) return;
     setCurrentBannerIndex((prev) => (prev - 1 + bannerItems.length) % bannerItems.length);
   };
-
-  const testimonials = [
-    {
-      text: "Participar en este proceso me permitió descubrir que sí podía volver a empezar, sanar mis heridas y liderar cambios en mi comunidad.",
-      author: "María Camila Restrepo",
-      role: "Participante del programa de salud mental",
-      location: "Agustín Codazzi, Cesar"
-    },
-    {
-      text: "La Escuela de Formación de FEPV nos dio herramientas para emprender y asociarnos. Hoy lidero un proyecto productivo familiar.",
-      author: "José Luis González",
-      role: "Egresado de la línea de Emprendimiento",
-      location: "Codazzi, Cesar"
-    },
-    {
-      text: "El acompañamiento de FEPV en la conservación de nuestro entorno nos enseñó a amar y proteger la cuenca local. El cambio inicia en casa.",
-      author: "Estela Araujo",
-      role: "Voluntaria del programa Medio Ambiente",
-      location: "Zona Rural de Codazzi"
-    }
-  ];
 
   const categories = [
     {
@@ -400,7 +435,7 @@ export default function Home() {
             {/* Lado Izquierdo (Textos y CTAs) */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <span className="inline-block text-xs font-bold tracking-widest text-fepv-green uppercase bg-fepv-green/10 px-3 py-1.5 rounded-full">
-                Fundación Encuentros Para la Vida
+                Fundación Encuentros para la Vida
               </span>
               <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-fepv-darkblue leading-tight">
                 Encuentros que <br />
@@ -605,115 +640,52 @@ export default function Home() {
       </section>
 
       {/* BLOQUE 6: HISTORIAS QUE TRANSFORMAN */}
-      <section className="py-20 bg-gradient-to-b from-white to-fepv-light/20 overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-8">
-          <span className="text-4xl">✨</span>
-          <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
-            Cada encuentro deja una huella
-          </h2>
-          
-          {/* Testimonial Box */}
-          <div className="relative bg-white p-8 sm:p-12 rounded-3xl shadow-xl shadow-fepv-green/5 border border-fepv-light/35 min-h-[220px] flex flex-col justify-center animate-in fade-in duration-500">
-            <span className="absolute top-4 left-6 text-6xl text-fepv-green/10 font-serif leading-none">“</span>
-            <p className="font-sans text-base sm:text-lg text-fepv-gray/95 italic leading-relaxed relative z-10">
-              {testimonials[currentTestimonial].text}
-            </p>
-            <div className="mt-6 flex flex-col items-center">
-              <span className="font-display font-bold text-sm text-fepv-darkblue">
-                {testimonials[currentTestimonial].author}
-              </span>
-              <span className="text-xs text-fepv-green font-semibold mt-0.5">
-                {testimonials[currentTestimonial].role} &bull; {testimonials[currentTestimonial].location}
-              </span>
-            </div>
-          </div>
-
-          {/* Testimonial Nav dots */}
-          <div className="flex justify-center items-center gap-3">
-            {testimonials.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentTestimonial(idx)}
-                className={`w-3.5 h-3.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  currentTestimonial === idx ? "bg-fepv-green w-8" : "bg-fepv-green/20 hover:bg-fepv-green/45"
-                }`}
-                aria-label={`Ver testimonio ${idx + 1}`}
-              />
-            ))}
-          </div>
-
-          <div>
-            <Link href="/nosotros#historia" className="fepv-btn fepv-btn-secondary mt-4 cursor-pointer">
-              Conoce más historias de impacto
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* BLOQUE 7: CONVOCATORIAS */}
-      <section className="py-20 bg-white" id="convocatorias">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div className="space-y-4">
-              <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
-                Oportunidades Abiertas
-              </h2>
-              <p className="text-fepv-gray/80 max-w-xl">
-                Cursos, voluntariados y convocatorias activas para participar e integrarte a las iniciativas de la FEPV.
+      {testimonialsList.length > 0 && (
+        <section className="py-20 bg-gradient-to-b from-white to-fepv-light/20 overflow-hidden">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-8">
+            <span className="text-4xl">✨</span>
+            <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
+              Cada encuentro deja una huella
+            </h2>
+            
+            {/* Testimonial Box */}
+            <div className="relative bg-white p-8 sm:p-12 rounded-3xl shadow-xl shadow-fepv-green/5 border border-fepv-light/35 min-h-[220px] flex flex-col justify-center animate-in fade-in duration-500">
+              <span className="absolute top-4 left-6 text-6xl text-fepv-green/10 font-serif leading-none">“</span>
+              <p className="font-sans text-base sm:text-lg text-fepv-gray/95 italic leading-relaxed relative z-10">
+                {testimonialsList[currentTestimonial].text}
               </p>
-            </div>
-            <Link href="/convocatorias" className="fepv-btn fepv-btn-primary cursor-pointer">
-              Ver todas las convocatorias
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {mockOpportunities.map((op, idx) => (
-              <div
-                key={idx}
-                className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-lg hover:border-fepv-green/20 transition-all duration-300"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${op.badgeColor}`}>
-                      {op.category}
-                    </span>
-                    <span className="text-[11px] font-bold text-fepv-green bg-fepv-light/40 px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-fepv-green rounded-full animate-ping"></span>
-                      {op.status}
-                    </span>
-                  </div>
-                  <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-4 leading-snug">
-                    {op.title}
-                  </h3>
-                  
-                  <div className="space-y-2 text-xs text-fepv-gray/85 border-t border-gray-50 pt-4 mb-6">
-                    <div className="flex items-center gap-2">
-                      <span>📍</span>
-                      <span><strong>Municipio:</strong> {op.location}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span>📅</span>
-                      <span><strong>Fecha límite:</strong> {op.deadline}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span>👥</span>
-                      <span><strong>Dirigido a:</strong> {op.target}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <Link
-                  href="/convocatorias"
-                  className="w-full fepv-btn fepv-btn-secondary text-center py-2.5 text-xs font-bold"
-                >
-                  VER CONVOCATORIA
-                </Link>
+              <div className="mt-6 flex flex-col items-center">
+                <span className="font-display font-bold text-sm text-fepv-darkblue">
+                  {testimonialsList[currentTestimonial].author}
+                </span>
+                <span className="text-xs text-fepv-green font-semibold mt-0.5">
+                  {testimonialsList[currentTestimonial].role} &bull; {testimonialsList[currentTestimonial].location}
+                </span>
               </div>
-            ))}
+            </div>
+
+            {/* Testimonial Nav dots */}
+            <div className="flex justify-center items-center gap-3">
+              {testimonialsList.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentTestimonial(idx)}
+                  className={`w-3.5 h-3.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    currentTestimonial === idx ? "bg-fepv-green w-8" : "bg-fepv-green/20 hover:bg-fepv-green/45"
+                  }`}
+                  aria-label={`Ver testimonio ${idx + 1}`}
+                />
+              ))}
+            </div>
+
+            <div>
+              <Link href="/nosotros#historia" className="fepv-btn fepv-btn-secondary mt-4 cursor-pointer">
+                Conoce más historias de impacto
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* BLOQUE 8: ¿QUIERES HACER PARTE? */}
       <section className="py-20 bg-fepv-light/20">

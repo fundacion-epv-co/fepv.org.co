@@ -48,7 +48,14 @@ export default function Header() {
       ],
     },
     { name: "Impacto", href: "/#impacto" },
-    { name: "Convocatorias", href: "/convocatorias" },
+    {
+      name: "Oportunidades",
+      href: "/convocatorias",
+      submenu: [
+        { name: "Convocatorias", href: "/convocatorias?cat=Convocatorias" },
+        { name: "Ofertas de Empleo", href: "/convocatorias?cat=Oferta" },
+      ],
+    },
     { name: "Noticias", href: "/noticias" },
     { name: "Participa", href: "/participa" },
     { name: "Contacto", href: "/contacto" },
@@ -75,7 +82,7 @@ export default function Header() {
                 Fundación Encuentros
               </span>
               <span className="font-sans text-xs font-semibold text-fepv-vividgreen tracking-wider mt-0.5">
-                Para la Vida — FEPV
+                Para la Vida
               </span>
             </div>
           </Link>
