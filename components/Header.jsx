@@ -78,7 +78,7 @@ export default function Header() {
               />
             </div>
             <div className="flex flex-col hidden sm:flex">
-              <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none">
+              <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none uppercase">
                 Fundación Encuentros
               </span>
               <span className="font-sans text-xs font-semibold text-fepv-vividgreen tracking-wider mt-0.5">
