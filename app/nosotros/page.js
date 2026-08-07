@@ -37,7 +37,7 @@ export default function Nosotros() {
     <div className="w-full bg-white pb-20">
       
       {/* Banner Superior */}
-      <section className="bg-fepv-dark text-white py-16">
+      <section className="bg-fepv-dark text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <h1 className="font-display font-bold text-3xl sm:text-4.5xl">
             Nuestra Fundación
@@ -49,12 +49,12 @@ export default function Nosotros() {
       </section>
 
       {/* Bloque 1: Quiénes Somos */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="quienes-somos">
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="quienes-somos">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue relative inline-block">
+            <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-darkblue relative inline-block">
               ¿Quiénes Somos?
-              <span className="absolute bottom-0 left-0 w-12 h-1 bg-fepv-green rounded"></span>
+              <span className="absolute bottom-0 left-0 w-16 h-1.5 bg-fepv-green rounded-full"></span>
             </h2>
             <p className="text-sm sm:text-base text-fepv-gray/85 leading-relaxed">
               La <strong>Fundación Encuentros Para la Vida (FEPV)</strong> es una entidad sin ánimo de lucro con domicilio principal en el municipio de <strong>Agustín Codazzi, Cesar</strong>. Fue constituida oficialmente el <strong>12 de mayo de 2026</strong> e inscrita ante la Cámara de Comercio el <strong>9 de junio de 2026</strong>.
@@ -78,7 +78,7 @@ export default function Nosotros() {
       </section>
 
       {/* Bloque 2: Misión y Visión */}
-      <section className="py-16 bg-fepv-light/20" id="mision-vision">
+      <section className="py-24 bg-fepv-light/20" id="mision-vision">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12">
           
           <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-gray-100 space-y-4">
@@ -105,9 +105,9 @@ export default function Nosotros() {
       </section>
 
       {/* Bloque 3: Enfoques Institucionales */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="enfoques">
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="enfoques">
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
+          <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
             Nuestros Enfoques de Trabajo
           </h2>
           <p className="text-sm text-fepv-gray/80">
@@ -130,10 +130,10 @@ export default function Nosotros() {
       </section>
 
       {/* Bloque 4: Historia - Línea de Tiempo */}
-      <section className="py-16 bg-fepv-light/10" id="historia">
+      <section className="py-24 bg-fepv-light/10" id="historia">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
+            <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
               Nuestra Historia
             </h2>
             <p className="text-sm text-fepv-gray/80 mt-2">Los hitos de consolidación institucional de FEPV.</p>
@@ -167,9 +167,9 @@ export default function Nosotros() {
       </section>
 
       {/* Bloque 5: Equipo Directivo y Técnico */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="equipo">
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="equipo">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
+          <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
             Estructura Organizacional
           </h2>
           <p className="text-sm text-fepv-gray/80">
@@ -225,10 +225,10 @@ export default function Nosotros() {
       </section>
 
       {/* Bloque 6: Transparencia Institucional */}
-      <section className="py-16 bg-fepv-light/20" id="transparencia">
+      <section className="py-24 bg-fepv-light/20" id="transparencia">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
+            <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
               Transparencia Institucional
             </h2>
             <p className="text-sm text-fepv-gray/80">

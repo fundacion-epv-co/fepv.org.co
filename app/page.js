@@ -434,19 +434,21 @@ export default function Home() {
             
             {/* Lado Izquierdo (Textos y CTAs) */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              <span className="inline-block text-xs font-bold tracking-widest text-fepv-green uppercase bg-fepv-green/10 px-3 py-1.5 rounded-full">
-                Fundación Encuentros para la Vida
-              </span>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-fepv-darkblue leading-tight">
-                Encuentros que <br />
-                <span className="text-fepv-vividgreen relative inline-block">
-                  transforman vidas
-                  <span className="absolute bottom-1 left-0 w-full h-2 bg-fepv-orange/30 -z-10 rounded"></span>
-                </span>
-              </h1>
-              <p className="font-sans text-base sm:text-lg lg:text-xl text-fepv-gray/80 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Construimos oportunidades, fortalecemos comunidades y acompañamos procesos que generan bienestar emocional y transformación social en el territorio.
-              </p>
+              <div className="space-y-4">
+                <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6.5xl text-fepv-darkblue leading-none tracking-tight">
+                  Fundación Encuentros <br />
+                  <span className="text-fepv-vividgreen">para la Vida</span>
+                </h1>
+                
+                <h2 className="font-display font-bold text-xl sm:text-2xl lg:text-3xl text-fepv-green leading-snug">
+                  “Encuentros que transforman vidas”
+                </h2>
+
+                <p className="font-sans text-sm sm:text-base lg:text-lg text-fepv-gray/80 max-w-xl mx-auto lg:mx-0 leading-relaxed pt-2">
+                  Construimos oportunidades, fortalecemos comunidades y acompañamos procesos que generan bienestar emocional y transformación social en el territorio.
+                </p>
+              </div>
+
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
                 <Link href="/nosotros" className="fepv-btn fepv-btn-primary w-full sm:w-auto text-center cursor-pointer">
                   Conoce nuestra Fundación
@@ -464,7 +466,7 @@ export default function Home() {
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-[420px] aspect-[4/5] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
                 <img 
-                  src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                  src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" 
                   alt="Comunidad FEPV" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
