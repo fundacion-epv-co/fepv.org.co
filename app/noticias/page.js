@@ -1,17 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_NOTICIAS_CSV } from "../../lib/api";
-
-// Helper para convertir el enlace de Drive normal a un enlace de imagen directa
-const getDirectDriveImageUrl = (url) => {
-  if (!url) return null;
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match && match[1]) {
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-  }
-  return url; // Si no es un enlace de Drive, lo devuelve igual (ej. un enlace directo)
-};
+import { fetchGoogleSheetData, GOOGLE_SHEETS_NOTICIAS_CSV, getDirectDriveImageUrl } from "../../lib/api";
 
 export default function Noticias() {
   const [noticias, setNoticias] = useState([]);
