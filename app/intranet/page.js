@@ -119,16 +119,51 @@ export default function Intranet() {
     }, 1000);
 
     const resetTimer = () => setTimeLeft(SESSION_TIMEOUT);
-    window.addEventListener("mousemove", resetTimer);
     window.addEventListener("keypress", resetTimer);
     window.addEventListener("click", resetTimer);
+    window.addEventListener("scroll", resetTimer);
 
     return () => {
       clearInterval(timer);
-      window.removeEventListener("mousemove", resetTimer);
       window.removeEventListener("keypress", resetTimer);
       window.removeEventListener("click", resetTimer);
+      window.removeEventListener("scroll", resetTimer);
     };
+  }, [session]);
+
+  // Alerta al intentar salir de la Intranet con sesión activa
+  useEffect(() => {
+    if (!session) return;
+
+    const handleAnchorClick = (e) => {
+      let target = e.target;
+      while (target && target.tagName !== "A") {
+        target = target.parentNode;
+      }
+
+      if (target && target.href) {
+        try {
+          const url = new URL(target.href);
+          // Si intenta navegar fuera de la intranet en la misma web
+          if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
+            const confirmLeave = window.confirm(
+              "Tienes una sesión activa en la Intranet. Navegar a otra página cerrará tu sesión por seguridad.\n\n¿Deseas cerrar sesión y continuar?"
+            );
+            if (!confirmLeave) {
+              e.preventDefault();
+              e.stopPropagation();
+            } else {
+              handleLogout();
+            }
+          }
+        } catch (err) {
+          // Ignorar errores de URL
+        }
+      }
+    };
+
+    document.addEventListener("click", handleAnchorClick, true);
+    return () => document.removeEventListener("click", handleAnchorClick, true);
   }, [session]);
 
   const loadDocumentos = async () => {
