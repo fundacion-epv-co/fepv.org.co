@@ -1,8 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_EQUIPO_CSV, GOOGLE_SHEETS_ALIADOS_CSV, getDirectDriveImageUrl } from "../../lib/api";
+
+const MOCK_EQUIPO = [
+  {
+    id: "EQ-1",
+    nombre: "Jesús Manuel González Madrid",
+    cargo: "Director Ejecutivo & Representante Legal",
+    foto: "",
+    bio: "Registrado oficialmente ante Cámara de Comercio, lidera la ejecución estratégica, representación institucional y la coordinación de programas de la fundación."
+  }
+];
+
+const MOCK_ALIADOS = [
+  { id: "AL-1", nombre: "SENA", logo: "", enlace_web: "https://www.sena.edu.co" },
+  { id: "AL-2", nombre: "Cámara de Comercio", logo: "", enlace_web: "https://ccvalledupar.org.co" }
+];
 
 export default function Nosotros() {
+  const [equipo, setEquipo] = useState([]);
+  const [aliados, setAliados] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadNosotrosData() {
+      setIsLoading(true);
+      
+      // Cargar Equipo
+      try {
+        const teamData = await fetchGoogleSheetData(GOOGLE_SHEETS_EQUIPO_CSV);
+        if (teamData && teamData.length > 0) {
+          const mapped = teamData.map(item => ({
+            id: item.id || `EQ-${Math.random()}`,
+            nombre: item.nombre || "Miembro de Equipo",
+            cargo: item.cargo || "",
+            foto: getDirectDriveImageUrl(item.foto),
+            bio: item.bio || ""
+          }));
+          setEquipo(mapped);
+        } else {
+          setEquipo(MOCK_EQUIPO);
+        }
+      } catch (e) {
+        console.error("Error cargando equipo", e);
+        setEquipo(MOCK_EQUIPO);
+      }
+
+      // Cargar Aliados
+      try {
+        const alliesData = await fetchGoogleSheetData(GOOGLE_SHEETS_ALIADOS_CSV);
+        if (alliesData && alliesData.length > 0) {
+          const mapped = alliesData.map(item => ({
+            id: item.id || `AL-${Math.random()}`,
+            nombre: item.nombre || "Aliado",
+            logo: getDirectDriveImageUrl(item.logo),
+            enlace_web: item.enlace_web || ""
+          }));
+          setAliados(mapped);
+        } else {
+          setAliados(MOCK_ALIADOS);
+        }
+      } catch (e) {
+        console.error("Error cargando aliados", e);
+        setAliados(MOCK_ALIADOS);
+      }
+
+      setIsLoading(false);
+    }
+    loadNosotrosData();
+  }, []);
+
   const enfoques = [
     { name: "Derechos Humanos", icon: "❤️", desc: "Priorizamos la dignidad humana y las garantías fundamentales en cada intervención." },
     { name: "Enfoque Psicosocial", icon: "🧠", desc: "Comprendemos el impacto emocional y social de las realidades para sanar integralmente." },
@@ -177,52 +245,86 @@ export default function Nosotros() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Representación Legal */}
-          <div className="lg:col-span-5 bg-white p-8 rounded-3xl border border-fepv-green/20 shadow-md text-center space-y-4">
-            <span className="text-xs font-bold text-fepv-green uppercase tracking-wider block">Dirección Ejecutiva</span>
-            <div className="w-24 h-24 bg-fepv-light rounded-full mx-auto flex items-center justify-center text-4xl text-fepv-darkblue font-bold font-display">
-              JM
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-lg text-fepv-darkblue">Jesús Manuel González Madrid</h3>
-              <p className="text-xs text-fepv-green font-semibold mt-0.5">Director Ejecutivo & Representante Legal</p>
-            </div>
-            <p className="text-xs text-fepv-gray/80 leading-relaxed">
-              Registrado oficialmente ante Cámara de Comercio, lidera la ejecución estratégica, representación institucional y la coordinación de programas de la fundación.
+        {isLoading ? (
+          <div className="flex flex-col justify-center items-center py-10 space-y-3">
+            <div className="w-10 h-10 border-4 border-fepv-green border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-xs font-semibold text-fepv-gray/70">Cargando equipo humano...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {equipo.map((member) => {
+              const initials = member.nombre
+                ? member.nombre.split(" ").slice(0, 2).map(n => n[0]).join("").toUpperCase()
+                : "EQ";
+
+              return (
+                <div key={member.id} className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-150 shadow-sm text-center flex flex-col justify-between hover:shadow-md transition-shadow duration-300">
+                  <div className="space-y-4">
+                    {member.foto ? (
+                      <img
+                        src={member.foto}
+                        alt={member.nombre}
+                        className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-fepv-green/20"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 bg-fepv-light rounded-full mx-auto flex items-center justify-center text-3xl text-fepv-darkblue font-bold font-display">
+                        {initials}
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-display font-bold text-base sm:text-lg text-fepv-darkblue leading-tight">{member.nombre}</h3>
+                      <p className="text-xs text-fepv-green font-semibold mt-1">{member.cargo}</p>
+                    </div>
+                    {member.bio && (
+                      <p className="text-xs text-fepv-gray/75 leading-relaxed pt-2">
+                        {member.bio}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Bloque 5.5: Aliados y Patrocinadores */}
+      {!isLoading && aliados.length > 0 && (
+        <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-100" id="aliados">
+          <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
+            <h3 className="font-display font-bold text-2xl text-fepv-darkblue">
+              Organizaciones y Aliados
+            </h3>
+            <p className="text-xs text-fepv-gray/70">
+              Trabajamos de la mano con entidades públicas, privadas y de cooperación para la sostenibilidad territorial.
             </p>
           </div>
-
-          {/* Áreas y Órganos de Control */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="bg-fepv-light/20 p-6 rounded-2xl border border-fepv-green/10">
-              <h4 className="font-display font-bold text-sm text-fepv-darkblue mb-3 uppercase tracking-wider">
-                Junta Directiva
-              </h4>
-              <div className="grid grid-cols-3 gap-4 text-xs font-semibold text-fepv-darkblue/85">
-                <div className="p-3 bg-white rounded-xl text-center">👑 Presidencia</div>
-                <div className="p-3 bg-white rounded-xl text-center">💰 Tesorería</div>
-                <div className="p-3 bg-white rounded-xl text-center">📝 Secretaría</div>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-              <h4 className="font-display font-bold text-sm text-fepv-darkblue mb-4 uppercase tracking-wider">
-                Áreas Técnicas y Operativas
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px] text-fepv-gray/90 font-medium">
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">📋 Dirección de Programas</div>
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">🌎 Cooperación Internacional</div>
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">💸 Admin. y Financiera</div>
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">⚖️ Dirección Jurídica</div>
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">📢 Comunicaciones</div>
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">📈 Planeación</div>
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg col-span-2 sm:col-span-1">🗄️ Gestión Documental</div>
-              </div>
-            </div>
+          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
+            {aliados.map((aliado) => (
+              <a
+                key={aliado.id}
+                href={aliado.enlace_web || "#"}
+                target={aliado.enlace_web ? "_blank" : "_self"}
+                rel="noopener noreferrer"
+                className="block opacity-70 hover:opacity-100 transition-all duration-300 filter grayscale hover:grayscale-0"
+                title={aliado.nombre}
+              >
+                {aliado.logo ? (
+                  <img
+                    src={aliado.logo}
+                    alt={aliado.nombre}
+                    className="h-10 sm:h-12 max-w-[150px] object-contain"
+                  />
+                ) : (
+                  <span className="text-xs font-bold text-fepv-gray bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 block">
+                    {aliado.nombre}
+                  </span>
+                )}
+              </a>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Bloque 6: Transparencia Institucional */}
       <section className="py-24 bg-fepv-light/20" id="transparencia">

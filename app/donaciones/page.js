@@ -1,13 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METAS_DONACION_CSV } from "../../lib/api";
 
 export default function Donaciones() {
   const [frequency, setFrequency] = useState("unica"); // 'unica' | 'recurrente'
   const [selectedValue, setSelectedValue] = useState("100000"); // preset values
   const [customValue, setCustomValue] = useState("");
   const [simulatedSubmit, setSimulatedSubmit] = useState(false);
+
+  // Estados del Termómetro
+  const [meta, setMeta] = useState(10000000); // 10 millones por defecto
+  const [recaudado, setRecaudado] = useState(3500000); // 3.5 millones por defecto
+  const [isLoadingMeta, setIsLoadingMeta] = useState(true);
+
+  useEffect(() => {
+    async function loadMetaDonaciones() {
+      setIsLoadingMeta(true);
+      try {
+        const data = await fetchGoogleSheetData(GOOGLE_SHEETS_METAS_DONACION_CSV);
+        if (data && data.length > 0) {
+          const row = data[0];
+          const mVal = parseInt(row.meta_mensual, 10);
+          const rVal = parseInt(row.recaudado_actual, 10);
+          if (!isNaN(mVal) && mVal > 0) setMeta(mVal);
+          if (!isNaN(rVal)) setRecaudado(rVal);
+        }
+      } catch (e) {
+        console.error("Error cargando metas de donaciones", e);
+      }
+      setIsLoadingMeta(false);
+    }
+    loadMetaDonaciones();
+  }, []);
 
   const presets = [
     { value: "20000", label: "$20.000" },
@@ -175,6 +201,48 @@ export default function Donaciones() {
 
         {/* Impacto de Donación (Lado Derecho) */}
         <div className="lg:col-span-5 space-y-6">
+
+          {/* Termómetro de Donaciones */}
+          {!isLoadingMeta && meta > 0 && (
+            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50/50 to-white shadow-sm space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">📈</span>
+                <div>
+                  <h3 className="font-display font-bold text-base text-fepv-darkblue">
+                    Termómetro de Solidaridad
+                  </h3>
+                  <p className="text-[10px] text-fepv-green font-bold uppercase tracking-wider">
+                    Meta de Recaudación Mensual
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs font-bold text-fepv-darkblue">
+                  <span>Recaudado: ${recaudado.toLocaleString("es-CO")}</span>
+                  <span>Meta: ${meta.toLocaleString("es-CO")}</span>
+                </div>
+                
+                {/* Progress bar */}
+                <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden p-0.5 border border-gray-250/20">
+                  <div 
+                    className="h-full bg-gradient-to-r from-fepv-green to-fepv-vividgreen rounded-full transition-all duration-1000 shadow-inner flex items-center justify-end pr-2"
+                    style={{ width: `${Math.min(100, Math.round((recaudado / meta) * 100))}%` }}
+                  >
+                    {Math.min(100, Math.round((recaudado / meta) * 100)) > 10 && (
+                      <span className="text-[8px] font-black text-white leading-none">
+                        {Math.min(100, Math.round((recaudado / meta) * 100))}%
+                      </span>
+                    )}
+                  </div>
+                </div>
+                
+                <p className="text-[10px] text-fepv-gray/70 text-center font-medium italic pt-1">
+                  ¡Llevamos el <strong>{Math.min(100, Math.round((recaudado / meta) * 100))}%</strong> de la meta gracias a tu ayuda!
+                </p>
+              </div>
+            </div>
+          )}
           
           {/* Destino de los recursos */}
           <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-150 shadow-sm space-y-6">

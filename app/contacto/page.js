@@ -1,6 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_FAQ_CSV } from "../../lib/api";
+
+const MOCK_FAQS = [
+  {
+    id: "FAQ-1",
+    pregunta: "¿Cómo puedo participar en las convocatorias o cursos?",
+    respuesta: "Puedes postularte ingresando a nuestra sección de Oportunidades, eligiendo la convocatoria de tu interés y completando el formulario de inscripción digital. Si requieres ayuda técnica, puedes comunicarte por WhatsApp."
+  },
+  {
+    id: "FAQ-2",
+    pregunta: "¿Mis donaciones son seguras y destinadas a los programas?",
+    respuesta: "Sí. La FEPV es una entidad sin ánimo de lucro registrada ante Cámara de Comercio. Emitimos certificados de donación oficiales y publicamos estados financieros anualmente por transparencia institucional."
+  },
+  {
+    id: "FAQ-3",
+    pregunta: "¿Dónde opera principalmente la fundación?",
+    respuesta: "Nuestra sede principal física y centro operativo se encuentra en Agustín Codazzi (Cesar), realizando brigadas y talleres presenciales en las comunas y áreas rurales aledañas, con cobertura virtual nacional."
+  }
+];
 
 export default function Contacto() {
   const [formData, setFormData] = useState({
@@ -14,6 +33,36 @@ export default function Contacto() {
 
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // Estados de Preguntas Frecuentes
+  const [faqs, setFaqs] = useState([]);
+  const [isLoadingFaqs, setIsLoadingFaqs] = useState(true);
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+
+  useEffect(() => {
+    async function loadFaqs() {
+      setIsLoadingFaqs(true);
+      try {
+        const data = await fetchGoogleSheetData(GOOGLE_SHEETS_FAQ_CSV);
+        if (data && data.length > 0) {
+          const sorted = data.map(item => ({
+            id: item.id || `FAQ-${Math.random()}`,
+            pregunta: item.pregunta || "",
+            respuesta: item.respuesta || "",
+            orden: parseInt(item.orden, 10) || 99
+          })).sort((a, b) => a.orden - b.orden);
+          setFaqs(sorted);
+        } else {
+          setFaqs(MOCK_FAQS);
+        }
+      } catch (e) {
+        console.error("Error cargando FAQs", e);
+        setFaqs(MOCK_FAQS);
+      }
+      setIsLoadingFaqs(false);
+    }
+    loadFaqs();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -253,6 +302,57 @@ export default function Contacto() {
 
       </section>
 
+      {/* Preguntas Frecuentes Accordion Section */}
+      <section className="py-20 bg-gray-50 border-t border-gray-150">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 space-y-2">
+            <h2 className="font-display font-bold text-2xl sm:text-3xl text-fepv-darkblue">
+              Preguntas Frecuentes
+            </h2>
+            <p className="text-xs sm:text-sm text-fepv-gray/70">
+              Resuelve tus dudas más comunes de forma inmediata sobre el funcionamiento de la fundación.
+            </p>
+          </div>
+
+          {isLoadingFaqs ? (
+            <div className="flex flex-col justify-center items-center py-10 space-y-3">
+              <div className="w-8 h-8 border-3 border-fepv-green border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-xs text-fepv-gray/70">Cargando preguntas frecuentes...</p>
+            </div>
+          ) : faqs.length === 0 ? (
+            <p className="text-center text-xs text-fepv-gray/50">No hay preguntas publicadas actualmente.</p>
+          ) : (
+            <div className="space-y-4">
+              {faqs.map((faq, idx) => {
+                const isOpen = openFaqIndex === idx;
+                return (
+                  <div 
+                    key={faq.id} 
+                    className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm transition-all duration-300"
+                  >
+                    <button
+                      onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                      className="w-full p-5 text-left flex justify-between items-center gap-4 cursor-pointer focus:outline-none hover:bg-gray-50/50"
+                    >
+                      <span className="font-display font-bold text-xs sm:text-sm text-fepv-darkblue">
+                        {faq.pregunta}
+                      </span>
+                      <span className={`text-fepv-green font-bold text-lg transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}>
+                        ＋
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-fepv-gray/85 leading-relaxed border-t border-gray-50 animate-in fade-in duration-300">
+                        {faq.respuesta}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

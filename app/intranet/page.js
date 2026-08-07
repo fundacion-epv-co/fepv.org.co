@@ -62,6 +62,9 @@ export default function Intranet() {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [pendingNavigationUrl, setPendingNavigationUrl] = useState(null);
 
+  // Estado para registrar el último correo de envío de consecutivo
+  const [lastSentEmail, setLastSentEmail] = useState("");
+
   const isPending = GOOGLE_APPS_SCRIPT_INTRANET_URL === "PENDIENTE_DE_URL_SCRIPT_INTRANET";
 
   const getDisplayName = (email) => {
@@ -387,10 +390,12 @@ export default function Intranet() {
 
       if (res.success) {
         setGeneratedConsecutivo(res.consecutivo);
+        setLastSentEmail(consEmail);
         setSuccessMsg(`¡Consecutivo generado con éxito: ${res.consecutivo}! Se envió una confirmación al correo.`);
         setConsNombre("");
         setConsResponsable("");
         setConsObservaciones("");
+        setConsEmail("");
       } else {
         setError(res.message);
       }
@@ -769,7 +774,7 @@ export default function Intranet() {
                         {generatedConsecutivo}
                       </div>
                       <p className="text-xs text-fepv-gray/80 max-w-md mx-auto">
-                        Copia este código y úsalo en tu documento. Se ha enviado una copia detallada del registro a tu correo: <strong>{session.email}</strong>.
+                        Copia este código y úsalo en tu documento. Se ha enviado una copia detallada del registro a tu correo: <strong>{lastSentEmail || session.email}</strong>.
                       </p>
                       <button 
                         onClick={() => setGeneratedConsecutivo("")} 
