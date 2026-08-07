@@ -27,15 +27,18 @@ export default function Noticias() {
       }
 
       const data = await fetchGoogleSheetData(GOOGLE_SHEETS_NOTICIAS_CSV);
-      // Mapear los datos del CSV (id, titulo, fecha, contenido, enlace_foto)
+      // Mapear los datos del CSV (id, fecha, categoria, titulo, resumen, autor, contenido, enlace_imagen_drive)
       const mapped = data.map((item, index) => ({
         id: item.id || `NOT-${index + 1}`,
         title: item.titulo || 'Sin título',
         date: item.fecha || '',
+        category: item.categoria || 'General',
+        summary: item.resumen || '',
+        author: item.autor || '',
         content: item.contenido || '',
-        image: getDirectDriveImageUrl(item.enlace_foto) || null
+        image: getDirectDriveImageUrl(item.enlace_imagen_drive || item.enlace_foto) || null
       }));
-      setNoticias(mapped.reverse()); // Reverse para mostrar las más recientes primero si se añaden al final
+      setNoticias(mapped.reverse()); // Reverse para mostrar las más recientes primero
       setIsLoading(false);
     }
     loadData();
@@ -103,16 +106,24 @@ export default function Noticias() {
                 </div>
                 
                 {/* Contenido Card */}
-                <div className="p-6 flex flex-col flex-grow">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-fepv-vividgreen mb-2 block">
-                    {n.date}
-                  </span>
-                  <h3 className="font-display font-bold text-lg text-fepv-darkblue leading-snug mb-3">
+                <div className="p-6 flex flex-col flex-grow text-left">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-fepv-green bg-fepv-light px-2 py-0.5 rounded">
+                      {n.category}
+                    </span>
+                    <span className="text-[10px] text-fepv-gray/60 font-semibold">
+                      {n.date}
+                    </span>
+                  </div>
+                  
+                  <h3 className="font-display font-bold text-base sm:text-lg text-fepv-darkblue leading-snug mb-2 group-hover:text-fepv-green transition-colors">
                     {n.title}
                   </h3>
-                  <p className="text-sm text-fepv-gray/80 line-clamp-3 mb-4 flex-grow">
-                    {n.content}
+                  
+                  <p className="text-xs sm:text-sm text-fepv-gray/80 line-clamp-3 mb-4 flex-grow">
+                    {n.summary || n.content}
                   </p>
+                  
                   <span className="text-xs font-bold text-fepv-orange flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                     Leer más <span aria-hidden="true">&rarr;</span>
                   </span>
@@ -152,14 +163,24 @@ export default function Noticias() {
               )}
 
               {/* Contenido Artículo */}
-              <div className="p-6 sm:p-10 space-y-6">
+              <div className="p-6 sm:p-10 space-y-6 text-left">
                 <div className="space-y-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-fepv-vividgreen">
-                    {selectedNoticia.date}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-fepv-green px-2.5 py-1 rounded">
+                      {selectedNoticia.category}
+                    </span>
+                    <span className="text-xs text-fepv-gray/70 font-semibold">
+                      {selectedNoticia.date}
+                    </span>
+                  </div>
                   <h2 className="font-display font-bold text-2xl sm:text-4xl text-fepv-darkblue leading-tight">
                     {selectedNoticia.title}
                   </h2>
+                  {selectedNoticia.author && (
+                    <p className="text-xs text-fepv-gray/60 font-semibold">
+                      Redactado por: <span className="text-fepv-darkblue">{selectedNoticia.author}</span>
+                    </p>
+                  )}
                 </div>
                 
                 <div className="w-12 h-1 bg-fepv-orange rounded-full"></div>
