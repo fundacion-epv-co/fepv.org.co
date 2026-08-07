@@ -83,7 +83,7 @@ export default function Header() {
                 Fundación Encuentros
 =======
               <span className="font-display font-bold text-base text-fepv-darkblue tracking-tight leading-none">
-                FUNDACIÓN ENCUENTROS
+                Fundación Encuentros
 >>>>>>> 3b2f064967ab0d56068b9d7178ce2aba62dc9c65
               </span>
               <span className="font-sans text-xs font-semibold text-fepv-vividgreen tracking-wider mt-0.5">
