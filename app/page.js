@@ -100,7 +100,7 @@ export default function Home() {
     if (bannerItems.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentBannerIndex((prev) => (prev + 1) % bannerItems.length);
-    }, 6000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [bannerItems.length]);
 
@@ -306,7 +306,7 @@ export default function Home() {
       
       {/* BLOQUE 0: BANNER DINÁMICO ESTILO SENA */}
       {bannerItems.length > 0 && (
-        <section className="relative w-full h-[385px] md:h-[460px] bg-fepv-darkblue group">
+        <section className="relative w-full h-[425px] md:h-[510px] bg-fepv-darkblue group">
           {bannerItems.map((item, idx) => (
             <div 
               key={idx}
@@ -314,7 +314,7 @@ export default function Home() {
             >
               {/* Imagen de fondo */}
               <div 
-                className="absolute inset-0 bg-cover bg-center" 
+                className="absolute inset-0 bg-cover bg-top" 
                 style={{ backgroundImage: `url(${getDirectDriveImageUrl(item.imagen)})` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-fepv-darkblue/90 via-fepv-darkblue/40 to-transparent mix-blend-multiply"></div>
@@ -429,7 +429,7 @@ export default function Home() {
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-[420px] aspect-[4/5] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1593113563332-f109af368e43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=800" 
                   alt="Comunidad FEPV" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
