@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV } from "../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV } from "../../lib/api";
 
 function ConvocatoriasContent() {
   const [filterCategory, setFilterCategory] = useState("all");
@@ -25,10 +25,42 @@ function ConvocatoriasContent() {
 
   useEffect(() => {
     async function loadData() {
-      const data = await fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV);
-      // Mapear los datos del CSV (id, titulo, descripcion, fecha_cierre, enlace_drive, estado, enlace_formulario)
-      const mapped = data.map((item, index) => ({
-        id: item.id || `CONV-${index + 1}`,
+      setIsLoading(true);
+      let combinedData = [];
+
+      // 1. Cargar Convocatorias (pestaña principal)
+      try {
+        const dataConvs = await fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV);
+        if (dataConvs && dataConvs.length > 0) {
+          const normalizedConvs = dataConvs.map(item => ({
+            ...item,
+            categoria: item.categoria || 'Convocatorias'
+          }));
+          combinedData = combinedData.concat(normalizedConvs);
+        }
+      } catch (e) {
+        console.error("Error cargando convocatorias", e);
+      }
+
+      // 2. Cargar Ofertas de Empleo (segunda pestaña)
+      if (GOOGLE_SHEETS_OFERTAS_CSV !== "PENDIENTE_DE_URL_OFERTAS") {
+        try {
+          const dataOfertas = await fetchGoogleSheetData(GOOGLE_SHEETS_OFERTAS_CSV);
+          if (dataOfertas && dataOfertas.length > 0) {
+            const normalizedOfertas = dataOfertas.map(item => ({
+              ...item,
+              categoria: item.categoria || 'Oferta'
+            }));
+            combinedData = combinedData.concat(normalizedOfertas);
+          }
+        } catch (e) {
+          console.error("Error cargando ofertas de empleo", e);
+        }
+      }
+
+      // Mapear los datos combinados
+      const mapped = combinedData.map((item, index) => ({
+        id: item.id || `OP-${index + 1}`,
         title: item.titulo || 'Sin título',
         desc: item.descripcion || '',
         deadline: item.cierre || item.fecha_cierre || '',
@@ -47,10 +79,15 @@ function ConvocatoriasContent() {
           uniqueCats.push(c.category);
         }
       });
-      setCategories(uniqueCats.map(c => ({
-        id: c === "Todas" ? "all" : c,
-        name: c
-      })));
+      setCategories(uniqueCats.map(c => {
+        let displayName = c;
+        if (c === "Convocatoria") displayName = "Convocatorias";
+        if (c === "Empleo") displayName = "Ofertas de Empleo";
+        return {
+          id: c === "Todas" ? "all" : c,
+          name: displayName
+        };
+      }));
 
       setIsLoading(false);
     }

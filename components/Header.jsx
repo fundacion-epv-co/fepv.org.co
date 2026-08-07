@@ -52,8 +52,8 @@ export default function Header() {
       name: "Oportunidades",
       href: "/convocatorias",
       submenu: [
-        { name: "Convocatorias", href: "/convocatorias?cat=Convocatorias" },
-        { name: "Ofertas de Empleo", href: "/convocatorias?cat=Oferta" },
+        { name: "Convocatorias", href: "/convocatorias?cat=Convocatoria" },
+        { name: "Ofertas de Empleo", href: "/convocatorias?cat=Empleo" },
       ],
     },
     { name: "Noticias", href: "/noticias" },
