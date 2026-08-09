@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PROGRAM_DATA } from "../../../lib/programData";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV } from "../../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_PROGRAMAS_CSV, getDirectDriveImageUrl, fetchProgramImagesMap } from "../../../lib/api";
 
 export default function ProgramDetailClient({ slug }) {
   const [oportunidades, setOportunidades] = useState([]);
   const [isLoadingOpps, setIsLoadingOpps] = useState(true);
 
-  // Obtener la información del programa
-  const program = PROGRAM_DATA[slug];
+  // Obtener la información del programa desde el estado
+  const [program, setProgram] = useState(PROGRAM_DATA[slug]);
 
   useEffect(() => {
     async function loadOpps() {
@@ -33,7 +33,7 @@ export default function ProgramDetailClient({ slug }) {
             opp.status.toLowerCase().trim() === "abierta" && 
             (
               (opp.programa && opp.programa.toLowerCase().trim() === slug.toLowerCase().trim()) ||
-              (program && opp.programa && opp.programa.toLowerCase().trim() === program.title.toLowerCase().trim())
+              (PROGRAM_DATA[slug] && opp.programa && opp.programa.toLowerCase().trim() === PROGRAM_DATA[slug].title.toLowerCase().trim())
             )
           );
           setOportunidades(activeOpps);
@@ -44,10 +44,51 @@ export default function ProgramDetailClient({ slug }) {
       setIsLoadingOpps(false);
     }
 
+    async function loadProgramCMS() {
+      try {
+        const progData = await fetchGoogleSheetData(GOOGLE_SHEETS_PROGRAMAS_CSV);
+        const imagesMap = await fetchProgramImagesMap();
+        
+        const sheetProg = (progData && progData.length > 0) ? progData.find(item => 
+          (item.id && item.id.toLowerCase().trim() === slug.toLowerCase().trim()) ||
+          (item.titulo && item.titulo.toLowerCase().trim().includes(slug.replace("-", " ").toLowerCase().trim()))
+        ) : null;
+
+        const customIcon = imagesMap[slug] || (sheetProg && (sheetProg.icono || sheetProg.imagen || sheetProg.enlace_imagen_drive)) || PROGRAM_DATA[slug]?.icon;
+
+        if (sheetProg) {
+          setProgram(prev => ({
+            ...prev,
+            title: sheetProg.titulo || prev.title,
+            desc: sheetProg.descripcion || prev.desc,
+            obj: sheetProg.objetivo || prev.obj,
+            population: sheetProg.poblacion || prev.population,
+            location: sheetProg.lugar || prev.location,
+            allies: sheetProg.aliados || prev.allies,
+            status: sheetProg.estado || prev.status,
+            icon: customIcon
+          }));
+        } else {
+          setProgram(prev => ({
+            ...prev,
+            icon: customIcon
+          }));
+        }
+      } catch (e) {
+        console.error("Error cargando detalles del CMS de programas", e);
+      }
+    }
+
     if (slug) {
       loadOpps();
+      loadProgramCMS();
     }
-  }, [slug, program]);
+  }, [slug]);
+
+  const isImageUrl = (str) => {
+    if (!str) return false;
+    return str.startsWith("http") || str.includes("drive.google.com") || str.includes("lh3.googleusercontent.com");
+  };
 
   if (!program) {
     return (
@@ -97,9 +138,19 @@ export default function ProgramDetailClient({ slug }) {
           </div>
 
           <div className="flex items-center gap-3 pt-2">
-            <span className="text-4xl p-3 bg-white/10 rounded-2xl backdrop-blur-md">
-              {program.icon}
-            </span>
+            {program && isImageUrl(program.icon) ? (
+              <div className="relative w-16 h-16 bg-white/10 rounded-2xl backdrop-blur-md overflow-hidden flex items-center justify-center p-2">
+                <img 
+                  src={getDirectDriveImageUrl(program.icon)} 
+                  alt={program.title}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            ) : (
+              <span className="text-4xl p-3 bg-white/10 rounded-2xl backdrop-blur-md">
+                {program?.icon}
+              </span>
+            )}
             <div className="space-y-0.5">
               <span className="text-[10px] font-bold text-fepv-green uppercase tracking-widest block">
                 Proyecto {program.code}

@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PROGRAM_DATA } from "../../lib/programData";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV } from "../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_PROGRAMAS_CSV, getDirectDriveImageUrl, fetchProgramImagesMap } from "../../lib/api";
 
 export default function Programas() {
   const [oportunidades, setOportunidades] = useState([]);
   const [isLoadingOpps, setIsLoadingOpps] = useState(true);
 
-  // Obtener array de programas
-  const programsList = Object.values(PROGRAM_DATA);
+  // Obtener array de programas desde el estado
+  const [programsList, setProgramsList] = useState(Object.values(PROGRAM_DATA));
 
   // Cargar oportunidades en vivo para cruzar conteo en badges
   useEffect(() => {
@@ -31,8 +31,52 @@ export default function Programas() {
       }
       setIsLoadingOpps(false);
     }
+
+    async function loadProgramsCMS() {
+      try {
+        const progData = await fetchGoogleSheetData(GOOGLE_SHEETS_PROGRAMAS_CSV);
+        const imagesMap = await fetchProgramImagesMap();
+        
+        const merged = Object.values(PROGRAM_DATA).map(staticProg => {
+          const sheetProg = (progData && progData.length > 0) ? progData.find(item => 
+            (item.id && item.id.toLowerCase().trim() === staticProg.id.toLowerCase().trim()) ||
+            (item.titulo && item.titulo.toLowerCase().trim().includes(staticProg.id.replace("-", " ").toLowerCase().trim()))
+          ) : null;
+          
+          const customIcon = imagesMap[staticProg.id] || (sheetProg && (sheetProg.icono || sheetProg.imagen || sheetProg.enlace_imagen_drive)) || staticProg.icon;
+
+          if (sheetProg) {
+            return {
+              ...staticProg,
+              title: sheetProg.titulo || staticProg.title,
+              desc: sheetProg.descripcion || staticProg.desc,
+              obj: sheetProg.objetivo || staticProg.obj,
+              population: sheetProg.poblacion || staticProg.population,
+              location: sheetProg.lugar || staticProg.location,
+              allies: sheetProg.aliados || staticProg.allies,
+              status: sheetProg.estado || staticProg.status,
+              icon: customIcon
+            };
+          }
+          return {
+            ...staticProg,
+            icon: customIcon
+          };
+        });
+        setProgramsList(merged);
+      } catch (e) {
+        console.error("Error cargando programas desde el CMS de Sheets", e);
+      }
+    }
+
     loadOpps();
+    loadProgramsCMS();
   }, []);
+
+  const isImageUrl = (str) => {
+    if (!str) return false;
+    return str.startsWith("http") || str.includes("drive.google.com") || str.includes("lh3.googleusercontent.com");
+  };
 
   // Lista de estados sugeridos
   const statusLabels = {
@@ -105,9 +149,19 @@ export default function Programas() {
                 <div className="space-y-4">
                   {/* Icono grande y Categoría */}
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl p-2.5 bg-gray-50 rounded-2xl group-hover:bg-fepv-light transition-colors">
-                      {p.icon}
-                    </span>
+                    {isImageUrl(p.icon) ? (
+                      <div className="w-14 h-14 bg-gray-50 rounded-2xl group-hover:bg-fepv-light transition-colors overflow-hidden flex items-center justify-center p-2">
+                        <img 
+                          src={getDirectDriveImageUrl(p.icon)} 
+                          alt={p.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-3xl p-2.5 bg-gray-50 rounded-2xl group-hover:bg-fepv-light transition-colors">
+                        {p.icon}
+                      </span>
+                    )}
                     <div>
                       <span className="text-[9px] font-bold text-fepv-blue uppercase tracking-widest block">
                         {p.category}
@@ -174,9 +228,19 @@ export default function Programas() {
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-3xl p-3 bg-white rounded-2xl border border-gray-100 flex items-center justify-center">
-                      {p.icon}
-                    </span>
+                    {isImageUrl(p.icon) ? (
+                      <div className="w-14 h-14 bg-white rounded-2xl border border-gray-100 overflow-hidden flex items-center justify-center p-2">
+                        <img 
+                          src={getDirectDriveImageUrl(p.icon)} 
+                          alt={p.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-3xl p-3 bg-white rounded-2xl border border-gray-100 flex items-center justify-center">
+                        {p.icon}
+                      </span>
+                    )}
                     <span className="text-[9px] font-black bg-fepv-orange text-white px-2.5 py-1 rounded-full uppercase tracking-wider">
                       ★ Insignia
                     </span>
