@@ -158,36 +158,44 @@ export default function ProgramDetailClient({ slug }) {
             <span className="text-white font-bold">{program.category}</span>
           </div>
 
-          <div className="flex items-center gap-4 pt-2">
-            {program && isImageUrl(program.icon) ? (
-              <div className="relative w-32 h-32 bg-white rounded-3xl overflow-hidden flex items-center justify-center p-3.5 shadow-2xl border border-white/20 hover:scale-105 transition-transform duration-300">
-                <img 
-                  src={getDirectDriveImageUrl(program.icon)} 
-                  alt={program.title}
-                  className="w-full h-full object-contain"
-                />
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-4">
+            {/* Contenido de Texto (Izquierda) */}
+            <div className="md:col-span-8 space-y-4 order-2 md:order-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-xs font-black text-fepv-green uppercase tracking-widest bg-fepv-green/10 border border-fepv-green/20 px-3 py-1 rounded-md">
+                  Proyecto {program.code}
+                </span>
+                <span className={`inline-block text-xs font-bold px-3.5 py-1 rounded-full border ${program.statusColor}`}>
+                  {program.status}
+                </span>
               </div>
-            ) : (
-              <span className="text-6xl p-5 bg-white/10 rounded-3xl backdrop-blur-md flex items-center justify-center min-w-[110px] min-h-[110px]">
-                {program?.icon}
-              </span>
-            )}
-            <div className="space-y-2">
-              <span className="text-xs sm:text-sm font-black text-fepv-green uppercase tracking-widest block">
-                Proyecto {program.code}
-              </span>
-              <span className={`inline-block text-xs font-bold px-3.5 py-1 rounded-full border ${program.statusColor}`}>
-                {program.status}
-              </span>
+
+              <h1 className="font-display font-black text-4xl sm:text-5.5xl lg:text-6.5xl leading-tight text-white">
+                {program.title}
+              </h1>
+              
+              <p className="font-sans text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
+                {program.subtitle}
+              </p>
+            </div>
+
+            {/* Contenedor del Logo (Derecha en Desktop, Arriba en Mobile) */}
+            <div className="md:col-span-4 flex justify-center md:justify-end order-1 md:order-2">
+              {program && isImageUrl(program.icon) ? (
+                <div className="relative w-36 h-36 sm:w-44 sm:h-44 bg-white rounded-full p-5 shadow-[0_20px_50px_rgba(8,_112,_184,_0.35)] border-4 border-white/10 flex items-center justify-center hover:scale-105 transition-transform duration-300">
+                  <img 
+                    src={getDirectDriveImageUrl(program.icon)} 
+                    alt={program.title}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <span className="text-7xl p-8 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center min-w-[130px] min-h-[130px] shadow-lg border border-white/10">
+                  {program?.icon}
+                </span>
+              )}
             </div>
           </div>
-
-          <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-tight">
-            {program.title}
-          </h1>
-          <p className="font-sans text-base sm:text-xl text-fepv-light/95 max-w-4xl leading-relaxed mt-2">
-            {program.subtitle}
-          </p>
         </div>
       </section>
 
