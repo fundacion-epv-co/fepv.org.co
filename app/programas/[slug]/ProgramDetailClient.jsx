@@ -143,14 +143,14 @@ export default function ProgramDetailClient({ slug }) {
   return (
     <div className="w-full bg-gray-50 pb-20 min-h-screen">
       
-      {/* Banner Superior del Programa */}
-      <section className="bg-gradient-to-br from-fepv-dark to-fepv-darkblue text-white py-20 relative overflow-hidden">
+      {/* Banner Superior del Programa (Súper Compacto) */}
+      <section className="bg-gradient-to-r from-fepv-dark to-fepv-darkblue text-white py-8 relative overflow-hidden border-b border-gray-200/10">
         {/* Adorno de fondo */}
-        <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-fepv-green/10 rounded-l-full blur-3xl pointer-events-none"></div>
+        <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-fepv-green/10 rounded-l-full blur-2xl pointer-events-none"></div>
         
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 relative z-10 text-left">
           {/* Breadcrumbs */}
-          <div className="flex items-center gap-2 text-xs text-fepv-light/80">
+          <div className="flex items-center gap-2 text-[10px] text-fepv-light/70">
             <Link href="/" className="hover:underline">Inicio</Link>
             <span>/</span>
             <Link href="/programas" className="hover:underline">Programas</Link>
@@ -158,31 +158,12 @@ export default function ProgramDetailClient({ slug }) {
             <span className="text-white font-bold">{program.category}</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-4">
-            {/* Contenido de Texto (Izquierda) */}
-            <div className="md:col-span-8 space-y-4 order-2 md:order-1">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-xs font-black text-fepv-green uppercase tracking-widest bg-fepv-green/10 border border-fepv-green/20 px-3 py-1 rounded-md">
-                  Proyecto {program.code}
-                </span>
-                <span className={`inline-block text-xs font-bold px-3.5 py-1 rounded-full border ${program.statusColor}`}>
-                  {program.status}
-                </span>
-              </div>
-
-              <h1 className="font-display font-black text-4xl sm:text-5.5xl lg:text-6.5xl leading-tight text-white">
-                {program.title}
-              </h1>
-              
-              <p className="font-sans text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
-                {program.subtitle}
-              </p>
-            </div>
-
-            {/* Contenedor del Logo (Derecha en Desktop, Arriba en Mobile) */}
-            <div className="md:col-span-4 flex justify-center md:justify-end order-1 md:order-2">
+          {/* Fila Horizontal Compacta (Logo + Textos Básicos) */}
+          <div className="flex items-center gap-4 sm:gap-6 pt-1">
+            {/* Contenedor del Logo */}
+            <div className="flex-shrink-0">
               {program && isImageUrl(program.icon) ? (
-                <div className="relative w-36 h-36 sm:w-44 sm:h-44 bg-white rounded-full p-5 shadow-[0_20px_50px_rgba(8,_112,_184,_0.35)] border-4 border-white/10 flex items-center justify-center hover:scale-105 transition-transform duration-300">
+                <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-white rounded-2xl p-2.5 sm:p-4 shadow-lg border border-white/20 hover:scale-105 transition-transform duration-300">
                   <img 
                     src={getDirectDriveImageUrl(program.icon)} 
                     alt={program.title}
@@ -190,10 +171,27 @@ export default function ProgramDetailClient({ slug }) {
                   />
                 </div>
               ) : (
-                <span className="text-7xl p-8 bg-white/10 rounded-full backdrop-blur-md flex items-center justify-center min-w-[130px] min-h-[130px] shadow-lg border border-white/10">
+                <span className="text-4xl sm:text-5xl p-3 bg-white/10 rounded-2xl backdrop-blur-md flex items-center justify-center min-w-[64px] min-h-[64px] shadow border border-white/10">
                   {program?.icon}
                 </span>
               )}
+            </div>
+
+            {/* Código y Nombre del Proyecto */}
+            <div className="space-y-1 sm:space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] sm:text-xs font-black text-fepv-green uppercase tracking-widest">
+                  Proyecto {program.code}
+                </span>
+                <span className="text-[10px] sm:text-xs text-white/50">•</span>
+                <span className={`inline-block text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full border ${program.statusColor}`}>
+                  {program.status}
+                </span>
+              </div>
+
+              <h1 className="font-display font-black text-xl sm:text-3.5xl lg:text-4xl leading-tight text-white">
+                {program.title}
+              </h1>
             </div>
           </div>
         </div>
@@ -201,6 +199,12 @@ export default function ProgramDetailClient({ slug }) {
 
       {/* Grid del Desafío y Respuesta */}
       <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Descripción de Introducción Reubicada */}
+        <div className="mb-10 text-left max-w-4xl border-l-4 border-fepv-green pl-4">
+          <p className="font-sans text-base sm:text-lg text-fepv-gray/80 leading-relaxed font-medium italic">
+            {program.subtitle}
+          </p>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* El Desafío */}
           <div className="lg:col-span-6 bg-white p-6 sm:p-8 rounded-3xl border border-gray-150 shadow-sm flex flex-col justify-between text-left space-y-4">
