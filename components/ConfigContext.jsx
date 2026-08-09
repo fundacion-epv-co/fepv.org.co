@@ -17,6 +17,19 @@ export function ConfigProvider({ children }) {
   });
 
   useEffect(() => {
+    // 1. Cargar instantáneamente desde el caché local (si existe)
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("fepv_cache_global_config");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          setConfig(prev => ({ ...prev, ...parsed }));
+        }
+      } catch (e) {
+        console.error("Error al leer caché local de configuración", e);
+      }
+    }
+
     async function loadConfig() {
       try {
         const data = await fetchGlobalConfig();
@@ -26,6 +39,11 @@ export function ConfigProvider({ children }) {
             formatted.logo_url_formatted = getDirectDriveImageUrl(data.logo_url);
           }
           setConfig(prev => ({ ...prev, ...formatted }));
+          
+          // Guardar en el caché local para la siguiente visita instantánea
+          if (typeof window !== "undefined") {
+            localStorage.setItem("fepv_cache_global_config", JSON.stringify(formatted));
+          }
         }
       } catch (e) {
         console.error("Error cargando configuración global de Sheets:", e);

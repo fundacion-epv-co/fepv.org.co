@@ -57,22 +57,34 @@ export default function ProgramDetailClient({ slug }) {
         const customIcon = imagesMap[slug] || (sheetProg && (sheetProg.icono || sheetProg.imagen || sheetProg.enlace_imagen_drive)) || PROGRAM_DATA[slug]?.icon;
 
         if (sheetProg) {
-          setProgram(prev => ({
-            ...prev,
-            title: sheetProg.titulo || prev.title,
-            desc: sheetProg.descripcion || prev.desc,
-            obj: sheetProg.objetivo || prev.obj,
-            population: sheetProg.poblacion || prev.population,
-            location: sheetProg.lugar || prev.location,
-            allies: sheetProg.aliados || prev.allies,
-            status: sheetProg.estado || prev.status,
+          const updated = {
+            ...PROGRAM_DATA[slug],
+            title: sheetProg.titulo || PROGRAM_DATA[slug]?.title,
+            desc: sheetProg.descripcion || PROGRAM_DATA[slug]?.desc,
+            obj: sheetProg.objetivo || PROGRAM_DATA[slug]?.obj,
+            population: sheetProg.poblacion || PROGRAM_DATA[slug]?.population,
+            location: sheetProg.lugar || PROGRAM_DATA[slug]?.location,
+            allies: sheetProg.aliados || PROGRAM_DATA[slug]?.allies,
+            status: sheetProg.estado || PROGRAM_DATA[slug]?.status,
             icon: customIcon
-          }));
+          };
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem(`fepv_cache_program_${slug}`, JSON.stringify(updated));
+            } catch(e){}
+          }
+          setProgram(updated);
         } else {
-          setProgram(prev => ({
-            ...prev,
+          const updated = {
+            ...PROGRAM_DATA[slug],
             icon: customIcon
-          }));
+          };
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem(`fepv_cache_program_${slug}`, JSON.stringify(updated));
+            } catch(e){}
+          }
+          setProgram(updated);
         }
       } catch (e) {
         console.error("Error cargando detalles del CMS de programas", e);
@@ -80,6 +92,15 @@ export default function ProgramDetailClient({ slug }) {
     }
 
     if (slug) {
+      // Cargar caché local instantáneamente antes de la petición de red
+      if (typeof window !== "undefined") {
+        try {
+          const cached = localStorage.getItem(`fepv_cache_program_${slug}`);
+          if (cached) {
+            setProgram(JSON.parse(cached));
+          }
+        } catch(e){}
+      }
       loadOpps();
       loadProgramCMS();
     }
@@ -137,9 +158,9 @@ export default function ProgramDetailClient({ slug }) {
             <span className="text-white font-bold">{program.category}</span>
           </div>
 
-          <div className="flex items-center gap-3 pt-2">
+          <div className="flex items-center gap-4 pt-2">
             {program && isImageUrl(program.icon) ? (
-              <div className="relative w-16 h-16 bg-white/10 rounded-2xl backdrop-blur-md overflow-hidden flex items-center justify-center p-2">
+              <div className="relative w-32 h-32 bg-white rounded-3xl overflow-hidden flex items-center justify-center p-3.5 shadow-2xl border border-white/20 hover:scale-105 transition-transform duration-300">
                 <img 
                   src={getDirectDriveImageUrl(program.icon)} 
                   alt={program.title}
@@ -147,24 +168,24 @@ export default function ProgramDetailClient({ slug }) {
                 />
               </div>
             ) : (
-              <span className="text-4xl p-3 bg-white/10 rounded-2xl backdrop-blur-md">
+              <span className="text-6xl p-5 bg-white/10 rounded-3xl backdrop-blur-md flex items-center justify-center min-w-[110px] min-h-[110px]">
                 {program?.icon}
               </span>
             )}
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-bold text-fepv-green uppercase tracking-widest block">
+            <div className="space-y-2">
+              <span className="text-xs sm:text-sm font-black text-fepv-green uppercase tracking-widest block">
                 Proyecto {program.code}
               </span>
-              <span className={`inline-block text-[9px] font-bold px-2.5 py-0.5 rounded-full border ${program.statusColor}`}>
+              <span className={`inline-block text-xs font-bold px-3.5 py-1 rounded-full border ${program.statusColor}`}>
                 {program.status}
               </span>
             </div>
           </div>
 
-          <h1 className="font-display font-bold text-3xl sm:text-4.5xl leading-tight">
+          <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-tight">
             {program.title}
           </h1>
-          <p className="font-sans text-sm sm:text-base text-fepv-light max-w-3xl leading-relaxed">
+          <p className="font-sans text-base sm:text-xl text-fepv-light/95 max-w-4xl leading-relaxed mt-2">
             {program.subtitle}
           </p>
         </div>
