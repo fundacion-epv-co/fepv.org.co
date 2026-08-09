@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_INTRANET_CSV, postToIntranetAPI, GOOGLE_APPS_SCRIPT_INTRANET_URL } from "../../lib/api";
 
 // Helper para hashear la contraseña en el cliente y no enviarla en texto plano
@@ -602,15 +603,16 @@ export default function Intranet() {
                             <h3 className="font-bold text-sm text-fepv-darkblue mt-1.5">{doc.titulo}</h3>
                           </div>
                           {doc.enlace_drive ? (
-                            <a
-                              href={doc.enlace_drive}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <Link
+                              href={`/visualizar?url=${encodeURIComponent(doc.enlace_drive)}&title=${encodeURIComponent(doc.titulo)}`}
                               className="text-fepv-gray hover:text-fepv-darkblue bg-white border border-gray-200 hover:border-fepv-darkblue p-2 rounded-lg transition-colors cursor-pointer"
-                              title="Descargar o Ver"
+                              title="Ver Documento"
                             >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            </a>
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            </Link>
                           ) : (
                             <span className="text-xs text-gray-400">Sin link</span>
                           )}

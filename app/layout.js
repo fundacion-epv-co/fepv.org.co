@@ -2,6 +2,7 @@ import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ConfigProvider } from "@/components/ConfigContext";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -45,9 +46,11 @@ export default function RootLayout({ children }) {
       style={{ scrollBehavior: "smooth" }}
     >
       <body className="min-h-full flex flex-col text-fepv-gray bg-fepv-white">
-        <Header />
-        <main className="flex-grow flex flex-col">{children}</main>
-        <Footer />
+        <ConfigProvider>
+          <Header />
+          <main className="flex-grow flex flex-col">{children}</main>
+          <Footer />
+        </ConfigProvider>
       </body>
     </html>
   );

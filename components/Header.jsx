@@ -5,11 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import logoImg from "../public/logo.png";
 import { usePathname } from "next/navigation";
+import { useGlobalConfig } from "./ConfigContext";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null); // 'nosotros' | 'programas' | null
   const pathname = usePathname();
+  const config = useGlobalConfig();
+  const dynamicLogo = config?.logo_url_formatted || logoImg;
 
   const handleDropdownToggle = (name) => {
     if (activeDropdown === name) {
@@ -71,8 +74,8 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 group focus:outline-none" aria-label="Volver a Inicio FEPV">
             <div className="relative w-14 h-14 flex-shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
               <Image
-                src={logoImg}
-                alt="Fundación Encuentros Para la Vida"
+                src={dynamicLogo}
+                alt={config?.nombre_fundacion || "Fundación Encuentros Para la Vida"}
                 fill
                 className="object-contain"
                 priority

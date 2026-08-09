@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV } from "../../lib/api";
 
 function ConvocatoriasContent() {
@@ -236,17 +237,15 @@ function ConvocatoriasContent() {
               
               {selectedConvocatoria.enlace_drive && (
                 <div className="mt-4">
-                  <a 
-                    href={selectedConvocatoria.enlace_drive} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                  <Link 
+                    href={`/visualizar?url=${encodeURIComponent(selectedConvocatoria.enlace_drive)}&title=${encodeURIComponent(selectedConvocatoria.title)}`}
                     className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-200"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                      <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                     </svg>
-                    Descargar / Ver Documento Adjunto
-                  </a>
+                    Ver Documento Adjunto
+                  </Link>
                 </div>
               )}
             </div>

@@ -1,9 +1,16 @@
+"use client";
+
+import logoImg from "../public/logo.png";
+import { useGlobalConfig } from "./ConfigContext";
+
 import Link from "next/link";
 import Image from "next/image";
-import logoImg from "../public/logo.png";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear() || 2026;
+  const config = useGlobalConfig();
+  const dynamicLogo = config?.logo_url_formatted || logoImg;
+  const foundationName = config?.nombre_fundacion || "Fundación Encuentros Para la Vida";
 
   return (
     <footer className="bg-fepv-darkblue text-white/90 border-t border-fepv-darkblue/20">
@@ -15,18 +22,18 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-16 h-16 flex-shrink-0 bg-white rounded-2xl p-1 shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <Image
-                  src={logoImg}
-                  alt="Fundación Encuentros Para la Vida - FEPV"
+                  src={dynamicLogo}
+                  alt={`${foundationName} - ${config?.sigla || "FEPV"}`}
                   fill
                   className="object-contain rounded-xl"
                 />
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-bold text-lg text-white leading-none">
-                  Fundación Encuentros
+                  {config?.nombre_fundacion || "Fundación Encuentros"}
                 </span>
                 <span className="font-sans text-xs font-semibold text-fepv-orange tracking-wider uppercase mt-0.5">
-                  Para la Vida
+                  {config?.sigla || "Para la Vida"}
                 </span>
               </div>
             </Link>
@@ -36,7 +43,7 @@ export default function Footer() {
             {/* Redes Sociales */}
             <div className="flex items-center space-x-4 pt-2">
               <a
-                href="https://facebook.com/fundacion.epv.co"
+                href={config?.enlace_facebook || "https://facebook.com/fundacion.epv.co"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
@@ -47,7 +54,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://instagram.com/fundacion.epv.co"
+                href={config?.enlace_instagram || "https://instagram.com/fundacion.epv.co"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
@@ -60,7 +67,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/573166899250"
+                href={config?.enlace_whatsapp || "https://wa.me/573166899250"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 hover:text-fepv-orange transition-colors duration-200"
@@ -183,7 +190,7 @@ export default function Footer() {
         {/* Sección de Copyright y Enlaces Legales */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
           <div>
-            &copy; {currentYear} Fundación Encuentros Para la Vida (FEPV). Todos los derechos reservados.
+            &copy; {currentYear} {foundationName} ({config?.sigla || "FEPV"}). Todos los derechos reservados.
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/politica-privacidad" className="hover:text-white transition-colors">

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_FAQ_CSV } from "../../lib/api";
+import { useGlobalConfig } from "../../components/ConfigContext";
 
 const MOCK_FAQS = [
   {
@@ -21,7 +21,18 @@ const MOCK_FAQS = [
   }
 ];
 
+import { useState, useEffect } from "react";
+
 export default function Contacto() {
+  const config = useGlobalConfig();
+  const foundationName = config?.nombre_fundacion || "Fundación Encuentros Para la Vida";
+  const contactPhone = config?.telefono_contacto || "+57 316 689 9250";
+  const contactEmail = config?.correo_contacto || "fundacion.epv.co@gmail.com";
+  const address = config?.direccion_fisica || "Agustín Codazzi, Cesar, Colombia";
+  const whatsappUrl = config?.enlace_whatsapp || "https://wa.me/573166899250";
+  const facebookUrl = config?.enlace_facebook || "https://facebook.com/fundacion.epv.co";
+  const instagramUrl = config?.enlace_instagram || "https://instagram.com/fundacion.epv.co";
+
   const [formData, setFormData] = useState({
     nombre: "",
     correo: "",
@@ -141,7 +152,7 @@ export default function Contacto() {
         <div className="lg:col-span-5 space-y-8">
           <div className="space-y-4">
             <h2 className="font-display font-bold text-2xl text-fepv-darkblue">
-              Fundación Encuentros Para la Vida
+              {foundationName}
             </h2>
             <p className="text-sm text-fepv-gray/80 leading-relaxed">
               Estamos a tu disposición en la sede principal en el departamento del Cesar o a través de nuestros canales digitales.
@@ -153,7 +164,7 @@ export default function Contacto() {
               <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">📍</span>
               <div className="space-y-1">
                 <h4 className="font-bold text-fepv-darkblue">Dirección Física</h4>
-                <p>Agustín Codazzi, Cesar, Colombia</p>
+                <p>{address}</p>
               </div>
             </div>
 
@@ -162,21 +173,20 @@ export default function Contacto() {
               <div className="space-y-1">
                 <h4 className="font-bold text-fepv-darkblue">Correo Electrónico</h4>
                 <p className="hover:underline">
-                  <a href="mailto:fundacion.epv.co@gmail.com">fundacion.epv.co@gmail.com</a>
+                  <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
                 </p>
-                <p className="text-[10px] text-fepv-gray/50">Corporativos: contacto@fepv.org.co (En proceso)</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
               <span className="text-2xl bg-fepv-light/50 p-2.5 rounded-xl flex items-center justify-center">📱</span>
               <div className="space-y-1">
-                <h4 className="font-bold text-fepv-darkblue">WhatsApp e Instagram</h4>
+                <h4 className="font-bold text-fepv-darkblue">Canales de Contacto</h4>
                 <p className="hover:underline">
-                  <a href="https://wa.me/573166899250" target="_blank" rel="noopener noreferrer">WhatsApp Institucional</a>
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp ({contactPhone})</a>
                 </p>
                 <p className="text-xs text-fepv-gray/70">
-                  <a href="https://instagram.com/fundacion.epv.co" target="_blank" rel="noopener noreferrer" className="hover:text-fepv-orange transition-colors">Instagram</a> / <a href="https://facebook.com/fundacion.epv.co" target="_blank" rel="noopener noreferrer" className="hover:text-fepv-orange transition-colors">Facebook</a>: @fundacion.epv.co
+                  <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="hover:text-fepv-orange transition-colors">Instagram</a> / <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="hover:text-fepv-orange transition-colors">Facebook</a>
                 </p>
               </div>
             </div>
