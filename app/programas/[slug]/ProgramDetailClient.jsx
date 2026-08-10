@@ -166,31 +166,31 @@ export default function ProgramDetailClient({ slug }) {
 
           {/* Fila Horizontal Compacta (Logo Rectangular Ancho + Textos) */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 pt-1">
-            {/* Contenedor del Logo (Compacto y Ajustado sin espacio blanco excesivo) */}
+            {/* Contenedor del Logo (Ultra-Compacto ajustado a los logos reales sin espacios blancos vacíos) */}
             <div className="flex-shrink-0">
-              <div className="bg-white rounded-2xl sm:rounded-3xl px-3.5 py-2 sm:px-5 sm:py-3 shadow-lg border border-white/20 inline-flex items-center gap-2.5 sm:gap-3.5 h-auto">
+              <div className="bg-white rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2.5 shadow-md border border-white/20 inline-flex items-center gap-2 sm:gap-3 h-auto">
                 {/* 1. Logo de la Fundación (Siempre a la izquierda) */}
-                <div className="relative h-9 w-24 sm:h-12 sm:w-32 flex-shrink-0">
+                <div className="h-8 sm:h-11 flex-shrink-0 flex items-center">
                   <img 
                     src={globalLogoSrc} 
                     alt="Logo Fundación"
-                    className="w-full h-full object-contain"
+                    className="h-full w-auto max-w-[110px] sm:max-w-[140px] object-contain block"
                   />
                 </div>
 
                 {/* Línea divisoria interna delgada */}
-                <div className="w-[1px] h-6 sm:h-9 bg-gray-200 flex-shrink-0"></div>
+                <div className="w-[1px] h-5 sm:h-8 bg-gray-250 flex-shrink-0 my-auto"></div>
 
                 {/* 2. Logo/Icono del Programa (A la derecha, ajustado) */}
-                <div className="relative h-9 w-9 sm:h-12 sm:w-12 flex items-center justify-center flex-shrink-0">
+                <div className="h-8 sm:h-11 flex-shrink-0 flex items-center justify-center">
                   {program && isImageUrl(program.icon) ? (
                     <img 
                       src={getDirectDriveImageUrl(program.icon)} 
                       alt={program.title}
-                      className="w-full h-full object-contain"
+                      className="h-full w-auto max-w-[40px] sm:max-w-[55px] object-contain block"
                     />
                   ) : (
-                    <span className="text-2xl sm:text-3xl flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl flex items-center justify-center">
                       {program?.icon}
                     </span>
                   )}
