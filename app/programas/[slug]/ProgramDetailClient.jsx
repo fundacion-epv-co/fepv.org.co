@@ -149,8 +149,8 @@ export default function ProgramDetailClient({ slug }) {
   return (
     <div className="w-full bg-gray-50 pb-20 min-h-screen relative overflow-hidden">
       
-      {/* Marca de agua transparente flotante en el cuerpo de la página */}
-      <div className="fixed right-[-5%] top-1/2 -translate-y-1/2 w-96 h-96 sm:w-[500px] sm:h-[500px] opacity-[0.04] pointer-events-none select-none z-0 overflow-hidden">
+      {/* Marca de agua transparente flotante centrada en el cuerpo de la página */}
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] sm:w-[650px] sm:h-[650px] opacity-[0.10] pointer-events-none select-none z-0 overflow-hidden">
         {program && isImageUrl(program.icon) ? (
           <img 
             src={getDirectDriveImageUrl(program.icon)} 
@@ -164,13 +164,13 @@ export default function ProgramDetailClient({ slug }) {
         )}
       </div>
 
-      {/* Banner Superior del Programa (Súper Compacto con Marca de Agua) */}
+      {/* Banner Superior del Programa (Súper Compacto con Marca de Agua Centrada) */}
       <section className="bg-gradient-to-r from-fepv-dark to-fepv-darkblue text-white py-9 relative overflow-hidden border-b border-gray-200/10">
         {/* Adorno de luz de fondo */}
         <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-fepv-green/10 rounded-l-full blur-2xl pointer-events-none"></div>
         
-        {/* Marca de agua transparente del logo del programa en el banner */}
-        <div className="absolute -right-8 -bottom-10 w-72 h-72 sm:w-96 sm:h-96 opacity-[0.08] pointer-events-none select-none z-0">
+        {/* Marca de agua transparente centrada en el banner */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 sm:w-[480px] sm:h-[480px] opacity-[0.15] pointer-events-none select-none z-0">
           {program && isImageUrl(program.icon) ? (
             <img 
               src={getDirectDriveImageUrl(program.icon)} 
