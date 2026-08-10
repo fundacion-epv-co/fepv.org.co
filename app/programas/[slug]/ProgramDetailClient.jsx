@@ -147,13 +147,43 @@ export default function ProgramDetailClient({ slug }) {
   };
 
   return (
-    <div className="w-full bg-gray-50 pb-20 min-h-screen">
+    <div className="w-full bg-gray-50 pb-20 min-h-screen relative overflow-hidden">
       
-      {/* Banner Superior del Programa (Súper Compacto) */}
-      <section className="bg-gradient-to-r from-fepv-dark to-fepv-darkblue text-white py-8 relative overflow-hidden border-b border-gray-200/10">
-        {/* Adorno de fondo */}
+      {/* Marca de agua transparente flotante en el cuerpo de la página */}
+      <div className="fixed right-[-5%] top-1/2 -translate-y-1/2 w-96 h-96 sm:w-[500px] sm:h-[500px] opacity-[0.04] pointer-events-none select-none z-0 overflow-hidden">
+        {program && isImageUrl(program.icon) ? (
+          <img 
+            src={getDirectDriveImageUrl(program.icon)} 
+            alt="Marca de agua"
+            className="w-full h-full object-contain filter grayscale"
+          />
+        ) : (
+          <span className="text-[250px] sm:text-[350px] flex items-center justify-center filter grayscale">
+            {program?.icon}
+          </span>
+        )}
+      </div>
+
+      {/* Banner Superior del Programa (Súper Compacto con Marca de Agua) */}
+      <section className="bg-gradient-to-r from-fepv-dark to-fepv-darkblue text-white py-9 relative overflow-hidden border-b border-gray-200/10">
+        {/* Adorno de luz de fondo */}
         <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-fepv-green/10 rounded-l-full blur-2xl pointer-events-none"></div>
         
+        {/* Marca de agua transparente del logo del programa en el banner */}
+        <div className="absolute -right-8 -bottom-10 w-72 h-72 sm:w-96 sm:h-96 opacity-[0.08] pointer-events-none select-none z-0">
+          {program && isImageUrl(program.icon) ? (
+            <img 
+              src={getDirectDriveImageUrl(program.icon)} 
+              alt="Marca de agua banner"
+              className="w-full h-full object-contain filter brightness-200"
+            />
+          ) : (
+            <span className="text-[180px] sm:text-[240px] flex items-center justify-center">
+              {program?.icon}
+            </span>
+          )}
+        </div>
+
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 relative z-10 text-left">
           {/* Breadcrumbs */}
           <div className="flex items-center gap-2 text-[10px] text-fepv-light/70">
@@ -166,31 +196,31 @@ export default function ProgramDetailClient({ slug }) {
 
           {/* Fila Horizontal Compacta (Logo Rectangular Ancho + Textos) */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 pt-1">
-            {/* Contenedor del Logo (Ultra-Compacto ajustado a los logos reales sin espacios blancos vacíos) */}
+            {/* Contenedor del Logo (Un poco más grande, compacto y ajustado) */}
             <div className="flex-shrink-0">
-              <div className="bg-white rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2.5 shadow-md border border-white/20 inline-flex items-center gap-2 sm:gap-3 h-auto">
-                {/* 1. Logo de la Fundación (Siempre a la izquierda) */}
-                <div className="h-8 sm:h-11 flex-shrink-0 flex items-center">
+              <div className="bg-white rounded-2xl sm:rounded-3xl px-4 py-2.5 sm:px-5.5 sm:py-3.5 shadow-lg border border-white/20 inline-flex items-center gap-3 sm:gap-4.5 h-auto">
+                {/* 1. Logo de la Fundación (Un poco más grande) */}
+                <div className="h-10 sm:h-14 flex-shrink-0 flex items-center">
                   <img 
                     src={globalLogoSrc} 
                     alt="Logo Fundación"
-                    className="h-full w-auto max-w-[110px] sm:max-w-[140px] object-contain block"
+                    className="h-full w-auto max-w-[130px] sm:max-w-[175px] object-contain block"
                   />
                 </div>
 
                 {/* Línea divisoria interna delgada */}
-                <div className="w-[1px] h-5 sm:h-8 bg-gray-250 flex-shrink-0 my-auto"></div>
+                <div className="w-[1.5px] h-7 sm:h-10 bg-gray-200 flex-shrink-0 my-auto"></div>
 
-                {/* 2. Logo/Icono del Programa (A la derecha, ajustado) */}
-                <div className="h-8 sm:h-11 flex-shrink-0 flex items-center justify-center">
+                {/* 2. Logo/Icono del Programa (Un poco más grande) */}
+                <div className="h-10 sm:h-14 flex-shrink-0 flex items-center justify-center">
                   {program && isImageUrl(program.icon) ? (
                     <img 
                       src={getDirectDriveImageUrl(program.icon)} 
                       alt={program.title}
-                      className="h-full w-auto max-w-[40px] sm:max-w-[55px] object-contain block"
+                      className="h-full w-auto max-w-[48px] sm:max-w-[68px] object-contain block"
                     />
                   ) : (
-                    <span className="text-xl sm:text-2xl flex items-center justify-center">
+                    <span className="text-2xl sm:text-3.5xl flex items-center justify-center">
                       {program?.icon}
                     </span>
                   )}
@@ -198,7 +228,7 @@ export default function ProgramDetailClient({ slug }) {
               </div>
             </div>
 
-            {/* Título, Código y Estado del Proyecto (Código y Estado alineados debajo del título) */}
+            {/* Título, Código y Estado del Proyecto */}
             <div className="space-y-1.5 sm:space-y-2.5">
               <h1 className="font-display font-black text-2xl sm:text-3.5xl lg:text-4.5xl leading-tight text-white">
                 {program.title}
