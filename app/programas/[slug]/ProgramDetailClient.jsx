@@ -158,12 +158,12 @@ export default function ProgramDetailClient({ slug }) {
             <span className="text-white font-bold">{program.category}</span>
           </div>
 
-          {/* Fila Horizontal Compacta (Logo + Textos Básicos) */}
-          <div className="flex items-center gap-4 sm:gap-6 pt-1">
-            {/* Contenedor del Logo */}
+          {/* Fila Horizontal Compacta (Logo Rectangular Ancho + Textos) */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 pt-1">
+            {/* Contenedor del Logo (Rectangular y Ancho para acomodar el logo unificado) */}
             <div className="flex-shrink-0">
               {program && isImageUrl(program.icon) ? (
-                <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-white rounded-2xl p-2.5 sm:p-4 shadow-lg border border-white/20 hover:scale-105 transition-transform duration-300">
+                <div className="relative w-56 h-20 sm:w-64 sm:h-24 bg-white rounded-3xl p-3 sm:p-4 shadow-lg border border-white/20 flex items-center justify-center overflow-hidden">
                   <img 
                     src={getDirectDriveImageUrl(program.icon)} 
                     alt={program.title}
@@ -171,27 +171,27 @@ export default function ProgramDetailClient({ slug }) {
                   />
                 </div>
               ) : (
-                <span className="text-4xl sm:text-5xl p-3 bg-white/10 rounded-2xl backdrop-blur-md flex items-center justify-center min-w-[64px] min-h-[64px] shadow border border-white/10">
+                <span className="text-4xl sm:text-5xl p-3 bg-white/10 rounded-2xl backdrop-blur-md flex items-center justify-center min-w-[80px] min-h-[80px] shadow border border-white/10">
                   {program?.icon}
                 </span>
               )}
             </div>
 
-            {/* Código y Nombre del Proyecto */}
-            <div className="space-y-1 sm:space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] sm:text-xs font-black text-fepv-green uppercase tracking-widest">
+            {/* Título, Código y Estado del Proyecto (Código y Estado alineados debajo del título) */}
+            <div className="space-y-1.5 sm:space-y-2.5">
+              <h1 className="font-display font-black text-2xl sm:text-3.5xl lg:text-4.5xl leading-tight text-white">
+                {program.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm">
+                <span className="font-bold text-fepv-green uppercase tracking-wider">
                   Proyecto {program.code}
                 </span>
-                <span className="text-[10px] sm:text-xs text-white/50">•</span>
-                <span className={`inline-block text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full border ${program.statusColor}`}>
+                <span className="text-white/40 font-bold">•</span>
+                <span className={`inline-block text-[10px] sm:text-xs font-bold px-3 py-0.5 rounded-full bg-white border border-current shadow-sm ${program.statusColor.split(' ')[0]}`}>
                   {program.status}
                 </span>
               </div>
-
-              <h1 className="font-display font-black text-xl sm:text-3.5xl lg:text-4xl leading-tight text-white">
-                {program.title}
-              </h1>
             </div>
           </div>
         </div>
