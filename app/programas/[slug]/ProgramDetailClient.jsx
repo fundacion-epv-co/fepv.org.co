@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PROGRAM_DATA } from "../../../lib/programData";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_PROGRAMAS_CSV, getDirectDriveImageUrl, fetchProgramImagesMap } from "../../../lib/api";
+import { useGlobalConfig } from "../../../components/ConfigContext";
+import logoImg from "../../../public/logo.png";
 
 export default function ProgramDetailClient({ slug }) {
   const [oportunidades, setOportunidades] = useState([]);
@@ -11,6 +13,10 @@ export default function ProgramDetailClient({ slug }) {
 
   // Obtener la información del programa desde el estado
   const [program, setProgram] = useState(PROGRAM_DATA[slug]);
+
+  const config = useGlobalConfig();
+  const globalLogo = config?.logo_url_formatted || logoImg;
+  const globalLogoSrc = typeof globalLogo === 'object' ? globalLogo.src : globalLogo;
 
   useEffect(() => {
     async function loadOpps() {
@@ -160,21 +166,36 @@ export default function ProgramDetailClient({ slug }) {
 
           {/* Fila Horizontal Compacta (Logo Rectangular Ancho + Textos) */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 pt-1">
-            {/* Contenedor del Logo (Rectangular y Ancho para acomodar el logo unificado) */}
+            {/* Contenedor del Logo (Logo Fundación a la izquierda, Logo del programa a la derecha) */}
             <div className="flex-shrink-0">
-              {program && isImageUrl(program.icon) ? (
-                <div className="relative w-56 h-20 sm:w-64 sm:h-24 bg-white rounded-3xl p-3 sm:p-4 shadow-lg border border-white/20 flex items-center justify-center overflow-hidden">
+              <div className="bg-white rounded-3xl p-3 sm:p-4 shadow-lg border border-white/20 flex items-center justify-center gap-4 sm:gap-6 w-60 h-20 sm:w-72 sm:h-24">
+                {/* 1. Logo de la Fundación (Siempre a la izquierda) */}
+                <div className="relative w-20 h-10 sm:w-28 sm:h-14 flex-shrink-0">
                   <img 
-                    src={getDirectDriveImageUrl(program.icon)} 
-                    alt={program.title}
+                    src={globalLogoSrc} 
+                    alt="Logo Fundación"
                     className="w-full h-full object-contain"
                   />
                 </div>
-              ) : (
-                <span className="text-4xl sm:text-5xl p-3 bg-white/10 rounded-2xl backdrop-blur-md flex items-center justify-center min-w-[80px] min-h-[80px] shadow border border-white/10">
-                  {program?.icon}
-                </span>
-              )}
+
+                {/* Línea divisoria interna */}
+                <div className="w-[1.5px] h-8 sm:h-12 bg-gray-200"></div>
+
+                {/* 2. Logo/Icono del Programa (A la derecha) */}
+                <div className="relative w-16 h-10 sm:w-24 sm:h-14 flex items-center justify-center flex-shrink-0">
+                  {program && isImageUrl(program.icon) ? (
+                    <img 
+                      src={getDirectDriveImageUrl(program.icon)} 
+                      alt={program.title}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-3xl sm:text-4xl flex items-center justify-center">
+                      {program?.icon}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Título, Código y Estado del Proyecto (Código y Estado alineados debajo del título) */}
