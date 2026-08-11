@@ -247,14 +247,14 @@ export default function Home() {
   ];
 
   const beneficiaries = [
-    { name: "Niñas y Niños", img: "👧👦" },
-    { name: "Adolescentes", img: "🎒" },
-    { name: "Jóvenes", img: "⚡" },
-    { name: "Familias", img: "🏡" },
-    { name: "Personas con Discapacidad", img: "♿" },
-    { name: "Víctimas del Conflicto", img: "🕊️" },
-    { name: "Comunidades Rurales", img: "🌽" },
-    { name: "Organizaciones de Base", img: "📢" }
+    { id: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
+    { id: "adolescentes", name: "Adolescentes", img: "🎒" },
+    { id: "jovenes", name: "Jóvenes", img: "⚡" },
+    { id: "familias-poblacion", name: "Familias", img: "🏡" },
+    { id: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
+    { id: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
+    { id: "rurales", name: "Comunidades Rurales", img: "🌽" },
+    { id: "organizaciones", name: "Organizaciones de Base", img: "📢" }
   ];
 
   const activePrograms = [
@@ -593,17 +593,33 @@ export default function Home() {
 
             <div className="lg:col-span-7">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {beneficiaries.map((b, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center justify-center hover:border-fepv-green/30 hover:shadow-md transition-all duration-300"
-                  >
-                    <span className="text-3xl mb-3">{b.img}</span>
-                    <span className="font-sans font-semibold text-xs text-fepv-darkblue leading-tight">
-                      {b.name}
-                    </span>
-                  </div>
-                ))}
+                {beneficiaries.map((b, idx) => {
+                  const customImg = programImagesMap[b.id] || programImagesMap[b.name.toLowerCase().trim()];
+                  const showImage = customImg || isImageUrl(b.img);
+                  const imgSrc = customImg ? getDirectDriveImageUrl(customImg) : getDirectDriveImageUrl(b.img);
+
+                  return (
+                    <div
+                      key={idx}
+                      className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center justify-center hover:border-fepv-green/30 hover:shadow-md transition-all duration-300"
+                    >
+                      <div className="w-10 h-10 mb-3 flex items-center justify-center">
+                        {showImage ? (
+                          <img 
+                            src={imgSrc} 
+                            alt={b.name}
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-3xl">{b.img}</span>
+                        )}
+                      </div>
+                      <span className="font-sans font-semibold text-xs text-fepv-darkblue leading-tight">
+                        {b.name}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
