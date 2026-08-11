@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, isImageUrl } from "../lib/api";
 
 const INITIAL_TESTIMONIALS = [
   {
@@ -33,6 +33,23 @@ export default function Home() {
   // Testimonials state
   const [testimonialsList, setTestimonialsList] = useState(INITIAL_TESTIMONIALS);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  // Mapa de imágenes de programas
+  const [programImagesMap, setProgramImagesMap] = useState({});
+
+  useEffect(() => {
+    async function loadProgramImages() {
+      try {
+        const map = await fetchProgramImagesMap();
+        if (map && Object.keys(map).length > 0) {
+          setProgramImagesMap(map);
+        }
+      } catch (e) {
+        console.error("Error cargando mapa de imágenes en Home:", e);
+      }
+    }
+    loadProgramImages();
+  }, []);
 
   const [stats, setStats] = useState([
     { id: "1", titulo: "Personas Participantes", valor: 0, _target: 250 },
@@ -172,48 +189,56 @@ export default function Home() {
 
   const categories = [
     {
+      id: "salud-mental",
       title: "Salud Mental",
       icon: "🧠",
       desc: "Promoción del bienestar emocional, atención psicosocial y fortalecimiento de capacidades.",
       color: "border-fepv-green bg-fepv-light/10"
     },
     {
+      id: "familias",
       title: "Familias",
       icon: "👨‍👩‍👧",
       desc: "Fortalecimiento familiar, orientación y construcción de entornos protectores.",
       color: "border-fepv-blue bg-blue-50/30"
     },
     {
+      id: "educacion",
       title: "Educación",
       icon: "📚",
       desc: "Formación, talleres y oportunidades para aprender y desarrollar habilidades.",
       color: "border-fepv-orange bg-yellow-50/30"
     },
     {
+      id: "inclusion-derechos",
       title: "Inclusión y Derechos",
       icon: "🤝",
       desc: "Promoción de derechos, participación ciudadana e inclusión social activa.",
       color: "border-fepv-green bg-fepv-light/10"
     },
     {
+      id: "medio-ambiente",
       title: "Medio Ambiente",
       icon: "🌱",
       desc: "Educación ambiental, reforestación y conservación comunitaria sostenible.",
       color: "border-fepv-blue bg-blue-50/30"
     },
     {
+      id: "bienestar-animal",
       title: "Bienestar Animal",
       icon: "🐾",
       desc: "Protección animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
       color: "border-fepv-orange bg-yellow-50/30"
     },
     {
+      id: "emprendimiento",
       title: "Emprendimiento",
       icon: "💼",
       desc: "Autonomía económica, emprendimiento social y fortalecimiento de capacidades locales.",
       color: "border-fepv-green bg-fepv-light/10"
     },
     {
+      id: "cultura-deporte",
       title: "Cultura y Deporte",
       icon: "⚽",
       desc: "Actividades artísticas, recreativas y deportivas que integran y sanan el tejido social.",
@@ -509,20 +534,36 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {categories.map((cat, idx) => (
-              <div
-                key={idx}
-                className={`p-6 rounded-2xl border-t-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${cat.color}`}
-              >
-                <span className="text-4xl mb-4 block">{cat.icon}</span>
-                <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-2">
-                  {cat.title}
-                </h3>
-                <p className="text-sm text-fepv-gray/85 leading-relaxed">
-                  {cat.desc}
-                </p>
-              </div>
-            ))}
+            {categories.map((cat, idx) => {
+              const customImg = programImagesMap[cat.id];
+              const showImage = customImg || isImageUrl(cat.icon);
+              const imgSrc = customImg ? getDirectDriveImageUrl(customImg) : getDirectDriveImageUrl(cat.icon);
+
+              return (
+                <div
+                  key={idx}
+                  className={`p-6 rounded-2xl border-t-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${cat.color}`}
+                >
+                  <div className="h-12 w-12 mb-4 flex items-center justify-start">
+                    {showImage ? (
+                      <img 
+                        src={imgSrc} 
+                        alt={cat.title}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-4xl block">{cat.icon}</span>
+                    )}
+                  </div>
+                  <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-2">
+                    {cat.title}
+                  </h3>
+                  <p className="text-sm text-fepv-gray/85 leading-relaxed">
+                    {cat.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
