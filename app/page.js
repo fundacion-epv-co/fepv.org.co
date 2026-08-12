@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, isImageUrl } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, fetchPoblacionesImagesMap, isImageUrl } from "../lib/api";
 
 const INITIAL_TESTIMONIALS = [
   {
@@ -34,21 +34,25 @@ export default function Home() {
   const [testimonialsList, setTestimonialsList] = useState(INITIAL_TESTIMONIALS);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // Mapa de imágenes de programas
+  // Mapa de imágenes de programas y poblaciones
   const [programImagesMap, setProgramImagesMap] = useState({});
 
   useEffect(() => {
-    async function loadProgramImages() {
+    async function loadAllImages() {
       try {
-        const map = await fetchProgramImagesMap();
-        if (map && Object.keys(map).length > 0) {
-          setProgramImagesMap(map);
+        const [progMap, pobMap] = await Promise.all([
+          fetchProgramImagesMap(),
+          fetchPoblacionesImagesMap()
+        ]);
+        const mergedMap = { ...progMap, ...pobMap };
+        if (Object.keys(mergedMap).length > 0) {
+          setProgramImagesMap(mergedMap);
         }
       } catch (e) {
-        console.error("Error cargando mapa de imágenes en Home:", e);
+        console.error("Error cargando mapas de imágenes en Home:", e);
       }
     }
-    loadProgramImages();
+    loadAllImages();
   }, []);
 
   const [stats, setStats] = useState([
@@ -247,14 +251,14 @@ export default function Home() {
   ];
 
   const beneficiaries = [
-    { id: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
-    { id: "adolescentes", name: "Adolescentes", img: "🎒" },
-    { id: "jovenes", name: "Jóvenes", img: "⚡" },
-    { id: "familias-poblacion", name: "Familias", img: "🏡" },
-    { id: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
-    { id: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
-    { id: "rurales", name: "Comunidades Rurales", img: "🌽" },
-    { id: "organizaciones", name: "Organizaciones de Base", img: "📢" }
+    { id: "ninas-ninos", altId: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
+    { id: "adolescentes", altId: "adolescentes", name: "Adolescentes", img: "🎒" },
+    { id: "jovenes", altId: "jovenes", name: "Jóvenes", img: "⚡" },
+    { id: "familias", altId: "familias-poblacion", name: "Familias", img: "🏡" },
+    { id: "discapacidad", altId: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
+    { id: "victimas", altId: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
+    { id: "comunidades-rurales", altId: "rurales", name: "Comunidades Rurales", img: "🌽" },
+    { id: "organizaciones", altId: "organizaciones", name: "Organizaciones de Base", img: "📢" }
   ];
 
   const activePrograms = [
@@ -594,7 +598,19 @@ export default function Home() {
             <div className="lg:col-span-7">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {beneficiaries.map((b, idx) => {
-                  const customImg = programImagesMap[b.id] || programImagesMap[b.name.toLowerCase().trim()];
+                  // Búsqueda inteligente por id principal, id alternativo, o aproximación por nombre
+                  const foundKey = Object.keys(programImagesMap).find(k => {
+                    const cleanK = k.toLowerCase().trim();
+                    return (
+                      cleanK === b.id.toLowerCase() ||
+                      cleanK === b.altId.toLowerCase() ||
+                      cleanK === b.name.toLowerCase().trim() ||
+                      cleanK.replace(/[^a-z0-9]/g, "") === b.id.replace(/[^a-z0-9]/g, "") ||
+                      cleanK.replace(/[^a-z0-9]/g, "") === b.altId.replace(/[^a-z0-9]/g, "")
+                    );
+                  });
+
+                  const customImg = foundKey ? programImagesMap[foundKey] : null;
                   const showImage = customImg || isImageUrl(b.img);
                   const imgSrc = customImg ? getDirectDriveImageUrl(customImg) : getDirectDriveImageUrl(b.img);
 
