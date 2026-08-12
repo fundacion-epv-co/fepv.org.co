@@ -548,15 +548,15 @@ export default function Home() {
                   key={idx}
                   className={`p-6 rounded-2xl border-t-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 ${cat.color}`}
                 >
-                  <div className="h-12 w-12 mb-4 flex items-center justify-start">
+                  <div className="h-20 w-20 sm:h-24 sm:w-24 mb-5 flex items-center justify-start">
                     {showImage ? (
                       <img 
                         src={imgSrc} 
                         alt={cat.title}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain drop-shadow-sm"
                       />
                     ) : (
-                      <span className="text-4xl block">{cat.icon}</span>
+                      <span className="text-5xl sm:text-6xl block">{cat.icon}</span>
                     )}
                   </div>
                   <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-2">

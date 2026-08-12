@@ -12,7 +12,7 @@ function ParticipaForms() {
   const [successMessage, setSuccessMessage] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const officialEmail = config?.correo_contacto || "contacto@fundacionepv.co";
+  const officialEmail = config?.correo_contacto || "fundacion.epv.co@gmail.com";
   const officialPhone = config?.telefono_contacto || "+57 316 689 9250";
   const whatsappBaseUrl = config?.enlace_whatsapp || "https://wa.me/573166899250";
 
@@ -188,14 +188,11 @@ function ParticipaForms() {
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Programa de interés *</label>
                   <select name="programa" value={formData.programa} onChange={handleInputChange}
                     className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
-                    <option value="Salud Mental (Mentes para la Vida - FEPV-PRO-001)">Salud Mental — Mentes para la Vida (FEPV-PRO-001)</option>
-                    <option value="Familias (Familias que Transforman - FEPV-PRO-002)">Familias — Familias que Transforman (FEPV-PRO-002)</option>
-                    <option value="Educación (Escuela de Oportunidades - FEPV-PRO-003)">Educación — Escuela de Oportunidades (FEPV-PRO-003)</option>
-                    <option value="Inclusión y Derechos (Voces de Inclusión - FEPV-PRO-004)">Inclusión y Derechos — Voces de Inclusión (FEPV-PRO-004)</option>
-                    <option value="Medio Ambiente (Eco-Encuentros - FEPV-PRO-005)">Medio Ambiente — Eco-Encuentros (FEPV-PRO-005)</option>
-                    <option value="Bienestar Animal (Huellas de Vida - FEPV-PRO-006)">Bienestar Animal — Huellas de Vida (FEPV-PRO-006)</option>
-                    <option value="Emprendimiento (Impulso Local - FEPV-PRO-007)">Emprendimiento — Impulso Local (FEPV-PRO-007)</option>
-                    <option value="Cultura y Deporte (Talento y Tejido Social - FEPV-PRO-008)">Cultura y Deporte — Talento y Tejido Social (FEPV-PRO-008)</option>
+                    <option>PAPSIVI (Salud Integral a Víctimas)</option>
+                    <option>Escuela de Formación y Competencias</option>
+                    <option>Medio Ambiente &amp; Eco-Encuentros</option>
+                    <option>Bienestar Animal (Esterilización/Apoyo)</option>
+                    <option>Emprendimiento y Autonomía</option>
                   </select>
                 </div>
               </div>
@@ -220,7 +217,7 @@ function ParticipaForms() {
                   <span className="text-xl">📄</span> Formato Único de Hoja de Vida para Voluntariado
                 </div>
                 <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                  Para formalizar tu postulación, por favor <strong>descarga el formato de Hoja de Vida oficial vigente</strong>, diligéncialo con tus datos académicos y experiencia, y envíalo adjunto a nuestro correo institucional <strong>{officialEmail}</strong> o adjúntalo a tu solicitud.
+                  Para formalizar tu postulación, por favor <strong>descarga el formato de Hoja de Vida oficial vigente</strong> y diligéncialo. Luego, completa el formulario a continuación y adjunta el archivo.
                 </p>
                 
                 <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -235,59 +232,21 @@ function ParticipaForms() {
                     </svg>
                     Descargar Formato de Hoja de Vida Vigente
                   </a>
-                  
-                  <a 
-                    href={`mailto:${officialEmail}?subject=Postulaci%C3%B3n%20Voluntariado%20FEPV%20-%20Hoja%20de%20Vida%20Adjunta&body=Hola%20equipo%20FEPV,%20adjunto%20mi%20Hoja%20de%20Vida%20diligenciada%20para%20postularme%20como%20voluntario.`}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-fepv-blue hover:underline"
-                  >
-                    ✉️ Enviar directamente al Correo ({officialEmail})
-                  </a>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                <div>
-                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo *</label>
-                  <input type="text" required name="nombre" value={formData.nombre} onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
-                    placeholder="Ej. Carlos Mendoza" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">WhatsApp de contacto *</label>
-                  <input type="tel" required name="telefono" value={formData.telefono} onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
-                    placeholder="300 000 0000" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Correo Electrónico *</label>
-                  <input type="email" required name="correo" value={formData.correo} onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
-                    placeholder="carlos@ejemplo.com" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Área de interés *</label>
-                  <select name="areaInteres" value={formData.areaInteres} onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
-                    <option value="Salud Mental (Mentes para la Vida - FEPV-PRO-001)">Salud Mental — Mentes para la Vida (FEPV-PRO-001)</option>
-                    <option value="Familias (Familias que Transforman - FEPV-PRO-002)">Familias — Familias que Transforman (FEPV-PRO-002)</option>
-                    <option value="Educación (Escuela de Oportunidades - FEPV-PRO-003)">Educación — Escuela de Oportunidades (FEPV-PRO-003)</option>
-                    <option value="Inclusión y Derechos (Voces de Inclusión - FEPV-PRO-004)">Inclusión y Derechos — Voces de Inclusión (FEPV-PRO-004)</option>
-                    <option value="Medio Ambiente (Eco-Encuentros - FEPV-PRO-005)">Medio Ambiente — Eco-Encuentros (FEPV-PRO-005)</option>
-                    <option value="Bienestar Animal (Huellas de Vida - FEPV-PRO-006)">Bienestar Animal — Huellas de Vida (FEPV-PRO-006)</option>
-                    <option value="Emprendimiento (Impulso Local - FEPV-PRO-007)">Emprendimiento — Impulso Local (FEPV-PRO-007)</option>
-                    <option value="Cultura y Deporte (Talento y Tejido Social - FEPV-PRO-008)">Cultura y Deporte — Talento y Tejido Social (FEPV-PRO-008)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-fepv-darkblue mb-1">Perfil Académico / Laboral *</label>
-                <textarea required name="perfil" rows="3" value={formData.perfil} onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green resize-none text-xs"
-                  placeholder="Describe brevemente tus estudios, profesión, habilidades o experiencias de voluntariado..." />
+              <div className="w-full bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 min-h-[600px] flex justify-center">
+                <iframe 
+                  src="https://docs.google.com/forms/d/e/1FAIpQLSc13DfnKTvlPESH3D7uHwvPmkh7xtrKW-PnHa1egj0nfQ5Xeg/viewform?embedded=true" 
+                  width="100%" 
+                  height="1200" 
+                  frameBorder="0" 
+                  marginHeight="0" 
+                  marginWidth="0"
+                  className="w-full h-[800px] sm:h-[1000px] md:h-[1200px]"
+                >
+                  Cargando formulario...
+                </iframe>
               </div>
             </div>
           )}
