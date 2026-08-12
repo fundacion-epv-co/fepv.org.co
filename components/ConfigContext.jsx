@@ -13,7 +13,9 @@ export function ConfigProvider({ children }) {
     sigla: "FEPV",
     telefono_contacto: "+57 316 689 9250",
     correo_contacto: "contacto@fundacionepv.co",
-    enlace_whatsapp: "https://wa.me/573166899250"
+    enlace_whatsapp: "https://wa.me/573166899250",
+    direccion_fisica: "Agustín Codazzi, Cesar, Colombia",
+    formato_hoja_vida: "https://docs.google.com/document/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub"
   });
 
   useEffect(() => {

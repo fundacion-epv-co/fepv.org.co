@@ -2,13 +2,19 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useGlobalConfig } from "../../components/ConfigContext";
 
 // Subcomponent to handle tabs and forms using useSearchParams inside Suspense
 function ParticipaForms() {
   const searchParams = useSearchParams();
+  const config = useGlobalConfig();
   const [activeTab, setActiveTab] = useState("beneficiario");
   const [successMessage, setSuccessMessage] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const officialEmail = config?.correo_contacto || "contacto@fundacionepv.co";
+  const officialPhone = config?.telefono_contacto || "+57 316 689 9250";
+  const whatsappBaseUrl = config?.enlace_whatsapp || "https://wa.me/573166899250";
 
   useEffect(() => {
     const rol = searchParams.get("rol");
@@ -49,7 +55,6 @@ function ParticipaForms() {
 
     setSubmitting(true);
 
-    // Para GitHub Pages (estático): construimos el mensaje de WhatsApp
     let mensajeTexto = "";
     if (activeTab === "beneficiario") {
       mensajeTexto =
@@ -67,6 +72,7 @@ function ParticipaForms() {
         `📧 *Correo:* ${formData.correo}\n` +
         `🌱 *Área de interés:* ${formData.areaInteres}\n` +
         `📝 *Perfil:* ${formData.perfil}\n\n` +
+        `_Nota: Adjuntaré/enviaré mi Hoja de Vida diligenciada a ${officialEmail}_\n` +
         `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`;
     } else if (activeTab === "aliado") {
       mensajeTexto =
@@ -79,7 +85,9 @@ function ParticipaForms() {
         `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`;
     }
 
-    const whatsappUrl = `https://wa.me/573166899250?text=${encodeURIComponent(mensajeTexto)}`;
+    // Limpiar número para enlace de WhatsApp si se usa base o directo
+    const cleanWaNum = whatsappBaseUrl.replace(/[^0-9]/g, "") || "573166899250";
+    const whatsappUrl = `https://wa.me/${cleanWaNum}?text=${encodeURIComponent(mensajeTexto)}`;
     window.open(whatsappUrl, "_blank");
 
     setSuccessMessage(true);
@@ -136,9 +144,9 @@ function ParticipaForms() {
       {successMessage ? (
         <div className="p-8 bg-fepv-light/50 border border-fepv-green/20 rounded-3xl text-center space-y-4 max-w-xl mx-auto">
           <span className="text-4xl block">🎉</span>
-          <h3 className="font-display font-bold text-lg text-fepv-darkblue">¡Formulario enviado por WhatsApp!</h3>
+          <h3 className="font-display font-bold text-lg text-fepv-darkblue">¡Formulario enviado con éxito!</h3>
           <p className="text-xs text-fepv-gray/80 leading-relaxed">
-            Se abrió WhatsApp con tu información pre-llenada. Envía el mensaje para completar tu registro con la Fundación Encuentros Para la Vida (FEPV). Nuestro equipo revisará tu solicitud y se pondrá en contacto pronto.
+            Se abrió la ventana de confirmación. Tu solicitud fue registrada con la Fundación Encuentros Para la Vida (FEPV). Nuestro equipo revisará tus datos y se pondrá en contacto pronto a través del correo <strong>{officialEmail}</strong> o el teléfono <strong>{officialPhone}</strong>.
           </p>
         </div>
       ) : (
@@ -180,11 +188,14 @@ function ParticipaForms() {
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Programa de interés *</label>
                   <select name="programa" value={formData.programa} onChange={handleInputChange}
                     className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
-                    <option>PAPSIVI (Salud Integral a Víctimas)</option>
-                    <option>Escuela de Formación y Competencias</option>
-                    <option>Medio Ambiente & Eco-Encuentros</option>
-                    <option>Bienestar Animal (Esterilización/Apoyo)</option>
-                    <option>Emprendimiento y Autonomía</option>
+                    <option value="Salud Mental (Mentes para la Vida - FEPV-PRO-001)">Salud Mental — Mentes para la Vida (FEPV-PRO-001)</option>
+                    <option value="Familias (Familias que Transforman - FEPV-PRO-002)">Familias — Familias que Transforman (FEPV-PRO-002)</option>
+                    <option value="Educación (Escuela de Oportunidades - FEPV-PRO-003)">Educación — Escuela de Oportunidades (FEPV-PRO-003)</option>
+                    <option value="Inclusión y Derechos (Voces de Inclusión - FEPV-PRO-004)">Inclusión y Derechos — Voces de Inclusión (FEPV-PRO-004)</option>
+                    <option value="Medio Ambiente (Eco-Encuentros - FEPV-PRO-005)">Medio Ambiente — Eco-Encuentros (FEPV-PRO-005)</option>
+                    <option value="Bienestar Animal (Huellas de Vida - FEPV-PRO-006)">Bienestar Animal — Huellas de Vida (FEPV-PRO-006)</option>
+                    <option value="Emprendimiento (Impulso Local - FEPV-PRO-007)">Emprendimiento — Impulso Local (FEPV-PRO-007)</option>
+                    <option value="Cultura y Deporte (Talento y Tejido Social - FEPV-PRO-008)">Cultura y Deporte — Talento y Tejido Social (FEPV-PRO-008)</option>
                   </select>
                 </div>
               </div>
@@ -193,15 +204,48 @@ function ParticipaForms() {
 
           {/* ROL: VOLUNTARIO */}
           {activeTab === "voluntario" && (
-            <div className="space-y-4">
-              <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-1">
-                Registro de Voluntariado
-              </h3>
-              <p className="text-xs text-fepv-gray/70 leading-relaxed">
-                Únete a FEPV aportando tu tiempo y conocimientos profesionales.
-              </p>
+            <div className="space-y-5">
+              <div>
+                <h3 className="font-display font-bold text-lg text-fepv-darkblue mb-1">
+                  Registro de Voluntariado
+                </h3>
+                <p className="text-xs text-fepv-gray/70 leading-relaxed">
+                  Únete a FEPV aportando tu tiempo y conocimientos profesionales en nuestros proyectos territoriales.
+                </p>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* BLOQUE DE DESCARGA DE HOJA DE VIDA VIGENTE */}
+              <div className="p-4 sm:p-5 bg-gradient-to-r from-fepv-light/60 to-white border border-fepv-green/30 rounded-2xl space-y-3 shadow-sm">
+                <div className="flex items-center gap-2 font-display font-bold text-fepv-darkblue text-xs sm:text-sm">
+                  <span className="text-xl">📄</span> Formato Único de Hoja de Vida para Voluntariado
+                </div>
+                <p className="text-xs text-fepv-gray/80 leading-relaxed">
+                  Para formalizar tu postulación, por favor <strong>descarga el formato de Hoja de Vida oficial vigente</strong>, diligéncialo con tus datos académicos y experiencia, y envíalo adjunto a nuestro correo institucional <strong>{officialEmail}</strong> o adjúntalo a tu solicitud.
+                </p>
+                
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  <a 
+                    href={config?.formato_hoja_vida || config?.enlace_hoja_vida || "https://docs.google.com/document/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub"}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-fepv-green hover:bg-fepv-dark text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-colors shadow-md"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Descargar Formato de Hoja de Vida Vigente
+                  </a>
+                  
+                  <a 
+                    href={`mailto:${officialEmail}?subject=Postulaci%C3%B3n%20Voluntariado%20FEPV%20-%20Hoja%20de%20Vida%20Adjunta&body=Hola%20equipo%20FEPV,%20adjunto%20mi%20Hoja%20de%20Vida%20diligenciada%20para%20postularme%20como%20voluntario.`}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-fepv-blue hover:underline"
+                  >
+                    ✉️ Enviar directamente al Correo ({officialEmail})
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                 <div>
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo *</label>
                   <input type="text" required name="nombre" value={formData.nombre} onChange={handleInputChange}
@@ -227,11 +271,14 @@ function ParticipaForms() {
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Área de interés *</label>
                   <select name="areaInteres" value={formData.areaInteres} onChange={handleInputChange}
                     className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
-                    <option>Salud Mental &amp; Atención Psicosocial</option>
-                    <option>Educación y Formación</option>
-                    <option>Medio Ambiente &amp; Reforestación</option>
-                    <option>Bienestar Animal y Veterinaria</option>
-                    <option>Asesoría de Negocios y Emprendimiento</option>
+                    <option value="Salud Mental (Mentes para la Vida - FEPV-PRO-001)">Salud Mental — Mentes para la Vida (FEPV-PRO-001)</option>
+                    <option value="Familias (Familias que Transforman - FEPV-PRO-002)">Familias — Familias que Transforman (FEPV-PRO-002)</option>
+                    <option value="Educación (Escuela de Oportunidades - FEPV-PRO-003)">Educación — Escuela de Oportunidades (FEPV-PRO-003)</option>
+                    <option value="Inclusión y Derechos (Voces de Inclusión - FEPV-PRO-004)">Inclusión y Derechos — Voces de Inclusión (FEPV-PRO-004)</option>
+                    <option value="Medio Ambiente (Eco-Encuentros - FEPV-PRO-005)">Medio Ambiente — Eco-Encuentros (FEPV-PRO-005)</option>
+                    <option value="Bienestar Animal (Huellas de Vida - FEPV-PRO-006)">Bienestar Animal — Huellas de Vida (FEPV-PRO-006)</option>
+                    <option value="Emprendimiento (Impulso Local - FEPV-PRO-007)">Emprendimiento — Impulso Local (FEPV-PRO-007)</option>
+                    <option value="Cultura y Deporte (Talento y Tejido Social - FEPV-PRO-008)">Cultura y Deporte — Talento y Tejido Social (FEPV-PRO-008)</option>
                   </select>
                 </div>
               </div>
