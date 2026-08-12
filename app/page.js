@@ -617,20 +617,20 @@ export default function Home() {
                   return (
                     <div
                       key={idx}
-                      className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center justify-center hover:border-fepv-green/30 hover:shadow-md transition-all duration-300"
+                      className="bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center text-center justify-between hover:border-fepv-green/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 min-h-[160px] sm:min-h-[185px]"
                     >
-                      <div className="w-10 h-10 mb-3 flex items-center justify-center">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 mb-2 flex items-center justify-center p-1 overflow-hidden">
                         {showImage ? (
                           <img 
                             src={imgSrc} 
                             alt={b.name}
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-contain transform hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <span className="text-3xl">{b.img}</span>
+                          <span className="text-4xl">{b.img}</span>
                         )}
                       </div>
-                      <span className="font-sans font-semibold text-xs text-fepv-darkblue leading-tight">
+                      <span className="font-sans font-bold text-xs sm:text-sm text-fepv-darkblue leading-tight mt-1">
                         {b.name}
                       </span>
                     </div>
