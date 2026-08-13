@@ -64,7 +64,13 @@ function ParticipaForms() {
     if (config?.enlace_formulario_web && config.enlace_formulario_web.includes("script.google.com")) {
       try {
         const formDataObj = new FormData(formElement);
-        formDataObj.append("Rol", activeTab.toUpperCase()); // Agregamos el rol
+        
+        // Convertir a objeto JSON simple
+        const payload = {};
+        for (const [key, value] of formDataObj.entries()) {
+          payload[key] = value;
+        }
+        payload.Rol = activeTab.toUpperCase();
         
         // Convertir archivo a Base64 si existe
         const fileInput = formElement.querySelector('input[type="file"]');
@@ -75,26 +81,20 @@ function ParticipaForms() {
             reader.onloadend = () => resolve(reader.result.split(',')[1]);
             reader.readAsDataURL(file);
           });
-          formDataObj.set('hoja_de_vida_base64', base64Str);
-          formDataObj.set('hoja_de_vida_name', file.name);
-          formDataObj.set('hoja_de_vida_mime', file.type);
+          payload.hoja_de_vida_base64 = base64Str;
+          payload.hoja_de_vida_name = file.name;
+          payload.hoja_de_vida_mime = file.type;
         }
         
-        // Limpiar archivo binario crudo
-        formDataObj.delete('hoja_de_vida');
+        // Remover el archivo binario crudo porque no es serializable
+        delete payload.hoja_de_vida;
 
-        // Codificar a URLSearchParams para garantizar que Google Apps Script lea todos los parámetros string (incluyendo base64 gigante)
-        const urlEncodedData = new URLSearchParams();
-        for (const [key, value] of formDataObj.entries()) {
-          urlEncodedData.append(key, value);
-        }
-        
-        // fetch con no-cors y form-urlencoded
+        // fetch enviando como JSON texto plano (para no chocar con CORS)
         await fetch(config.enlace_formulario_web, {
           method: 'POST',
-          body: urlEncodedData,
+          body: JSON.stringify(payload),
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'text/plain;charset=utf-8'
           },
           mode: 'no-cors'
         });
