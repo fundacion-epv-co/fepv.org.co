@@ -46,7 +46,7 @@ function ParticipaForms() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.aceptaDatos) {
       alert("Debes aceptar el tratamiento de datos personales para continuar.");
@@ -54,7 +54,43 @@ function ParticipaForms() {
     }
 
     setSubmitting(true);
+    const formElement = e.target;
+    
+    // Si el usuario configuró el enlace de Google Apps Script en Sheets
+    if (config?.enlace_formulario_web && config.enlace_formulario_web.includes("script.google.com")) {
+      try {
+        // Enviar a Google Apps Script usando FormData
+        const formDataObj = new FormData(formElement);
+        formDataObj.append("Rol", activeTab.toUpperCase()); // Agregamos el rol (Beneficiario, Voluntariado, Aliado)
+        
+        // fetch con no-cors previene errores en el cliente
+        await fetch(config.enlace_formulario_web, {
+          method: 'POST',
+          body: formDataObj,
+          mode: 'no-cors'
+        });
 
+        // Simula éxito inmediatamente ya que no-cors es opaco
+        setSuccessMessage(true);
+        setFormData({
+          nombre: "", correo: "", telefono: "", documento: "",
+          programa: "PAPSIVI (Salud Integral a Víctimas)", perfil: "",
+          areaInteres: "Salud Mental & Atención Psicosocial",
+          organizacion: "", representante: "", cooperacion: "Cooperación Técnica",
+          mensaje: "", aceptaDatos: false
+        });
+        formElement.reset(); // limpia el input type="file"
+      } catch (error) {
+        console.error("Error al enviar formulario:", error);
+        alert("Hubo un error de red al intentar enviar los datos. Intenta nuevamente.");
+      } finally {
+        setSubmitting(false);
+        setTimeout(() => setSuccessMessage(false), 5000);
+      }
+      return;
+    }
+
+    // SI NO HAY GOOGLE SCRIPT CONFIGURADO -> Cae de respaldo a enviar por WhatsApp
     let mensajeTexto = "";
     if (activeTab === "beneficiario") {
       mensajeTexto =
@@ -85,7 +121,6 @@ function ParticipaForms() {
         `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`;
     }
 
-    // Limpiar número para enlace de WhatsApp si se usa base o directo
     const cleanWaNum = whatsappBaseUrl.replace(/[^0-9]/g, "") || "573166899250";
     const whatsappUrl = `https://wa.me/${cleanWaNum}?text=${encodeURIComponent(mensajeTexto)}`;
     window.open(whatsappUrl, "_blank");
@@ -235,18 +270,52 @@ function ParticipaForms() {
                 </div>
               </div>
 
-              <div className="w-full bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 min-h-[600px] flex justify-center">
-                <iframe 
-                  src="https://docs.google.com/forms/d/e/1FAIpQLSc13DfnKTvlPESH3D7uHwvPmkh7xtrKW-PnHa1egj0nfQ5Xeg/viewform?embedded=true" 
-                  width="100%" 
-                  height="1200" 
-                  frameBorder="0" 
-                  marginHeight="0" 
-                  marginWidth="0"
-                  className="w-full h-[800px] sm:h-[1000px] md:h-[1200px]"
-                >
-                  Cargando formulario...
-                </iframe>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo *</label>
+                  <input type="text" required name="nombre" value={formData.nombre} onChange={handleInputChange}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                    placeholder="Ej. Carlos Mendoza" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">WhatsApp de contacto *</label>
+                  <input type="tel" required name="telefono" value={formData.telefono} onChange={handleInputChange}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                    placeholder="300 000 0000" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Correo Electrónico *</label>
+                  <input type="email" required name="correo" value={formData.correo} onChange={handleInputChange}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                    placeholder="carlos@ejemplo.com" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Área de interés *</label>
+                  <select name="areaInteres" value={formData.areaInteres} onChange={handleInputChange}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
+                    <option>Salud Mental &amp; Atención Psicosocial</option>
+                    <option>Educación y Formación</option>
+                    <option>Medio Ambiente &amp; Reforestación</option>
+                    <option>Bienestar Animal y Veterinaria</option>
+                    <option>Asesoría de Negocios y Emprendimiento</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-fepv-darkblue mb-1">Perfil Académico / Laboral *</label>
+                <textarea required name="perfil" rows="3" value={formData.perfil} onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green resize-none text-xs"
+                  placeholder="Describe brevemente tus estudios, profesión, habilidades o experiencias de voluntariado..." />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-fepv-darkblue mb-1">Hoja de Vida Diligenciada (PDF o DOCX)</label>
+                <input type="file" name="hoja_de_vida" accept=".pdf,.doc,.docx" required
+                  className="w-full p-2 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-fepv-green/10 file:text-fepv-green hover:file:bg-fepv-green/20" />
               </div>
             </div>
           )}

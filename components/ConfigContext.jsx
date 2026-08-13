@@ -15,7 +15,8 @@ export function ConfigProvider({ children }) {
     correo_contacto: "fundacion.epv.co@gmail.com",
     enlace_whatsapp: "https://wa.me/573166899250",
     direccion_fisica: "Agustín Codazzi, Cesar, Colombia",
-    formato_hoja_vida: "https://docs.google.com/document/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub"
+    formato_hoja_vida: "https://docs.google.com/document/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub",
+    enlace_formulario_web: ""
   });
 
   useEffect(() => {
