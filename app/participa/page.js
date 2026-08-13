@@ -31,6 +31,10 @@ function ParticipaForms() {
     programa: "PAPSIVI (Salud Integral a Víctimas)",
     perfil: "",
     areaInteres: "Salud Mental & Atención Psicosocial",
+    ubicacion: "",
+    edad: "",
+    disponibilidad: "Fines de semana",
+    motivacion: "",
     organizacion: "",
     representante: "",
     cooperacion: "Cooperación Técnica",
@@ -59,14 +63,39 @@ function ParticipaForms() {
     // Si el usuario configuró el enlace de Google Apps Script en Sheets
     if (config?.enlace_formulario_web && config.enlace_formulario_web.includes("script.google.com")) {
       try {
-        // Enviar a Google Apps Script usando FormData
         const formDataObj = new FormData(formElement);
-        formDataObj.append("Rol", activeTab.toUpperCase()); // Agregamos el rol (Beneficiario, Voluntariado, Aliado)
+        formDataObj.append("Rol", activeTab.toUpperCase()); // Agregamos el rol
         
-        // fetch con no-cors previene errores en el cliente
+        // Convertir archivo a Base64 si existe
+        const fileInput = formElement.querySelector('input[type="file"]');
+        if (fileInput && fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const base64Str = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            reader.readAsDataURL(file);
+          });
+          formDataObj.set('hoja_de_vida_base64', base64Str);
+          formDataObj.set('hoja_de_vida_name', file.name);
+          formDataObj.set('hoja_de_vida_mime', file.type);
+        }
+        
+        // Limpiar archivo binario crudo
+        formDataObj.delete('hoja_de_vida');
+
+        // Codificar a URLSearchParams para garantizar que Google Apps Script lea todos los parámetros string (incluyendo base64 gigante)
+        const urlEncodedData = new URLSearchParams();
+        for (const [key, value] of formDataObj.entries()) {
+          urlEncodedData.append(key, value);
+        }
+        
+        // fetch con no-cors y form-urlencoded
         await fetch(config.enlace_formulario_web, {
           method: 'POST',
-          body: formDataObj,
+          body: urlEncodedData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
           mode: 'no-cors'
         });
 
@@ -76,6 +105,7 @@ function ParticipaForms() {
           nombre: "", correo: "", telefono: "", documento: "",
           programa: "PAPSIVI (Salud Integral a Víctimas)", perfil: "",
           areaInteres: "Salud Mental & Atención Psicosocial",
+          ubicacion: "", edad: "", disponibilidad: "Fines de semana", motivacion: "",
           organizacion: "", representante: "", cooperacion: "Cooperación Técnica",
           mensaje: "", aceptaDatos: false
         });
@@ -106,8 +136,12 @@ function ParticipaForms() {
         `👤 *Nombre:* ${formData.nombre}\n` +
         `📞 *Celular:* ${formData.telefono}\n` +
         `📧 *Correo:* ${formData.correo}\n` +
+        `📍 *Ubicación:* ${formData.ubicacion}\n` +
+        `🎂 *Edad:* ${formData.edad}\n` +
         `🌱 *Área de interés:* ${formData.areaInteres}\n` +
-        `📝 *Perfil:* ${formData.perfil}\n\n` +
+        `⏳ *Disponibilidad:* ${formData.disponibilidad}\n` +
+        `📝 *Perfil:* ${formData.perfil}\n` +
+        `💡 *Motivación:* ${formData.motivacion}\n\n` +
         `_Nota: Adjuntaré/enviaré mi Hoja de Vida diligenciada a ${officialEmail}_\n` +
         `_Acepta tratamiento de datos: Sí (Ley 1581/2012)_`;
     } else if (activeTab === "aliado") {
@@ -385,7 +419,10 @@ function ParticipaForms() {
 
           <button type="submit" disabled={submitting}
             className="w-full fepv-btn fepv-btn-primary py-3.5 text-xs font-bold cursor-pointer disabled:opacity-55">
-            {submitting ? "Abriendo WhatsApp..." : "📲 ENVIAR SOLICITUD POR WHATSAPP"}
+            {submitting 
+              ? (config?.enlace_formulario_web ? "Enviando solicitud..." : "Abriendo WhatsApp...") 
+              : (config?.enlace_formulario_web ? "📩 ENVIAR SOLICITUD" : "📲 ENVIAR SOLICITUD POR WHATSAPP")
+            }
           </button>
         </form>
       )}
