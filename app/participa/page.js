@@ -331,20 +331,53 @@ function ParticipaForms() {
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Área de interés *</label>
                   <select name="areaInteres" value={formData.areaInteres} onChange={handleInputChange}
                     className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
-                    <option>Salud Mental &amp; Atención Psicosocial</option>
+                    <option>Salud Mental & Atención Psicosocial</option>
                     <option>Educación y Formación</option>
-                    <option>Medio Ambiente &amp; Reforestación</option>
+                    <option>Medio Ambiente & Reforestación</option>
                     <option>Bienestar Animal y Veterinaria</option>
                     <option>Asesoría de Negocios y Emprendimiento</option>
                   </select>
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-1">
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Edad *</label>
+                  <input type="number" required name="edad" value={formData.edad} onChange={handleInputChange}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                    placeholder="Ej. 25" min="15" max="99" />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Ciudad / Municipio *</label>
+                  <input type="text" required name="ubicacion" value={formData.ubicacion} onChange={handleInputChange}
+                    className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green"
+                    placeholder="Ej. Bogotá, Cundinamarca" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-fepv-darkblue mb-1">Disponibilidad de Tiempo *</label>
+                <select name="disponibilidad" value={formData.disponibilidad} onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-white">
+                  <option>Fines de semana</option>
+                  <option>Por proyectos o eventos específicos</option>
+                  <option>Medio tiempo (entre semana)</option>
+                  <option>Tiempo completo</option>
+                </select>
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-fepv-darkblue mb-1">Perfil Académico / Laboral *</label>
-                <textarea required name="perfil" rows="3" value={formData.perfil} onChange={handleInputChange}
+                <textarea required name="perfil" rows="2" value={formData.perfil} onChange={handleInputChange}
                   className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green resize-none text-xs"
-                  placeholder="Describe brevemente tus estudios, profesión, habilidades o experiencias de voluntariado..." />
+                  placeholder="Estudios, profesión, habilidades..." />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-fepv-darkblue mb-1">¿Por qué te gustaría hacer voluntariado en FEPV? *</label>
+                <textarea required name="motivacion" rows="3" value={formData.motivacion} onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green resize-none text-xs"
+                  placeholder="Cuéntanos brevemente qué te motiva a sumarte a nuestra causa..." />
               </div>
 
               <div>
