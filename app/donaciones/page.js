@@ -1,39 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METAS_DONACION_CSV } from "../../lib/api";
+import { useState } from "react";
+import { useGlobalConfig } from "../../components/ConfigContext";
 
 export default function Donaciones() {
-  const [frequency, setFrequency] = useState("unica"); // 'unica' | 'recurrente'
-  const [selectedValue, setSelectedValue] = useState("100000"); // preset values
+  const config = useGlobalConfig();
+  
+  const [frequency, setFrequency] = useState("unica");
+  const [selectedValue, setSelectedValue] = useState("100000");
   const [customValue, setCustomValue] = useState("");
-  const [simulatedSubmit, setSimulatedSubmit] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
 
-  // Estados del Termómetro
-  const [meta, setMeta] = useState(10000000); // 10 millones por defecto
-  const [recaudado, setRecaudado] = useState(3500000); // 3.5 millones por defecto
-  const [isLoadingMeta, setIsLoadingMeta] = useState(true);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    documento: "",
+    telefono: "",
+    correo: "",
+  });
 
-  useEffect(() => {
-    async function loadMetaDonaciones() {
-      setIsLoadingMeta(true);
-      try {
-        const data = await fetchGoogleSheetData(GOOGLE_SHEETS_METAS_DONACION_CSV);
-        if (data && data.length > 0) {
-          const row = data[0];
-          const mVal = parseInt(row.meta_mensual, 10);
-          const rVal = parseInt(row.recaudado_actual, 10);
-          if (!isNaN(mVal) && mVal > 0) setMeta(mVal);
-          if (!isNaN(rVal)) setRecaudado(rVal);
-        }
-      } catch (e) {
-        console.error("Error cargando metas de donaciones", e);
-      }
-      setIsLoadingMeta(false);
-    }
-    loadMetaDonaciones();
-  }, []);
+  // Cargar meta y recaudado desde la configuración global
+  const meta = parseInt(config?.meta_donaciones) || 5000000;
+  const recaudado = parseInt(config?.total_donaciones_recibidas) || 0;
+  const progressPercent = Math.min(100, Math.round((recaudado / meta) * 100)) || 0;
 
   const presets = [
     { value: "20000", label: "$20.000" },
@@ -52,15 +41,51 @@ export default function Donaciones() {
     setSelectedValue("");
   };
 
-  const handleDonateSubmit = (e) => {
-    e.preventDefault();
-    setSimulatedSubmit(true);
-    setTimeout(() => {
-      setSimulatedSubmit(false);
-    }, 5000);
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const finalAmount = customValue ? parseInt(customValue) : parseInt(selectedValue) || 0;
+
+  const handleDonateSubmit = async (e) => {
+    e.preventDefault();
+    if (finalAmount <= 0) return alert("Por favor selecciona un monto válido.");
+    
+    setSubmitting(true);
+    
+    if (config?.enlace_formulario_web) {
+      try {
+        const payload = {
+          Rol: "DONANTE",
+          monto: finalAmount,
+          nombre: formData.nombre,
+          documento: formData.documento,
+          telefono: formData.telefono,
+          correo: formData.correo
+        };
+
+        await fetch(config.enlace_formulario_web, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          mode: 'no-cors'
+        });
+
+        setSuccessMessage(true);
+        setFormData({ nombre: "", documento: "", telefono: "", correo: "" });
+      } catch (error) {
+        console.error("Error al enviar intención de donación:", error);
+        alert("Ocurrió un error al enviar tu solicitud. Intenta nuevamente.");
+      } finally {
+        setSubmitting(false);
+      }
+    } else {
+      alert("Error: El sistema no tiene configurado el enlace del servidor. Intenta más tarde.");
+      setSubmitting(false);
+    }
+  };
 
   const budgetAllocation = [
     { area: "Programas de Salud Mental y Apoyo Psicosocial", pct: 60, color: "bg-fepv-green" },
@@ -79,7 +104,7 @@ export default function Donaciones() {
             Tu Aporte Transforma Vidas
           </h1>
           <p className="font-sans text-sm sm:text-base text-fepv-light max-w-2xl mx-auto leading-relaxed">
-            Cada aporte económico nos permite sostener y ampliar las acciones terapéuticas, formativas e inclusivas de FEPV en Agustín Codazzi.
+            Cada aporte económico nos permite sostener y ampliar las acciones terapéuticas, formativas e inclusivas de FEPV.
           </p>
         </div>
       </section>
@@ -90,59 +115,36 @@ export default function Donaciones() {
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white p-6 sm:p-10 rounded-3xl border border-gray-150 shadow-md space-y-6">
             <h2 className="font-display font-bold text-xl text-fepv-darkblue">
-              Simulador de Aporte
+              Registro de Aporte Solidario
             </h2>
 
-            {simulatedSubmit ? (
-              <div className="p-8 bg-fepv-light/60 border border-fepv-green/20 rounded-2xl text-center space-y-4 animate-in fade-in duration-300">
-                <span className="text-4xl block">🙌</span>
-                <h3 className="font-display font-bold text-base text-fepv-darkblue">¡Gracias por tu intención de apoyo!</h3>
-                <p className="text-xs text-fepv-gray/80 leading-relaxed">
-                  Has seleccionado una donación {frequency === "unica" ? "única" : "mensual"} por valor de <strong>${finalAmount.toLocaleString("es-CO")} COP</strong>. 
+            {successMessage ? (
+              <div className="p-8 bg-gradient-to-r from-fepv-light/60 to-white border border-fepv-green/30 rounded-3xl text-center space-y-4 shadow-sm animate-in fade-in">
+                <span className="text-5xl block mb-2">💌</span>
+                <h3 className="font-display font-bold text-lg text-fepv-darkblue">¡Revisa tu correo electrónico!</h3>
+                <p className="text-xs text-fepv-gray/80 leading-relaxed max-w-md mx-auto">
+                  Hemos registrado tu intención de donar <strong>${finalAmount.toLocaleString("es-CO")} COP</strong>. 
+                  Te acabamos de enviar un correo de forma privada con los <strong>números de cuenta bancaria y el código QR oficial</strong> de la fundación.
                 </p>
-                <div className="p-4 bg-white rounded-xl text-left border border-fepv-green/10 text-xs space-y-2 max-w-md mx-auto">
-                  <p className="font-bold text-fepv-darkblue text-center mb-1">Para completar tu transferencia bancaria directa:</p>
-                  <p>🏦 <strong>Banco:</strong> Bancolombia (Ahorros)</p>
-                  <p>🔢 <strong>Cuenta:</strong> 123-456789-01 (FEPV)</p>
-                  <p>📱 <strong>Nequi / Daviplata:</strong> 300 000 0000</p>
-                  <p>📧 <strong>Confirmación:</strong> Envía tu comprobante a <strong>fundacion.epv.co@gmail.com</strong> para emitir tu certificado de donación deducible de impuestos.</p>
+                <div className="p-4 bg-amber-50 rounded-xl text-left border border-amber-200 text-xs mt-4 max-w-sm mx-auto">
+                  <p className="font-bold text-amber-900 mb-1">📸 No olvides el comprobante:</p>
+                  <p className="text-amber-800">Una vez hagas la transferencia, responde al correo enviando el pantallazo o comprobante para emitir tu certificado y sumar tu aporte a nuestro termómetro.</p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setSimulatedSubmit(false)}
-                  className="fepv-btn fepv-btn-secondary text-xs py-2 px-6"
+                  onClick={() => setSuccessMessage(false)}
+                  className="mt-4 fepv-btn fepv-btn-secondary text-xs py-2 px-6"
                 >
-                  Volver a calcular
+                  Registrar otra donación
                 </button>
               </div>
             ) : (
               <form onSubmit={handleDonateSubmit} className="space-y-6 text-xs sm:text-sm">
                 
-                {/* Frecuencia Selector */}
-                <div className="flex bg-gray-50 p-1.5 rounded-2xl border border-gray-150">
-                  <button
-                    type="button"
-                    onClick={() => setFrequency("unica")}
-                    className={`flex-1 py-3 text-center rounded-xl font-bold cursor-pointer transition-colors ${
-                      frequency === "unica" ? "bg-white text-fepv-green shadow-sm" : "text-fepv-gray/60 hover:text-fepv-darkblue"
-                    }`}
-                  >
-                    Donación Única
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFrequency("recurrente")}
-                    className={`flex-1 py-3 text-center rounded-xl font-bold cursor-pointer transition-colors ${
-                      frequency === "recurrente" ? "bg-white text-fepv-green shadow-sm" : "text-fepv-gray/60 hover:text-fepv-darkblue"
-                    }`}
-                  >
-                    Aporte Mensual Recurrente
-                  </button>
-                </div>
-
-                {/* Pre-sets */}
-                <div className="space-y-2">
-                  <label className="block text-xs font-bold text-fepv-darkblue">Selecciona un monto (COP):</label>
+                {/* 1. SELECCIÓN DE MONTO */}
+                <div className="space-y-4">
+                  <h3 className="font-bold text-fepv-green text-xs uppercase tracking-wider">1. Selecciona el monto</h3>
+                  
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {presets.map((preset) => (
                       <button
@@ -159,12 +161,8 @@ export default function Donaciones() {
                       </button>
                     ))}
                   </div>
-                </div>
 
-                {/* Custom Value */}
-                <div className="space-y-2">
-                  <label className="block text-xs font-bold text-fepv-darkblue">O ingresa otro valor (COP):</label>
-                  <div className="relative">
+                  <div className="relative max-w-sm">
                     <span className="absolute left-4 top-3 text-fepv-gray/60 font-bold">$</span>
                     <input
                       type="number"
@@ -172,27 +170,57 @@ export default function Donaciones() {
                       step="1000"
                       value={customValue}
                       onChange={handleCustomChange}
-                      placeholder="Monto personalizado"
-                      className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-fepv-green"
+                      placeholder="O ingresa otro valor (COP)"
+                      className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-fepv-green text-xs"
                     />
                   </div>
                 </div>
 
-                {finalAmount > 0 && (
-                  <div className="p-4 bg-fepv-light/40 rounded-2xl border border-fepv-green/10 text-center">
-                    <p className="text-xs text-fepv-gray">Monto final a aportar:</p>
-                    <p className="text-xl sm:text-2xl font-display font-bold text-fepv-darkblue mt-1">
-                      ${finalAmount.toLocaleString("es-CO")} COP {frequency === "recurrente" && "/ Mes"}
-                    </p>
+                <hr className="border-gray-100" />
+
+                {/* 2. DATOS DEL DONANTE */}
+                <div className="space-y-4">
+                  <h3 className="font-bold text-fepv-green text-xs uppercase tracking-wider">2. Tus datos personales</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] sm:text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo *</label>
+                      <input type="text" required name="nombre" value={formData.nombre} onChange={handleInputChange}
+                        className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green text-xs"
+                        placeholder="Ej. María Pérez" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] sm:text-xs font-bold text-fepv-darkblue mb-1">Cédula o NIT *</label>
+                      <input type="text" required name="documento" value={formData.documento} onChange={handleInputChange}
+                        className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green text-xs"
+                        placeholder="Documento de identidad" />
+                    </div>
                   </div>
-                )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] sm:text-xs font-bold text-fepv-darkblue mb-1">Celular / WhatsApp *</label>
+                      <input type="tel" required name="telefono" value={formData.telefono} onChange={handleInputChange}
+                        className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green text-xs"
+                        placeholder="300 000 0000" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] sm:text-xs font-bold text-fepv-darkblue mb-1">Correo Electrónico *</label>
+                      <input type="email" required name="correo" value={formData.correo} onChange={handleInputChange}
+                        className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green text-xs"
+                        placeholder="maria@ejemplo.com" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-gray-50 rounded-xl text-[10px] sm:text-xs text-fepv-gray/80 italic text-justify">
+                  Al hacer clic en "Recibir Cuentas para Donar", te enviaremos por correo las instrucciones bancarias de forma privada. La Fundación protegerá tus datos conforme a la Ley 1581 de 2012.
+                </div>
 
                 <button
                   type="submit"
-                  disabled={finalAmount <= 0}
-                  className="w-full fepv-btn fepv-btn-donate flex items-center justify-center gap-1.5 py-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={finalAmount <= 0 || submitting}
+                  className="w-full fepv-btn fepv-btn-donate flex items-center justify-center gap-1.5 py-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm font-bold shadow-lg"
                 >
-                  PROCEDER A DONAR <span className="text-red-500">❤️</span>
+                  {submitting ? "PROCESANDO..." : `RECIBIR CUENTAS PARA DONAR $${finalAmount.toLocaleString("es-CO")} ❤️`}
                 </button>
               </form>
             )}
@@ -203,46 +231,45 @@ export default function Donaciones() {
         <div className="lg:col-span-5 space-y-6">
 
           {/* Termómetro de Donaciones */}
-          {!isLoadingMeta && meta > 0 && (
-            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50/50 to-white shadow-sm space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">📈</span>
-                <div>
-                  <h3 className="font-display font-bold text-base text-fepv-darkblue">
-                    Termómetro de Solidaridad
-                  </h3>
-                  <p className="text-[10px] text-fepv-green font-bold uppercase tracking-wider">
-                    Meta de Recaudación Mensual
-                  </p>
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs font-bold text-fepv-darkblue">
-                  <span>Recaudado: ${recaudado.toLocaleString("es-CO")}</span>
-                  <span>Meta: ${meta.toLocaleString("es-CO")}</span>
-                </div>
-                
-                {/* Progress bar */}
-                <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden p-0.5 border border-gray-250/20">
-                  <div 
-                    className="h-full bg-gradient-to-r from-fepv-green to-fepv-vividgreen rounded-full transition-all duration-1000 shadow-inner flex items-center justify-end pr-2"
-                    style={{ width: `${Math.min(100, Math.round((recaudado / meta) * 100))}%` }}
-                  >
-                    {Math.min(100, Math.round((recaudado / meta) * 100)) > 10 && (
-                      <span className="text-[8px] font-black text-white leading-none">
-                        {Math.min(100, Math.round((recaudado / meta) * 100))}%
-                      </span>
-                    )}
-                  </div>
-                </div>
-                
-                <p className="text-[10px] text-fepv-gray/70 text-center font-medium italic pt-1">
-                  ¡Llevamos el <strong>{Math.min(100, Math.round((recaudado / meta) * 100))}%</strong> de la meta gracias a tu ayuda!
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50/50 to-white shadow-sm space-y-4 relative overflow-hidden">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📈</span>
+              <div>
+                <h3 className="font-display font-bold text-base text-fepv-darkblue">
+                  Termómetro de Solidaridad
+                </h3>
+                <p className="text-[10px] text-fepv-green font-bold uppercase tracking-wider">
+                  Meta de Recaudación Actual
                 </p>
               </div>
             </div>
-          )}
+            
+            <div className="space-y-2 relative z-10">
+              <div className="flex justify-between text-xs font-bold text-fepv-darkblue">
+                <span>Recaudado: ${recaudado.toLocaleString("es-CO")}</span>
+                <span>Meta: ${meta.toLocaleString("es-CO")}</span>
+              </div>
+              
+              {/* Progress bar */}
+              <div className="w-full h-4 bg-white rounded-full overflow-hidden p-0.5 border border-amber-200 shadow-inner">
+                <div 
+                  className="h-full bg-gradient-to-r from-fepv-green to-fepv-vividgreen rounded-full transition-all duration-1000 flex items-center justify-end pr-2 relative overflow-hidden"
+                  style={{ width: `${Math.max(5, progressPercent)}%` }}
+                >
+                  <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse"></div>
+                  {progressPercent > 10 && (
+                    <span className="text-[8px] font-black text-white leading-none relative z-10">
+                      {progressPercent}%
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              <p className="text-[10px] text-fepv-gray/70 text-center font-medium italic pt-1">
+                ¡Llevamos el <strong>{progressPercent}%</strong> de la meta gracias a tu ayuda!
+              </p>
+            </div>
+          </div>
           
           {/* Destino de los recursos */}
           <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-150 shadow-sm space-y-6">
@@ -253,15 +280,14 @@ export default function Donaciones() {
               En FEPV la transparencia es un enfoque fundamental. Exponemos el destino promedio de cada peso recibido mediante donaciones de particulares.
             </p>
 
-            {/* CSS Bar graph */}
             <div className="space-y-4">
               {budgetAllocation.map((alloc, idx) => (
                 <div key={idx} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-semibold text-fepv-darkblue">
+                  <div className="flex items-center justify-between text-[10px] sm:text-xs font-semibold text-fepv-darkblue">
                     <span className="truncate pr-4">{alloc.area}</span>
                     <span>{alloc.pct}%</span>
                   </div>
-                  <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
                     <div 
                       className={`h-full rounded-full ${alloc.color}`}
                       style={{ width: `${alloc.pct}%` }}
@@ -275,7 +301,7 @@ export default function Donaciones() {
           {/* Deducción tributaria */}
           <div className="bg-fepv-light/20 p-6 rounded-3xl border border-fepv-green/10 space-y-3">
             <h4 className="font-display font-bold text-sm text-fepv-darkblue">🛡️ Deducción de Impuestos</h4>
-            <p className="text-xs text-fepv-gray/80 leading-relaxed">
+            <p className="text-xs text-fepv-gray/80 leading-relaxed text-justify">
               Como Entidad Sin Ánimo de Lucro (ESAL) inscrita, todas las donaciones a la Fundación Encuentros Para la Vida otorgan derecho a un descuento tributario en el impuesto sobre la renta en Colombia de conformidad con el Artículo 257 del Estatuto Tributario.
             </p>
             <p className="text-[10px] text-fepv-green font-bold">
