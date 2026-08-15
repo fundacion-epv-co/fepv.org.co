@@ -19,9 +19,14 @@ export default function Donaciones() {
     correo: "",
   });
 
-  // Cargar meta y recaudado desde la configuración global
-  const meta = parseInt(config?.meta_donaciones) || 5000000;
-  const recaudado = parseInt(config?.total_donaciones_recibidas) || 0;
+  // Cargar meta y recaudado desde la configuración global limpiando el formato moneda ($100,000.00)
+  const cleanCurrency = (val) => {
+    if (!val) return "";
+    return String(val).replace(/[$\\s,]/g, '').split('.')[0];
+  };
+
+  const meta = parseInt(cleanCurrency(config?.meta_donaciones)) || 5000000;
+  const recaudado = parseInt(cleanCurrency(config?.total_donaciones_recibidas)) || 0;
   const progressPercent = Math.min(100, Math.round((recaudado / meta) * 100)) || 0;
 
   const presets = [
@@ -88,10 +93,26 @@ export default function Donaciones() {
   };
 
   const budgetAllocation = [
-    { area: "Programas de Salud Mental y Apoyo Psicosocial", pct: 60, color: "bg-fepv-green" },
-    { area: "Material Pedagógico y Capacitación", pct: 20, color: "bg-fepv-blue" },
-    { area: "Actividades Comunitarias y Conservación", pct: 10, color: "bg-fepv-orange" },
-    { area: "Bienestar y Protección Animal", pct: 10, color: "bg-red-400" }
+    { 
+      area: config?.prog1_nombre || "Programas de Salud Mental y Apoyo Psicosocial", 
+      pct: parseInt(config?.prog1_pct) || 60, 
+      color: "bg-fepv-green" 
+    },
+    { 
+      area: config?.prog2_nombre || "Material Pedagógico y Capacitación", 
+      pct: parseInt(config?.prog2_pct) || 20, 
+      color: "bg-fepv-blue" 
+    },
+    { 
+      area: config?.prog3_nombre || "Actividades Comunitarias y Conservación", 
+      pct: parseInt(config?.prog3_pct) || 10, 
+      color: "bg-fepv-orange" 
+    },
+    { 
+      area: config?.prog4_nombre || "Bienestar y Protección Animal", 
+      pct: parseInt(config?.prog4_pct) || 10, 
+      color: "bg-red-400" 
+    }
   ];
 
   return (
