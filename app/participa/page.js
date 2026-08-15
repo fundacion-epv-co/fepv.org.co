@@ -62,17 +62,20 @@ function ParticipaForms() {
     
     // Si el usuario configuró el enlace de Google Apps Script en Sheets
     if (config?.enlace_formulario_web && config.enlace_formulario_web.includes("script.google.com")) {
+      if (!config.enlace_formulario_web.endsWith("/exec")) {
+        alert("❌ ADVERTENCIA: El enlace pegado en Google Sheets no es correcto. Debe terminar en '/exec'. Revisa la configuración de tu hoja de Google Sheets (gid=3001).");
+        setSubmitting(false);
+        return;
+      }
+      
       try {
         const formDataObj = new FormData(formElement);
-        
-        // Convertir a objeto JSON simple
         const payload = {};
         for (const [key, value] of formDataObj.entries()) {
           payload[key] = value;
         }
         payload.Rol = activeTab.toUpperCase();
         
-        // Convertir archivo a Base64 si existe
         const fileInput = formElement.querySelector('input[type="file"]');
         if (fileInput && fileInput.files.length > 0) {
           const file = fileInput.files[0];
@@ -86,10 +89,9 @@ function ParticipaForms() {
           payload.hoja_de_vida_mime = file.type;
         }
         
-        // Remover el archivo binario crudo porque no es serializable
         delete payload.hoja_de_vida;
 
-        // fetch enviando como JSON texto plano (para no chocar con CORS)
+        // Enviar JSON puro a Google Apps Script
         await fetch(config.enlace_formulario_web, {
           method: 'POST',
           body: JSON.stringify(payload),
@@ -99,7 +101,6 @@ function ParticipaForms() {
           mode: 'no-cors'
         });
 
-        // Simula éxito inmediatamente ya que no-cors es opaco
         setSuccessMessage(true);
         setFormData({
           nombre: "", correo: "", telefono: "", documento: "",
@@ -109,10 +110,10 @@ function ParticipaForms() {
           organizacion: "", representante: "", cooperacion: "Cooperación Técnica",
           mensaje: "", aceptaDatos: false
         });
-        formElement.reset(); // limpia el input type="file"
+        formElement.reset();
       } catch (error) {
-        console.error("Error al enviar formulario:", error);
-        alert("Hubo un error de red al intentar enviar los datos. Intenta nuevamente.");
+        console.error("Error al enviar:", error);
+        alert("Hubo un error de red. Intenta nuevamente.");
       } finally {
         setSubmitting(false);
         setTimeout(() => setSuccessMessage(false), 5000);
