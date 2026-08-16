@@ -34,8 +34,9 @@ export default function Home() {
   const [testimonialsList, setTestimonialsList] = useState(INITIAL_TESTIMONIALS);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // Mapa de imágenes de programas y poblaciones
+  // Mapas de imágenes separados
   const [programImagesMap, setProgramImagesMap] = useState({});
+  const [poblacionesImagesMap, setPoblacionesImagesMap] = useState({});
 
   useEffect(() => {
     async function loadAllImages() {
@@ -44,10 +45,8 @@ export default function Home() {
           fetchProgramImagesMap(),
           fetchPoblacionesImagesMap()
         ]);
-        const mergedMap = { ...progMap, ...pobMap };
-        if (Object.keys(mergedMap).length > 0) {
-          setProgramImagesMap(mergedMap);
-        }
+        if (Object.keys(progMap).length > 0) setProgramImagesMap(progMap);
+        if (Object.keys(pobMap).length > 0) setPoblacionesImagesMap(pobMap);
       } catch (e) {
         console.error("Error cargando mapas de imágenes en Home:", e);
       }
@@ -599,7 +598,7 @@ export default function Home() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {beneficiaries.map((b, idx) => {
                   // Búsqueda inteligente por id principal, id alternativo, o aproximación por nombre
-                  const foundKey = Object.keys(programImagesMap).find(k => {
+                  const foundKey = Object.keys(poblacionesImagesMap).find(k => {
                     const cleanK = k.toLowerCase().trim();
                     return (
                       cleanK === b.id.toLowerCase() ||
@@ -610,7 +609,7 @@ export default function Home() {
                     );
                   });
 
-                  const customImg = foundKey ? programImagesMap[foundKey] : null;
+                  const customImg = foundKey ? poblacionesImagesMap[foundKey] : null;
                   const showImage = customImg || isImageUrl(b.img);
                   const imgSrc = customImg ? getDirectDriveImageUrl(customImg) : getDirectDriveImageUrl(b.img);
 
