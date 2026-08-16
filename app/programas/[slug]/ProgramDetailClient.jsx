@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, getDynamicPrograms } from "../../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, getDynamicPrograms, getDirectDriveImageUrl } from "../../../lib/api";
 import { useGlobalConfig } from "../../../components/ConfigContext";
 import logoImg from "../../../public/logo.png";
 
