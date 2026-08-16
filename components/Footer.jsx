@@ -121,27 +121,27 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
-                <Link href="/programas#salud-mental" className="hover:text-white transition-colors">
+                <Link href="/programas/salud-mental" className="hover:text-white transition-colors">
                   Salud Mental y Psicología
                 </Link>
               </li>
               <li>
-                <Link href="/programas#educacion" className="hover:text-white transition-colors">
+                <Link href="/programas/educacion" className="hover:text-white transition-colors">
                   Educación y Formación
                 </Link>
               </li>
               <li>
-                <Link href="/programas#inclusion" className="hover:text-white transition-colors">
+                <Link href="/programas/inclusion" className="hover:text-white transition-colors">
                   Inclusión y Derechos
                 </Link>
               </li>
               <li>
-                <Link href="/programas#ambiente" className="hover:text-white transition-colors">
+                <Link href="/programas/medio-ambiente" className="hover:text-white transition-colors">
                   Sostenibilidad Ambiental
                 </Link>
               </li>
               <li>
-                <Link href="/programas#bienestar-animal" className="hover:text-white transition-colors">
+                <Link href="/programas/animales" className="hover:text-white transition-colors">
                   Bienestar Animal
                 </Link>
               </li>
