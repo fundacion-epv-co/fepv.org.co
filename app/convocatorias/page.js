@@ -118,92 +118,146 @@ function OportunidadesClient() {
           ) : (
             <>
               {/* VISTA 1: RESUMEN (DASHBOARD) */}
+              {/* VISTA 1: RESUMEN (DASHBOARD) */}
               {activeTab === "resumen" && (
-                <div className="space-y-8 animate-fade-in">
+                <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
                   
-                  {/* Banner Principal Estilo Infografía */}
-                  <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-gray-100 flex flex-col lg:flex-row gap-8 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-fepv-green/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-                    
-                    <div className="flex-1 space-y-8 relative z-10">
-                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                        <div className="bg-fepv-green text-white rounded-2xl p-6 flex-1 w-full sm:w-auto shadow-md transform hover:scale-105 transition-transform cursor-pointer" onClick={() => setActiveTab("ofertas")}>
-                          <div className="text-5xl font-black mb-2">{totalOfertas}</div>
-                          <div className="text-sm font-bold uppercase tracking-wide">Ofertas de Empleo<br/>Disponibles</div>
-                        </div>
-                        <div className="bg-fepv-blue text-white rounded-2xl p-6 flex-1 w-full sm:w-auto shadow-md transform hover:scale-105 transition-transform cursor-pointer" onClick={() => setActiveTab("convocatorias")}>
-                          <div className="text-5xl font-black mb-2">{activeConvocatorias}</div>
-                          <div className="text-sm font-bold uppercase tracking-wide">Convocatorias<br/>FEPV Activas</div>
+                  {/* Cabecera Principal */}
+                  <div className="bg-[#002f6c] rounded-t-[40px] rounded-br-[40px] rounded-bl-sm p-8 md:p-12 text-white relative overflow-hidden shadow-lg">
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                      <div className="text-center md:text-left space-y-4">
+                        <h2 className="font-display font-black text-4xl md:text-6xl uppercase leading-none tracking-tight">
+                          Oportunidades<br/>
+                          <span className="text-[#8cc63f]">De Empleo</span><br/>
+                          En El Cesar
+                        </h2>
+                        <div className="inline-block bg-[#001f4d] text-white font-bold px-6 py-2 rounded-full text-sm sm:text-base border border-[#003876]">
+                          Impulsamos oportunidades, construimos futuro
                         </div>
                       </div>
+                      <div className="hidden md:block">
+                         <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20">
+                            <span className="text-6xl">🎯</span>
+                         </div>
+                      </div>
+                    </div>
+                  </div>
 
-                      <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-                        <h3 className="font-bold text-fepv-darkblue mb-4 flex items-center gap-2">
-                          <span className="text-fepv-green text-xl">📍</span> Municipios con ofertas disponibles
-                        </h3>
+                  {/* Cifras Clave */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Ofertas Disponibles (Caja Verde) */}
+                    <div className="bg-[#2d7a2d] text-white rounded-2xl p-6 sm:p-8 flex items-center gap-6 shadow-md transform hover:-translate-y-1 transition-transform cursor-pointer" onClick={() => setActiveTab("ofertas")}>
+                      <div className="text-6xl opacity-90">💼</div>
+                      <div className="flex-1 flex items-center gap-6">
+                        <div className="text-6xl sm:text-7xl font-black leading-none">{totalOfertas}</div>
+                        <div className="text-sm sm:text-base font-bold uppercase tracking-wider leading-tight border-l-2 border-white/30 pl-4">
+                          Ofertas<br/>De Empleo<br/>Disponibles
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Rango Salarial (Caja Blanca) */}
+                    <div className="bg-white text-fepv-darkblue rounded-2xl p-6 sm:p-8 flex items-center gap-6 shadow-md border border-gray-200">
+                      <div className="w-16 h-16 bg-[#002f6c] text-white rounded-full flex items-center justify-center text-3xl font-black shrink-0">
+                        $
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Rango Salarial Promedio</div>
+                        <div className="text-2xl sm:text-3xl font-black text-[#002f6c] leading-tight mb-1">
+                          $ 1.5 a $4<br/>millones
+                        </div>
+                        <div className="text-[10px] sm:text-xs text-gray-400 font-medium">(Según cargo y experiencia)</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Municipios */}
+                  <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden relative">
+                    <div className="bg-white px-8 py-6 border-b border-gray-100 flex items-center gap-3">
+                       <span className="text-2xl text-[#2d7a2d]">📍</span>
+                       <h3 className="font-black text-xl text-[#2d7a2d] uppercase tracking-wide">Municipios con ofertas disponibles</h3>
+                    </div>
+                    
+                    <div className="p-8 flex flex-col md:flex-row gap-8 items-center">
+                      <div className="flex-1 w-full">
                         {uniqueMunicipios.length > 0 ? (
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4">
+                          <div className="columns-2 sm:columns-3 gap-8 space-y-4">
                             {uniqueMunicipios.map((m, idx) => (
-                              <div key={idx} className="flex items-center gap-2 text-sm text-gray-700 font-medium">
-                                <div className="w-1.5 h-1.5 rounded-full bg-fepv-blue"></div>
+                              <div key={idx} className="flex items-center gap-2 text-sm text-gray-700 font-bold uppercase tracking-wider break-inside-avoid">
+                                <div className="w-1 h-4 bg-gray-300 rounded-full"></div>
                                 {m}
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500">No hay municipios disponibles por el momento.</p>
+                          <p className="text-sm text-gray-500 text-center">No hay municipios disponibles por el momento.</p>
                         )}
                       </div>
-                    </div>
-
-                    <div className="w-full lg:w-1/3 space-y-6 relative z-10 flex flex-col justify-between">
-                      <div className="bg-fepv-light/30 rounded-2xl p-6 border border-fepv-green/20 text-center">
-                        <div className="text-4xl mb-2 text-fepv-darkblue">💰</div>
-                        <div className="text-xs font-bold text-fepv-green uppercase tracking-wider mb-1">Rango Salarial Promedio</div>
-                        <div className="text-2xl font-black text-fepv-darkblue leading-tight">
-                          $1.5 a $4 millones
-                        </div>
-                        <div className="text-xs text-gray-500 mt-2">(Según cargo y experiencia)</div>
+                      
+                      <div className="hidden md:flex w-1/3 justify-center border-l border-dashed border-gray-200 pl-8">
+                         <div className="text-[120px] opacity-80 filter drop-shadow-md">🗺️</div>
                       </div>
+                    </div>
+                  </div>
 
-                      <div className="bg-white rounded-2xl p-6 border border-gray-200 text-center shadow-sm">
-                        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Agencias Aliadas</h4>
-                        <div className="flex items-center justify-center gap-4 flex-wrap">
-                          <div className="font-black text-xl text-[#0065ff] tracking-tight">Computrabajo</div>
-                          <div className="font-black text-xl text-[#6e28d9] tracking-tight">magneto</div>
+                  {/* Agencias Aliadas */}
+                  <div className="relative pt-6">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#002f6c] text-white text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest z-10">
+                      Agencias de Empleo Aliadas
+                    </div>
+                    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 pt-10">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                        <div className="flex flex-col items-center justify-center py-4">
+                           <span className="font-black text-2xl text-[#0065ff] tracking-tight">Computrabajo</span>
+                           <span className="text-xs text-gray-400 mt-1">LeaderSearch</span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center py-4">
+                           <span className="font-black text-3xl text-[#6e28d9] tracking-tight lowercase">magneto</span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center py-4">
+                           <div className="flex items-center gap-1">
+                              <span className="text-xl">🍂</span>
+                              <span className="font-black text-xl text-red-600 uppercase tracking-tighter">Comfacesar</span>
+                           </div>
+                           <span className="text-[10px] text-gray-400 mt-1">Estamos cumpliendo sueños</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Call to action hacia las pestañas */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <button 
-                      onClick={() => setActiveTab("ofertas")}
-                      className="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm hover:border-fepv-blue hover:shadow-md transition-all text-left flex items-center justify-between group"
-                    >
-                      <div>
-                        <h3 className="font-display font-bold text-2xl text-fepv-darkblue mb-2 group-hover:text-fepv-blue transition-colors">Explorar Empleos</h3>
-                        <p className="text-gray-500">Postúlate a las vacantes activas en el departamento del Cesar.</p>
-                      </div>
-                      <div className="bg-gray-50 p-4 rounded-full text-fepv-blue group-hover:bg-fepv-blue group-hover:text-white transition-colors flex-shrink-0 ml-4">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                      </div>
-                    </button>
-                    
+                  {/* Footer Stats / Info */}
+                  <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-wrap justify-center sm:justify-between items-center gap-6 shadow-sm">
+                     <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-fepv-green text-white rounded-full flex items-center justify-center text-sm">✓</div>
+                        <span className="text-xs font-bold text-gray-700">Información<br/>verificada</span>
+                     </div>
+                     <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-[#0065ff] text-white rounded-full flex items-center justify-center text-sm">🎁</div>
+                        <span className="text-xs font-bold text-gray-700">Gratuita</span>
+                     </div>
+                     <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm">👥</div>
+                        <span className="text-xs font-bold text-gray-700">Para<br/>todos</span>
+                     </div>
+                     <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-fepv-green text-white rounded-full flex items-center justify-center text-sm">🤝</div>
+                        <span className="text-xs font-bold text-gray-700">Comprometidos<br/>con tu futuro</span>
+                     </div>
+                  </div>
+                  
+                  {/* Convocatorias Call to Action */}
+                  <div className="mt-8">
                     <button 
                       onClick={() => setActiveTab("convocatorias")}
-                      className="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm hover:border-fepv-orange hover:shadow-md transition-all text-left flex items-center justify-between group"
+                      className="w-full bg-[#002f6c] p-6 rounded-3xl shadow-sm hover:shadow-md transition-all text-center group border border-[#001f4d]"
                     >
-                      <div>
-                        <h3 className="font-display font-bold text-2xl text-fepv-darkblue mb-2 group-hover:text-fepv-orange transition-colors">Explorar Convocatorias</h3>
-                        <p className="text-gray-500">Participa en proyectos sociales, formaciones y becas de la FEPV.</p>
-                      </div>
-                      <div className="bg-gray-50 p-4 rounded-full text-fepv-orange group-hover:bg-fepv-orange group-hover:text-white transition-colors flex-shrink-0 ml-4">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                      </div>
+                      <h3 className="font-display font-bold text-2xl text-white mb-1 group-hover:text-fepv-orange transition-colors flex justify-center items-center gap-3">
+                        Ver Convocatorias de la Fundación <span className="bg-white/10 p-2 rounded-full text-sm">➔</span>
+                      </h3>
+                      <p className="text-white/70 text-sm">Participa en proyectos sociales, formaciones y becas exclusivas.</p>
                     </button>
                   </div>
+
                 </div>
               )}
 
