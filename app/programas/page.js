@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { PROGRAM_DATA } from "../../lib/programData";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_PROGRAMAS_CSV, getDirectDriveImageUrl, fetchProgramImagesMap } from "../../lib/api";
+
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, getDynamicPrograms } from "../../lib/api";
 
 export default function Programas() {
   const [oportunidades, setOportunidades] = useState([]);
   const [isLoadingOpps, setIsLoadingOpps] = useState(true);
 
   // Obtener array de programas desde el estado
-  const [programsList, setProgramsList] = useState(Object.values(PROGRAM_DATA));
+  const [programsList, setProgramsList] = useState([]);
 
   // Cargar oportunidades en vivo para cruzar conteo en badges
   useEffect(() => {

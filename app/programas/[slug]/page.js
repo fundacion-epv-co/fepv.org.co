@@ -1,10 +1,14 @@
-import { PROGRAM_DATA } from "../../../lib/programData";
+import { getDynamicPrograms } from "../../../lib/api";
 import ProgramDetailClient from "./ProgramDetailClient";
 
 // Generar rutas estáticas a nivel de compilación
-export function generateStaticParams() {
-  return Object.keys(PROGRAM_DATA).map((key) => ({
-    slug: key,
+export async function generateStaticParams() {
+  const dynamicPrograms = await getDynamicPrograms();
+  if (!dynamicPrograms || dynamicPrograms.length === 0) {
+    return [{ slug: 'salud-mental' }]; // Fallback
+  }
+  return dynamicPrograms.map((prog) => ({
+    slug: prog.id,
   }));
 }
 

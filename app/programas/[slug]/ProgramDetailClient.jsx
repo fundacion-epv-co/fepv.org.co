@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { PROGRAM_DATA } from "../../../lib/programData";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_PROGRAMAS_CSV, getDirectDriveImageUrl, fetchProgramImagesMap } from "../../../lib/api";
+
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, getDynamicPrograms } from "../../../lib/api";
 import { useGlobalConfig } from "../../../components/ConfigContext";
 import logoImg from "../../../public/logo.png";
 
@@ -12,7 +12,8 @@ export default function ProgramDetailClient({ slug }) {
   const [isLoadingOpps, setIsLoadingOpps] = useState(true);
 
   // Obtener la información del programa desde el estado
-  const [program, setProgram] = useState(PROGRAM_DATA[slug]);
+  const [program, setProgram] = useState(null);
+  const [isLoadingProg, setIsLoadingProg] = useState(true);
 
   const config = useGlobalConfig();
   const globalLogo = config?.logo_url_formatted || logoImg;
@@ -117,6 +118,7 @@ export default function ProgramDetailClient({ slug }) {
     return str.startsWith("http") || str.includes("drive.google.com") || str.includes("lh3.googleusercontent.com");
   };
 
+  if (isLoadingProg) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><p className="text-gray-500 font-medium">Cargando programa...</p></div>;
   if (!program) {
     return (
       <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center justify-center py-20 px-4 space-y-6">
