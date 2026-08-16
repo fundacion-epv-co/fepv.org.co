@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV } from "../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV, getDirectDriveImageUrl } from "../../lib/api";
+import { useGlobalConfig } from "../../components/ConfigContext";
 
 function OportunidadesClient() {
   const [activeTab, setActiveTab] = useState("resumen");
@@ -13,6 +14,7 @@ function OportunidadesClient() {
 
   const searchParams = useSearchParams();
   const catParam = searchParams.get("cat");
+  const config = useGlobalConfig();
 
   useEffect(() => {
     if (catParam) {
@@ -32,14 +34,30 @@ function OportunidadesClient() {
         ]);
 
         if (dataConvs && dataConvs.length > 0) {
+          const normalizedConvs = dataConvs.map(row => {
+            const obj = {};
+            for (let k in row) {
+              obj[k.toLowerCase().trim()] = row[k];
+            }
+            return obj;
+          });
           // Filtrar las activas
-          const validConvs = dataConvs.filter(c => c.titulo);
+          const validConvs = normalizedConvs.filter(c => c.titulo);
           setConvocatorias(validConvs);
         }
 
         if (dataOfertas && dataOfertas.length > 0) {
+          // Normalizar las llaves a minúsculas
+          const normalizedOfertas = dataOfertas.map(row => {
+            const obj = {};
+            for (let k in row) {
+              obj[k.toLowerCase().trim()] = row[k];
+            }
+            return obj;
+          });
+
           // Filtrar vacantes válidas y que el estado no sea cerrado/oculto
-          const validOfertas = dataOfertas.filter(o => {
+          const validOfertas = normalizedOfertas.filter(o => {
             if (!o.titulo_vacante && !o.codigo_vacante) return false;
             const st = (o.estado || "").toLowerCase().trim();
             if (st === "inactiva" || st === "inactivo" || st === "cerrada" || st === "cerrado" || st === "oculta" || st === "oculto") return false;
@@ -68,16 +86,33 @@ function OportunidadesClient() {
   });
   const uniqueMunicipios = Object.keys(municipiosMap).sort();
 
+  // ==========================================
+  // CONFIGURACIÓN DE IMAGEN DE FONDO
+  // La URL viene desde ConfiguracionGlobal (gid=3001) bajo la clave: banner_oportunidades_url
+  // ==========================================
+  const googleDriveLink = config?.banner_oportunidades_url || ""; 
+  const bgImageUrl = googleDriveLink ? getDirectDriveImageUrl(googleDriveLink) : null;
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col pb-20">
       {/* HEADER SECTION */}
-      <section className="bg-fepv-darkblue text-white pt-24 pb-16 px-4">
-        <div className="max-w-7xl mx-auto text-center space-y-4 mt-8">
-          <span className="text-fepv-green font-bold tracking-wider uppercase text-sm">Portal de Oportunidades</span>
-          <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight">
+      <section 
+        className="relative pt-24 pb-16 px-4 bg-fepv-darkblue"
+        style={bgImageUrl ? { 
+          backgroundImage: `url(${bgImageUrl})`, 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center' 
+        } : {}}
+      >
+        {/* Overlay oscuro para que el texto sea legible si hay imagen */}
+        {bgImageUrl && <div className="absolute inset-0 bg-black/60 z-0"></div>}
+        
+        <div className="max-w-7xl mx-auto text-center space-y-4 mt-8 relative z-10 text-white">
+          <span className="text-fepv-green font-bold tracking-wider uppercase text-sm drop-shadow-md">Portal de Oportunidades</span>
+          <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight drop-shadow-lg">
             Encuentra tu próximo desafío
           </h1>
-          <p className="text-gray-300 max-w-2xl mx-auto text-base sm:text-lg">
+          <p className="text-gray-200 max-w-2xl mx-auto text-base sm:text-lg drop-shadow-md">
             Explora las vacantes de empleo en el Cesar, oportunidades de voluntariado y convocatorias exclusivas de la Fundación.
           </p>
         </div>
