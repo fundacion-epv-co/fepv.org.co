@@ -5,303 +5,390 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV } from "../../lib/api";
 
-function ConvocatoriasContent() {
-  const [filterCategory, setFilterCategory] = useState("all");
-  const [selectedConvocatoria, setSelectedConvocatoria] = useState(null);
+function OportunidadesClient() {
+  const [activeTab, setActiveTab] = useState("resumen");
   const [convocatorias, setConvocatorias] = useState([]);
-  const [categories, setCategories] = useState([{ id: "all", name: "Todas" }]);
+  const [ofertas, setOfertas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const searchParams = useSearchParams();
   const catParam = searchParams.get("cat");
 
-  // Efecto para escuchar la categoría en la URL (?cat=Categoria)
   useEffect(() => {
     if (catParam) {
-      setFilterCategory(catParam);
-    } else {
-      setFilterCategory("all");
+      if (catParam.toLowerCase() === "empleo") setActiveTab("ofertas");
+      else if (catParam.toLowerCase() === "convocatoria") setActiveTab("convocatorias");
     }
   }, [catParam]);
 
   useEffect(() => {
     async function loadData() {
       setIsLoading(true);
-      let combinedData = [];
 
-      // 1. Cargar Convocatorias (pestaña principal)
       try {
-        const dataConvs = await fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV);
+        const [dataConvs, dataOfertas] = await Promise.all([
+          fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV),
+          fetchGoogleSheetData(GOOGLE_SHEETS_OFERTAS_CSV)
+        ]);
+
         if (dataConvs && dataConvs.length > 0) {
-          const normalizedConvs = dataConvs.map(item => ({
-            ...item,
-            categoria: item.categoria || 'Convocatorias'
-          }));
-          combinedData = combinedData.concat(normalizedConvs);
+          // Filtrar las activas
+          const validConvs = dataConvs.filter(c => c.titulo);
+          setConvocatorias(validConvs);
         }
+
+        if (dataOfertas && dataOfertas.length > 0) {
+          // Filtrar vacantes válidas y que el estado no sea cerrado/oculto
+          const validOfertas = dataOfertas.filter(o => {
+            if (!o.titulo_vacante && !o.codigo_vacante) return false;
+            const st = (o.estado || "").toLowerCase().trim();
+            if (st === "inactiva" || st === "inactivo" || st === "cerrada" || st === "cerrado" || st === "oculta" || st === "oculto") return false;
+            return true;
+          });
+          setOfertas(validOfertas);
+        }
+
       } catch (e) {
-        console.error("Error cargando convocatorias", e);
+        console.error("Error cargando oportunidades:", e);
       }
-
-      // 2. Cargar Ofertas de Empleo (segunda pestaña)
-      if (GOOGLE_SHEETS_OFERTAS_CSV !== "PENDIENTE_DE_URL_OFERTAS") {
-        try {
-          const dataOfertas = await fetchGoogleSheetData(GOOGLE_SHEETS_OFERTAS_CSV);
-          if (dataOfertas && dataOfertas.length > 0) {
-            const normalizedOfertas = dataOfertas.map(item => ({
-              ...item,
-              categoria: item.categoria || 'Oferta'
-            }));
-            combinedData = combinedData.concat(normalizedOfertas);
-          }
-        } catch (e) {
-          console.error("Error cargando ofertas de empleo", e);
-        }
-      }
-
-      // Mapear los datos combinados
-      const mapped = combinedData.map((item, index) => ({
-        id: item.id || `OP-${index + 1}`,
-        title: item.titulo || 'Sin título',
-        desc: item.descripcion || '',
-        deadline: item.cierre || item.fecha_cierre || '',
-        status: (item.estado || 'CERRADA').toUpperCase(),
-        category: item.categoria || 'general',
-        location: item.lugar || "Sede FEPV / Virtual",
-        enlace_drive: item.enlace_drive || null,
-        enlace_formulario: item.enlace_formulario || null
-      }));
-      setConvocatorias(mapped);
-
-      // Generar categorías dinámicas a partir de los datos
-      const uniqueCats = ["Todas"];
-      mapped.forEach(c => {
-        if (c.category && !uniqueCats.includes(c.category)) {
-          uniqueCats.push(c.category);
-        }
-      });
-      setCategories(uniqueCats.map(c => {
-        let displayName = c;
-        if (c === "Convocatoria") displayName = "Convocatorias";
-        if (c === "Empleo") displayName = "Ofertas de Empleo";
-        return {
-          id: c === "Todas" ? "all" : c,
-          name: displayName
-        };
-      }));
 
       setIsLoading(false);
     }
     loadData();
   }, []);
 
-  const filteredConvocatorias = filterCategory === "all" 
-    ? convocatorias 
-    : convocatorias.filter(c => c.category === filterCategory);
+  const totalOfertas = ofertas.reduce((acc, curr) => acc + (parseInt(curr.cantidad_vacantes) || 1), 0);
+  const activeConvocatorias = convocatorias.filter(c => (c.estado || "").toLowerCase().includes("abierta") || (c.estado || "").toLowerCase().includes("activa")).length;
+
+  // Municipios únicos de ofertas
+  const municipiosMap = {};
+  ofertas.forEach(o => {
+    const mun = (o.municipio || "CESAR").toUpperCase().trim();
+    municipiosMap[mun] = true;
+  });
+  const uniqueMunicipios = Object.keys(municipiosMap).sort();
 
   return (
-    <div className="w-full bg-white pb-20">
-      
-      {/* Banner Superior */}
-      <section className="bg-fepv-darkblue text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <h1 className="font-display font-bold text-3xl sm:text-5xl">
-            Convocatorias y Oportunidades
+    <div className="min-h-screen bg-gray-50 flex flex-col pb-20">
+      {/* HEADER SECTION */}
+      <section className="bg-fepv-darkblue text-white pt-24 pb-16 px-4">
+        <div className="max-w-7xl mx-auto text-center space-y-4 mt-8">
+          <span className="text-fepv-green font-bold tracking-wider uppercase text-sm">Portal de Oportunidades</span>
+          <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight">
+            Encuentra tu próximo desafío
           </h1>
-          <p className="font-sans text-sm sm:text-base text-fepv-light max-w-2xl mx-auto leading-relaxed">
-            Participa en nuestros procesos. Inscríbete en los cursos, postúlate a las vacantes, voluntariados y becas locales de FEPV.
+          <p className="text-gray-300 max-w-2xl mx-auto text-base sm:text-lg">
+            Explora las vacantes de empleo en el Cesar, oportunidades de voluntariado y convocatorias exclusivas de la Fundación.
           </p>
         </div>
       </section>
 
-      {/* Filtros */}
-      <section className="py-8 bg-gray-50 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setFilterCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer border transition-colors ${
-                  filterCategory === cat.id
-                    ? "bg-fepv-vividgreen text-white border-fepv-vividgreen shadow-sm"
-                    : "bg-white text-fepv-gray hover:bg-gray-50 border-gray-200"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-          <span className="text-xs text-fepv-gray/70">
-            Mostrando <strong>{filteredConvocatorias.length}</strong> oportunidades
-          </span>
+      {/* TABS NAVIGATION */}
+      <div className="bg-white border-b border-gray-200 sticky top-16 z-20 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 flex justify-start sm:justify-center gap-4 sm:gap-8 overflow-x-auto no-scrollbar">
+          <button
+            onClick={() => setActiveTab("resumen")}
+            className={`whitespace-nowrap py-4 px-2 sm:px-6 font-bold text-sm sm:text-base border-b-4 transition-colors ${activeTab === "resumen" ? "border-fepv-green text-fepv-darkblue" : "border-transparent text-gray-500 hover:text-fepv-darkblue"}`}
+          >
+            📊 Resumen General
+          </button>
+          <button
+            onClick={() => setActiveTab("ofertas")}
+            className={`whitespace-nowrap py-4 px-2 sm:px-6 font-bold text-sm sm:text-base border-b-4 transition-colors ${activeTab === "ofertas" ? "border-fepv-blue text-fepv-darkblue" : "border-transparent text-gray-500 hover:text-fepv-darkblue"}`}
+          >
+            💼 Ofertas de Empleo
+          </button>
+          <button
+            onClick={() => setActiveTab("convocatorias")}
+            className={`whitespace-nowrap py-4 px-2 sm:px-6 font-bold text-sm sm:text-base border-b-4 transition-colors ${activeTab === "convocatorias" ? "border-fepv-orange text-fepv-darkblue" : "border-transparent text-gray-500 hover:text-fepv-darkblue"}`}
+          >
+            📢 Convocatorias
+          </button>
         </div>
-      </section>
+      </div>
 
-      {/* Lista de Convocatorias */}
-      <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 space-y-4">
-            <div className="w-12 h-12 border-4 border-fepv-light border-t-fepv-vividgreen rounded-full animate-spin"></div>
-            <p className="text-sm font-semibold text-fepv-darkblue">Cargando datos desde el sistema...</p>
-          </div>
-        ) : filteredConvocatorias.length === 0 ? (
-          <div className="text-center py-16 bg-gray-50 rounded-3xl border border-gray-100 max-w-md mx-auto space-y-4">
-            <span className="text-5xl block">📢</span>
-            <h3 className="font-display font-bold text-lg text-fepv-darkblue">No hay convocatorias activas</h3>
-            <p className="text-xs text-fepv-gray/70">
-              No se encontraron oportunidades en esta categoría en este momento.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {filteredConvocatorias.map((c) => {
-              const isOpen = c.status === "ABIERTA";
-              return (
-                <div
-                  key={c.id}
-                  className="bg-white rounded-3xl border border-gray-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-shadow"
-                >
-                  <div className="space-y-3 max-w-2xl">
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-100 text-fepv-gray">
-                        {c.category}
-                      </span>
-                      <span className="text-[10px] text-fepv-gray/50">Código: {c.id}</span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                        isOpen ? "bg-fepv-light/60 text-fepv-vividgreen" : "bg-red-50 text-red-600"
-                      }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-fepv-vividgreen animate-pulse" : "bg-red-600"}`}></span>
-                        {c.status}
-                      </span>
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-grow py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fepv-darkblue"></div>
+              <p className="text-gray-500 font-medium">Buscando oportunidades...</p>
+            </div>
+          ) : (
+            <>
+              {/* VISTA 1: RESUMEN (DASHBOARD) */}
+              {activeTab === "resumen" && (
+                <div className="space-y-8 animate-fade-in">
+                  
+                  {/* Banner Principal Estilo Infografía */}
+                  <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-gray-100 flex flex-col lg:flex-row gap-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-fepv-green/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+                    
+                    <div className="flex-1 space-y-8 relative z-10">
+                      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                        <div className="bg-fepv-green text-white rounded-2xl p-6 flex-1 w-full sm:w-auto shadow-md transform hover:scale-105 transition-transform cursor-pointer" onClick={() => setActiveTab("ofertas")}>
+                          <div className="text-5xl font-black mb-2">{totalOfertas}</div>
+                          <div className="text-sm font-bold uppercase tracking-wide">Ofertas de Empleo<br/>Disponibles</div>
+                        </div>
+                        <div className="bg-fepv-blue text-white rounded-2xl p-6 flex-1 w-full sm:w-auto shadow-md transform hover:scale-105 transition-transform cursor-pointer" onClick={() => setActiveTab("convocatorias")}>
+                          <div className="text-5xl font-black mb-2">{activeConvocatorias}</div>
+                          <div className="text-sm font-bold uppercase tracking-wide">Convocatorias<br/>FEPV Activas</div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                        <h3 className="font-bold text-fepv-darkblue mb-4 flex items-center gap-2">
+                          <span className="text-fepv-green text-xl">📍</span> Municipios con ofertas disponibles
+                        </h3>
+                        {uniqueMunicipios.length > 0 ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4">
+                            {uniqueMunicipios.map((m, idx) => (
+                              <div key={idx} className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                                <div className="w-1.5 h-1.5 rounded-full bg-fepv-blue"></div>
+                                {m}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-500">No hay municipios disponibles por el momento.</p>
+                        )}
+                      </div>
                     </div>
 
-                    <h3 className="font-display font-bold text-lg text-fepv-darkblue leading-snug">
-                      {c.title}
-                    </h3>
+                    <div className="w-full lg:w-1/3 space-y-6 relative z-10 flex flex-col justify-between">
+                      <div className="bg-fepv-light/30 rounded-2xl p-6 border border-fepv-green/20 text-center">
+                        <div className="text-4xl mb-2 text-fepv-darkblue">💰</div>
+                        <div className="text-xs font-bold text-fepv-green uppercase tracking-wider mb-1">Rango Salarial Promedio</div>
+                        <div className="text-2xl font-black text-fepv-darkblue leading-tight">
+                          $1.5 a $4 millones
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2">(Según cargo y experiencia)</div>
+                      </div>
 
-                    <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs text-fepv-gray/80">
-                      <p>📍 <strong>Lugar:</strong> {c.location}</p>
-                      <p>📅 <strong>Cierre:</strong> {c.deadline}</p>
+                      <div className="bg-white rounded-2xl p-6 border border-gray-200 text-center shadow-sm">
+                        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Agencias Aliadas</h4>
+                        <div className="flex items-center justify-center gap-4 flex-wrap">
+                          <div className="font-black text-xl text-[#0065ff] tracking-tight">Computrabajo</div>
+                          <div className="font-black text-xl text-[#6e28d9] tracking-tight">magneto</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <button
-                      onClick={() => setSelectedConvocatoria(c)}
-                      className="fepv-btn text-xs py-3 px-6 w-full md:w-auto text-center cursor-pointer bg-fepv-orange text-white hover:bg-orange-600 transition-colors rounded-xl"
+                  {/* Call to action hacia las pestañas */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button 
+                      onClick={() => setActiveTab("ofertas")}
+                      className="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm hover:border-fepv-blue hover:shadow-md transition-all text-left flex items-center justify-between group"
                     >
-                      VER DETALLES
+                      <div>
+                        <h3 className="font-display font-bold text-2xl text-fepv-darkblue mb-2 group-hover:text-fepv-blue transition-colors">Explorar Empleos</h3>
+                        <p className="text-gray-500">Postúlate a las vacantes activas en el departamento del Cesar.</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-full text-fepv-blue group-hover:bg-fepv-blue group-hover:text-white transition-colors flex-shrink-0 ml-4">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                      </div>
+                    </button>
+                    
+                    <button 
+                      onClick={() => setActiveTab("convocatorias")}
+                      className="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm hover:border-fepv-orange hover:shadow-md transition-all text-left flex items-center justify-between group"
+                    >
+                      <div>
+                        <h3 className="font-display font-bold text-2xl text-fepv-darkblue mb-2 group-hover:text-fepv-orange transition-colors">Explorar Convocatorias</h3>
+                        <p className="text-gray-500">Participa en proyectos sociales, formaciones y becas de la FEPV.</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-full text-fepv-orange group-hover:bg-fepv-orange group-hover:text-white transition-colors flex-shrink-0 ml-4">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                      </div>
                     </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+              )}
 
-      {/* MODAL DETALLE / INSCRIPCIÓN */}
-      {selectedConvocatoria && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 space-y-6 relative border border-gray-150">
-            
-            <button
-              onClick={() => setSelectedConvocatoria(null)}
-              className="absolute top-4 right-4 text-fepv-gray/60 hover:text-fepv-darkblue cursor-pointer p-1.5 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Cerrar modal"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
+              {/* VISTA 2: OFERTAS DE EMPLEO (TABLA DIRECTORIO) */}
+              {activeTab === "ofertas" && (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                    <div>
+                      <span className="text-fepv-blue font-bold text-sm tracking-widest uppercase mb-1 block">Parte 4 de 4</span>
+                      <h2 className="font-display font-bold text-3xl text-fepv-darkblue uppercase">Busca Oportunidades | Cesar</h2>
+                      <div className="flex flex-wrap gap-4 mt-3">
+                        <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-green text-lg">✓</span> Información verificada</span>
+                        <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-blue text-lg">●</span> Gratuita</span>
+                        <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-orange text-lg">●</span> Para todos</span>
+                      </div>
+                    </div>
+                  </div>
 
-            <div className="space-y-2 pr-8">
-              <span className="text-[10px] font-bold text-fepv-vividgreen bg-fepv-light/60 px-2 py-0.5 rounded">
-                Código: {selectedConvocatoria.id}
-              </span>
-              <h2 className="font-display font-bold text-xl sm:text-2xl text-fepv-darkblue leading-snug">
-                {selectedConvocatoria.title}
-              </h2>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-fepv-gray/70">
-                <p>📍 <strong>Lugar:</strong> {selectedConvocatoria.location}</p>
-                <p>📅 <strong>Cierre:</strong> {selectedConvocatoria.deadline}</p>
-              </div>
-            </div>
-
-            <div className="space-y-4 border-t border-b border-gray-100 py-4 text-xs sm:text-sm text-fepv-gray/90">
-              <div>
-                <h4 className="font-bold text-fepv-darkblue mb-1">Descripción de la oportunidad:</h4>
-                <p className="leading-relaxed text-xs">{selectedConvocatoria.desc}</p>
-              </div>
-              
-              {selectedConvocatoria.enlace_drive && (
-                <div className="mt-4">
-                  <Link 
-                    href={`/visualizar?url=${encodeURIComponent(selectedConvocatoria.enlace_drive)}&title=${encodeURIComponent(selectedConvocatoria.title)}`}
-                    className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-200"
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                    </svg>
-                    Ver Documento Adjunto
-                  </Link>
+                  {ofertas.length === 0 ? (
+                    <div className="bg-white p-12 rounded-3xl border border-gray-200 text-center shadow-sm">
+                      <span className="text-6xl mb-4 block">📭</span>
+                      <h3 className="text-xl font-bold text-gray-700">No hay ofertas de empleo activas</h3>
+                      <p className="text-gray-500 mt-2">Vuelve pronto para nuevas oportunidades o revisa las convocatorias de la Fundación.</p>
+                    </div>
+                  ) : (
+                    <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse min-w-[800px]">
+                          <thead>
+                            <tr className="bg-[#1f2937] text-white text-xs uppercase tracking-wider">
+                              <th className="px-4 py-4 font-bold text-center">#</th>
+                              <th className="px-4 py-4 font-bold">Código</th>
+                              <th className="px-4 py-4 font-bold w-1/3">Vacantes</th>
+                              <th className="px-4 py-4 font-bold">Rango Salarial</th>
+                              <th className="px-4 py-4 font-bold text-center">Cantidad</th>
+                              <th className="px-4 py-4 font-bold">Municipio</th>
+                              <th className="px-4 py-4 font-bold">Vencimiento</th>
+                              <th className="px-4 py-4 font-bold text-center">Acción</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100 text-sm">
+                            {ofertas.map((o, idx) => {
+                              const st = (o.estado || "").toLowerCase().trim();
+                              const isUrgent = st.includes("urgente");
+                              return (
+                                <tr key={idx} className={`transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-fepv-light/20`}>
+                                  <td className="px-4 py-4 font-bold text-gray-500 text-center">
+                                    <div className="bg-[#8cc63f] text-white w-6 h-6 rounded-md flex items-center justify-center mx-auto">{idx + 1}</div>
+                                  </td>
+                                  <td className="px-4 py-4 font-mono text-xs text-gray-600">{o.codigo_vacante || '-'}</td>
+                                  <td className="px-4 py-4">
+                                    <div className="font-bold text-fepv-darkblue">{o.titulo_vacante || o.cargo || 'Sin título'}</div>
+                                    <div className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">{o.nombre_prestador || 'Agencia de Empleo'}</div>
+                                    {isUrgent && <span className="inline-block mt-1 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-sm">URGENTE</span>}
+                                  </td>
+                                  <td className="px-4 py-4 font-medium text-gray-700">{o.rango_salarial || 'A Convenir'}</td>
+                                  <td className="px-4 py-4 text-center font-bold text-fepv-darkblue">{o.cantidad_vacantes || '1'}</td>
+                                  <td className="px-4 py-4 text-gray-600 uppercase font-medium text-xs tracking-wider">{o.municipio || 'CESAR'}</td>
+                                  <td className="px-4 py-4 text-gray-600 text-xs">{o.fecha_vencimiento || '-'}</td>
+                                  <td className="px-4 py-4 text-center">
+                                    {o.url_detalle_vacante || o.enlace ? (
+                                      <Link 
+                                        href={o.url_detalle_vacante || o.enlace || "#"} 
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-block bg-[#003876] hover:bg-fepv-darkblue text-white text-xs font-bold px-4 py-2 rounded transition-colors shadow-sm whitespace-nowrap"
+                                      >
+                                        Ver Oferta
+                                      </Link>
+                                    ) : (
+                                      <span className="text-[10px] text-gray-400 font-bold uppercase">Sin Enlace</span>
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="bg-gray-50 p-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+                        <div className="flex items-center gap-2 text-gray-500">
+                          <svg className="w-5 h-5 text-fepv-green" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
+                          Recuerda buscar el empleo en el portal oficial con el código.
+                        </div>
+                        <div className="text-gray-400">Total listadas: {ofertas.length}</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
 
-            {selectedConvocatoria.status === "ABIERTA" ? (
-              <div className="space-y-4">
-                <h3 className="font-display font-bold text-base text-fepv-darkblue">
-                  Formulario de Inscripción
-                </h3>
-                
-                <p className="text-sm text-fepv-gray/80">
-                  Para participar en esta convocatoria, debes completar el Registro Único de Beneficiarios oficial de la Fundación.
-                </p>
-
-                {selectedConvocatoria.enlace_formulario ? (
-                  <a 
-                    href={selectedConvocatoria.enlace_formulario} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="w-full py-3 rounded-xl font-bold text-white transition-colors bg-fepv-vividgreen hover:bg-green-600 flex items-center justify-center gap-2"
-                  >
-                    📝 IR AL FORMULARIO OFICIAL
-                  </a>
-                ) : (
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-                    <p className="text-xs text-yellow-700 text-center">
-                      El enlace de inscripción aún no ha sido publicado. Revisa nuevamente más tarde o contáctanos.
-                    </p>
+              {/* VISTA 3: CONVOCATORIAS (TARJETAS) */}
+              {activeTab === "convocatorias" && (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                    <div>
+                      <h2 className="font-display font-bold text-3xl text-fepv-darkblue">Convocatorias FEPV</h2>
+                      <p className="text-gray-500">Participa en nuestros proyectos sociales, becas y voluntariados.</p>
+                    </div>
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl text-center space-y-2">
-                <span className="text-3xl block">⏳</span>
-                <h4 className="font-display font-bold text-sm text-fepv-darkblue">Esta convocatoria ya cerró</h4>
-                <p className="text-[11px] text-fepv-gray/80">
-                  El periodo de inscripción para esta oportunidad ha finalizado. Te invitamos a estar atento a nuestras próximas convocatorias en las redes sociales de FEPV.
-                </p>
-              </div>
-            )}
-          </div>
+
+                  {convocatorias.length === 0 ? (
+                    <div className="bg-white p-12 rounded-3xl border border-gray-200 text-center shadow-sm">
+                      <span className="text-6xl mb-4 block">📣</span>
+                      <h3 className="text-xl font-bold text-gray-700">No hay convocatorias activas</h3>
+                      <p className="text-gray-500 mt-2">Pronto abriremos nuevos espacios de participación institucional.</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {convocatorias.map((c, idx) => {
+                        const st = (c.estado || "").toUpperCase();
+                        let bgStatus = "bg-gray-100 text-gray-600";
+                        if (st.includes("ABIERTA") || st.includes("ACTIVA")) bgStatus = "bg-fepv-green text-white";
+                        if (st.includes("CERRADA")) bgStatus = "bg-red-100 text-red-600";
+                        
+                        return (
+                          <div key={idx} className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm flex flex-col h-full hover:shadow-lg transition-shadow">
+                            <div className="mb-4">
+                              <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider ${bgStatus}`}>
+                                {st || 'CONVOCATORIA'}
+                              </span>
+                            </div>
+                            <h3 className="font-display font-bold text-xl text-fepv-darkblue mb-2 leading-tight">
+                              {c.titulo}
+                            </h3>
+                            {c.categoria && (
+                              <p className="text-xs font-bold text-fepv-orange uppercase tracking-wider mb-4">
+                                {c.categoria}
+                              </p>
+                            )}
+                            <p className="text-sm text-gray-600 leading-relaxed mb-6 flex-grow">
+                              {c.descripcion}
+                            </p>
+                            
+                            <div className="space-y-3 mb-6 bg-gray-50 p-4 rounded-2xl">
+                              <div className="flex items-center gap-3 text-xs text-gray-600">
+                                <span className="text-lg">📅</span> 
+                                <div>
+                                  <div className="font-bold text-[10px] uppercase tracking-wider text-gray-400">Cierre</div>
+                                  <strong className="text-gray-800">{c.cierre || c.fecha_cierre || 'No definido'}</strong>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3 text-xs text-gray-600">
+                                <span className="text-lg">📍</span> 
+                                <div>
+                                  <div className="font-bold text-[10px] uppercase tracking-wider text-gray-400">Lugar</div>
+                                  <strong className="text-gray-800">{c.lugar || 'Por definir'}</strong>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {(c.enlace || c.enlace_formulario) ? (
+                              <Link 
+                                href={c.enlace || c.enlace_formulario || "#"}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full text-center bg-fepv-orange hover:bg-[#d96704] text-white font-bold py-3 rounded-xl transition-colors text-sm shadow-sm"
+                              >
+                                Ver Detalles / Inscribirse
+                              </Link>
+                            ) : (
+                              <button disabled className="w-full text-center bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed text-sm">
+                                Inscripciones Cerradas
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
 
-export default function Convocatorias() {
+export default function OportunidadesPage() {
   return (
-    <Suspense fallback={
-      <div className="flex flex-col items-center justify-center py-40 space-y-4">
-        <div className="w-12 h-12 border-4 border-fepv-light border-t-fepv-vividgreen rounded-full animate-spin"></div>
-        <p className="text-sm font-semibold text-fepv-darkblue">Cargando oportunidades...</p>
-      </div>
-    }>
-      <ConvocatoriasContent />
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Cargando...</div>}>
+      <OportunidadesClient />
     </Suspense>
   );
 }
