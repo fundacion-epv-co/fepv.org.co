@@ -122,27 +122,27 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/programas/salud-mental" className="hover:text-white transition-colors">
-                  Mentes para la Vida
+                  Salud Mental
+                </Link>
+              </li>
+              <li>
+                <Link href="/programas/familias" className="hover:text-white transition-colors">
+                  Familia
                 </Link>
               </li>
               <li>
                 <Link href="/programas/educacion" className="hover:text-white transition-colors">
-                  Aprender para Transformar
-                </Link>
-              </li>
-              <li>
-                <Link href="/programas/inclusion" className="hover:text-white transition-colors">
-                  Todos Somos Parte
+                  Educación
                 </Link>
               </li>
               <li>
                 <Link href="/programas/ambiente" className="hover:text-white transition-colors">
-                  Codazzi vivo
+                  Medio Ambiente
                 </Link>
               </li>
               <li>
-                <Link href="/programas/animales" className="hover:text-white transition-colors">
-                  Huellas que Transforman
+                <Link href="/programas/talentos-para-la-vida" className="hover:text-white transition-colors">
+                  Deporte y Cultura
                 </Link>
               </li>
             </ul>
