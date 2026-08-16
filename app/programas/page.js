@@ -34,38 +34,12 @@ export default function Programas() {
 
     async function loadProgramsCMS() {
       try {
-        const progData = await fetchGoogleSheetData(GOOGLE_SHEETS_PROGRAMAS_CSV);
-        const imagesMap = await fetchProgramImagesMap();
-        
-        const merged = Object.values(PROGRAM_DATA).map(staticProg => {
-          const sheetProg = (progData && progData.length > 0) ? progData.find(item => 
-            (item.id && item.id.toLowerCase().trim() === staticProg.id.toLowerCase().trim()) ||
-            (item.titulo && item.titulo.toLowerCase().trim().includes(staticProg.id.replace("-", " ").toLowerCase().trim()))
-          ) : null;
-          
-          const customIcon = imagesMap[staticProg.id] || (sheetProg && (sheetProg.icono || sheetProg.imagen || sheetProg.enlace_imagen_drive)) || staticProg.icon;
-
-          if (sheetProg) {
-            return {
-              ...staticProg,
-              title: sheetProg.titulo || staticProg.title,
-              desc: sheetProg.descripcion || staticProg.desc,
-              obj: sheetProg.objetivo || staticProg.obj,
-              population: sheetProg.poblacion || staticProg.population,
-              location: sheetProg.lugar || staticProg.location,
-              allies: sheetProg.aliados || staticProg.allies,
-              status: sheetProg.estado || staticProg.status,
-              icon: customIcon
-            };
-          }
-          return {
-            ...staticProg,
-            icon: customIcon
-          };
-        });
-        setProgramsList(merged);
+        const dynamicPrograms = await getDynamicPrograms();
+        if (dynamicPrograms && dynamicPrograms.length > 0) {
+          setProgramsList(dynamicPrograms);
+        }
       } catch (e) {
-        console.error("Error cargando programas desde el CMS de Sheets", e);
+        console.error("Error fetching dynamic programs", e);
       }
     }
 

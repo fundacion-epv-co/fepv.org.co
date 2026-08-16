@@ -38,10 +38,7 @@ export default function ProgramDetailClient({ slug }) {
             enlace_formulario: item.enlace_formulario || ""
           })).filter(opp => 
             opp.status.toLowerCase().trim() === "abierta" && 
-            (
-              (opp.programa && opp.programa.toLowerCase().trim() === slug.toLowerCase().trim()) ||
-              (PROGRAM_DATA[slug] && opp.programa && opp.programa.toLowerCase().trim() === PROGRAM_DATA[slug].title.toLowerCase().trim())
-            )
+            opp.programa && opp.programa.toLowerCase().trim() === slug.toLowerCase().trim()
           );
           setOportunidades(activeOpps);
         }
@@ -51,65 +48,22 @@ export default function ProgramDetailClient({ slug }) {
       setIsLoadingOpps(false);
     }
 
-    async function loadProgramCMS() {
+    async function loadProgram() {
       try {
-        const progData = await fetchGoogleSheetData(GOOGLE_SHEETS_PROGRAMAS_CSV);
-        const imagesMap = await fetchProgramImagesMap();
-        
-        const sheetProg = (progData && progData.length > 0) ? progData.find(item => 
-          (item.id && item.id.toLowerCase().trim() === slug.toLowerCase().trim()) ||
-          (item.titulo && item.titulo.toLowerCase().trim().includes(slug.replace("-", " ").toLowerCase().trim()))
-        ) : null;
-
-        const customIcon = imagesMap[slug] || (sheetProg && (sheetProg.icono || sheetProg.imagen || sheetProg.enlace_imagen_drive)) || PROGRAM_DATA[slug]?.icon;
-
-        if (sheetProg) {
-          const updated = {
-            ...PROGRAM_DATA[slug],
-            title: sheetProg.titulo || PROGRAM_DATA[slug]?.title,
-            desc: sheetProg.descripcion || PROGRAM_DATA[slug]?.desc,
-            obj: sheetProg.objetivo || PROGRAM_DATA[slug]?.obj,
-            population: sheetProg.poblacion || PROGRAM_DATA[slug]?.population,
-            location: sheetProg.lugar || PROGRAM_DATA[slug]?.location,
-            allies: sheetProg.aliados || PROGRAM_DATA[slug]?.allies,
-            status: sheetProg.estado || PROGRAM_DATA[slug]?.status,
-            icon: customIcon
-          };
-          if (typeof window !== "undefined") {
-            try {
-              localStorage.setItem(`fepv_cache_program_${slug}`, JSON.stringify(updated));
-            } catch(e){}
-          }
-          setProgram(updated);
-        } else {
-          const updated = {
-            ...PROGRAM_DATA[slug],
-            icon: customIcon
-          };
-          if (typeof window !== "undefined") {
-            try {
-              localStorage.setItem(`fepv_cache_program_${slug}`, JSON.stringify(updated));
-            } catch(e){}
-          }
-          setProgram(updated);
+        const dynamicPrograms = await getDynamicPrograms();
+        const prog = dynamicPrograms.find(p => p.id === slug);
+        if (prog) {
+          setProgram(prog);
         }
       } catch (e) {
         console.error("Error cargando detalles del CMS de programas", e);
       }
+      setIsLoadingProg(false);
     }
 
     if (slug) {
-      // Cargar caché local instantáneamente antes de la petición de red
-      if (typeof window !== "undefined") {
-        try {
-          const cached = localStorage.getItem(`fepv_cache_program_${slug}`);
-          if (cached) {
-            setProgram(JSON.parse(cached));
-          }
-        } catch(e){}
-      }
       loadOpps();
-      loadProgramCMS();
+      loadProgram();
     }
   }, [slug]);
 

@@ -136,7 +136,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/programas/medio-ambiente" className="hover:text-white transition-colors">
+                <Link href="/programas/ambiente" className="hover:text-white transition-colors">
                   Sostenibilidad Ambiental
                 </Link>
               </li>
