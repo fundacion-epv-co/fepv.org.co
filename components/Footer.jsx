@@ -136,12 +136,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/programas/ambiente" className="hover:text-white transition-colors">
+                <Link href="/programas/medio-ambiente" className="hover:text-white transition-colors">
                   Medio Ambiente
                 </Link>
               </li>
               <li>
-                <Link href="/programas/talentos-para-la-vida" className="hover:text-white transition-colors">
+                <Link href="/programas/cultura-deporte" className="hover:text-white transition-colors">
                   Deporte y Cultura
                 </Link>
               </li>
