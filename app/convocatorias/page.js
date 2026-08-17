@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV, getDirectDriveImageUrl } from "../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV, GOOGLE_SHEETS_AGENCIAS_EMPLEO_CSV, getDirectDriveImageUrl } from "../../lib/api";
 import { useGlobalConfig } from "../../components/ConfigContext";
 import { toJpeg } from "html-to-image";
 
@@ -12,6 +12,7 @@ function OportunidadesClient() {
   const [activeTab, setActiveTab] = useState("resumen");
   const [convocatorias, setConvocatorias] = useState([]);
   const [ofertas, setOfertas] = useState([]);
+  const [agencias, setAgencias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Filtros y Paginación
@@ -41,9 +42,10 @@ function OportunidadesClient() {
       setIsLoading(true);
 
       try {
-        const [dataConvs, dataOfertas] = await Promise.all([
+        const [dataConvs, dataOfertas, dataAgencias] = await Promise.all([
           fetchGoogleSheetData(GOOGLE_SHEETS_CONVOCATORIAS_CSV),
-          fetchGoogleSheetData(GOOGLE_SHEETS_OFERTAS_CSV)
+          fetchGoogleSheetData(GOOGLE_SHEETS_OFERTAS_CSV),
+          fetchGoogleSheetData(GOOGLE_SHEETS_AGENCIAS_EMPLEO_CSV)
         ]);
 
         if (dataConvs && dataConvs.length > 0) {
@@ -56,6 +58,19 @@ function OportunidadesClient() {
           });
           const validConvs = normalizedConvs.filter(c => c.titulo);
           setConvocatorias(validConvs);
+        }
+
+        if (dataAgencias && dataAgencias.length > 0) {
+          const normalizedAgencias = dataAgencias.map(row => {
+            const obj = {};
+            for (let k in row) {
+              obj[k.toLowerCase().trim()] = row[k];
+            }
+            return obj;
+          });
+          // Solo tomar los que tengan nombre
+          const validAgencias = normalizedAgencias.filter(a => a.nombre);
+          setAgencias(validAgencias);
         }
 
         if (dataOfertas && dataOfertas.length > 0) {
@@ -462,22 +477,42 @@ function OportunidadesClient() {
                            Agencias de Empleo Aliadas
                          </span>
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
-                        <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
-                           <span className="font-black text-3xl text-[#0065ff] tracking-tight">Computrabajo</span>
-                           <span className="text-xs text-gray-400 font-medium uppercase tracking-widest mt-2">LeaderSearch</span>
+                      {agencias.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                          {agencias.map((agencia, i) => (
+                            <Link 
+                              key={i} 
+                              href={agencia.url || "#"} 
+                              target={agencia.url ? "_blank" : "_self"} 
+                              rel="noopener noreferrer"
+                              className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer"
+                            >
+                              {agencia.url_imagen ? (
+                                <img src={agencia.url_imagen} alt={agencia.nombre} className="h-16 w-auto object-contain mb-2 drop-shadow-sm" />
+                              ) : (
+                                <span className="font-black text-2xl text-[#002f6c] tracking-tight text-center">{agencia.nombre}</span>
+                              )}
+                              {agencia.eslogan && (
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2 text-center">
+                                  {agencia.eslogan}
+                                </span>
+                              )}
+                            </Link>
+                          ))}
                         </div>
-                        <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
-                           <span className="font-black text-4xl text-[#6e28d9] tracking-tight lowercase">magneto</span>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                          <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
+                             <span className="font-black text-3xl text-[#0065ff] tracking-tight">Computrabajo</span>
+                          </div>
+                          <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
+                             <span className="font-black text-4xl text-[#6e28d9] tracking-tight lowercase">magneto</span>
+                          </div>
+                          <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
+                             <span className="font-black text-2xl text-red-600 uppercase tracking-tighter">Comfacesar</span>
+                          </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
-                           <div className="flex items-center gap-2">
-                              <svg className="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
-                              <span className="font-black text-2xl text-red-600 uppercase tracking-tighter">Comfacesar</span>
-                           </div>
-                           <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Estamos cumpliendo sueños</span>
-                        </div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Features Inferiores */}
@@ -746,20 +781,36 @@ function OportunidadesClient() {
                               </div>
                             </div>
                             
-                            {(c.enlace || c.enlace_formulario) ? (
-                              <Link 
-                                href={c.enlace || c.enlace_formulario || "#"}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full text-center bg-fepv-orange hover:bg-[#d96704] text-white font-bold py-3 rounded-xl transition-colors text-sm shadow-sm"
-                              >
-                                Ver Detalles / Inscribirse
-                              </Link>
-                            ) : (
-                              <button disabled className="w-full text-center bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed text-sm">
-                                Inscripciones Cerradas
-                              </button>
-                            )}
+                            {(() => {
+                              const isClosed = st.includes("CERRADA");
+                              
+                              if (isClosed) {
+                                return (
+                                  <button disabled className="w-full text-center bg-gray-200 text-gray-500 font-bold py-3 rounded-xl cursor-not-allowed text-sm shadow-inner">
+                                    Convocatoria Cerrada
+                                  </button>
+                                );
+                              }
+
+                              if (c.enlace || c.enlace_formulario) {
+                                return (
+                                  <Link 
+                                    href={c.enlace || c.enlace_formulario || "#"}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full block text-center bg-fepv-orange hover:bg-[#d96704] text-white font-bold py-3 rounded-xl transition-colors text-sm shadow-sm"
+                                  >
+                                    Ver Detalles / Inscribirse
+                                  </Link>
+                                );
+                              }
+
+                              return (
+                                <button disabled className="w-full text-center bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed text-sm">
+                                  Próximamente
+                                </button>
+                              );
+                            })()}
                           </div>
                         );
                       })}

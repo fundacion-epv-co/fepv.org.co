@@ -360,10 +360,12 @@ export default function ProgramDetailClient({ slug }) {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
             </span>
-            Convocatorias Activas en esta Línea
+            {slug === 'educacion' ? 'Oportunidades de Formación' : 'Convocatorias Activas en esta Línea'}
           </h2>
           <p className="text-xs text-fepv-gray/70">
-            Postúlate directamente a las vacantes de empleo, voluntariado o cursos de formación disponibles para esta área.
+            {slug === 'educacion' 
+              ? 'Accede a cursos, diplomados y procesos de formación (propia o externa) para potenciar tus habilidades y conocimientos.'
+              : 'Descubre y postúlate a las oportunidades de participación vinculadas a este programa.'}
           </p>
         </div>
 
