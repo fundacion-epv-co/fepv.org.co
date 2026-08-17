@@ -265,29 +265,27 @@ function OportunidadesClient() {
       </div>
       {/* END EXPORT TEMPLATE */}
 
-      {/* HEADER SECTION (IMAGEN COMPLETAMENTE VISIBLE) */}
-      <section 
-        className="relative flex items-center justify-center bg-fepv-darkblue overflow-hidden"
-        style={{
-          minHeight: bgImageUrl ? '250px' : 'auto',
-          paddingTop: bgImageUrl ? '0' : '6rem',
-          paddingBottom: bgImageUrl ? '0' : '4rem',
-          backgroundImage: bgImageUrl ? `url(${bgImageUrl})` : 'none', 
-          backgroundSize: 'cover', 
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        {/* Solo mostramos texto si NO hay imagen de fondo */}
-        {!bgImageUrl && (
-          <div className="max-w-7xl mx-auto text-center space-y-4 px-4 relative z-10 text-white">
-            <span className="text-fepv-green font-bold tracking-wider uppercase text-sm drop-shadow-md">Portal de Oportunidades</span>
-            <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight drop-shadow-lg">
-              Encuentra tu próximo desafío
-            </h1>
-            <p className="text-gray-200 max-w-2xl mx-auto text-base sm:text-lg drop-shadow-md">
-              Explora las vacantes de empleo en el Cesar, oportunidades de voluntariado y convocatorias exclusivas de la Fundación.
-            </p>
+      {/* HEADER SECTION (IMAGEN COMPLETAMENTE VISIBLE SIN RECORTES) */}
+      <section className="relative bg-fepv-darkblue overflow-hidden w-full">
+        {bgImageUrl ? (
+          /* Si hay imagen configurada, se muestra como etiqueta <img> para que el contenedor adapte su altura automáticamente y NUNCA se recorte */
+          <img 
+            src={bgImageUrl} 
+            alt="Banner de Oportunidades" 
+            className="w-full h-auto object-contain block"
+          />
+        ) : (
+          /* Fallback por defecto si no hay imagen */
+          <div className="flex items-center justify-center min-h-[250px] pt-24 pb-16 px-4">
+            <div className="max-w-7xl mx-auto text-center space-y-4 relative z-10 text-white">
+              <span className="text-fepv-green font-bold tracking-wider uppercase text-sm drop-shadow-md">Portal de Oportunidades</span>
+              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight drop-shadow-lg">
+                Encuentra tu próximo desafío
+              </h1>
+              <p className="text-gray-200 max-w-2xl mx-auto text-base sm:text-lg drop-shadow-md">
+                Explora las vacantes de empleo en el Cesar, oportunidades de voluntariado y convocatorias exclusivas de la Fundación.
+              </p>
+            </div>
           </div>
         )}
       </section>
