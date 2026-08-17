@@ -532,6 +532,9 @@ function OportunidadesClient() {
                           <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-green text-lg">✓</span> Verificada</span>
                           <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-blue text-lg">●</span> Gratuita</span>
                         </div>
+                        <div className="mt-4 bg-blue-50/80 border-l-2 border-[#002f6c] p-3 rounded-r text-xs text-gray-600 max-w-2xl text-justify">
+                          <strong>Aviso Legal:</strong> La FEPV actúa exclusivamente como canal de difusión de estas ofertas (SENA, Comfacesar, etc). No intervenimos en la selección ni garantizamos contratación. Toda postulación es bajo responsabilidad del usuario ante la entidad emisora.
+                        </div>
                       </div>
                       
                       {/* Filtros */}
@@ -596,15 +599,24 @@ function OportunidadesClient() {
                               const st = (o.estado || "").toLowerCase().trim();
                               const isUrgent = st.includes("urgente");
                               return (
-                                <tr key={idx} className={`transition-colors ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-fepv-light/20`}>
+                                <tr key={idx} className={`transition-colors ${idx % 2 === 0 ? 'bg-[#002f6c]/[0.03]' : 'bg-[#8cc63f]/[0.05]'} hover:bg-[#002f6c]/10`}>
                                   <td className="px-4 py-4 font-bold text-gray-500 text-center border-r border-gray-200">
                                     <div className="bg-[#8cc63f] text-white w-7 h-7 rounded-lg flex items-center justify-center mx-auto">{(currentPage - 1) * itemsPerPage + idx + 1}</div>
                                   </td>
                                   <td className="px-4 py-4 font-mono text-xs text-gray-600 border-r border-gray-200">{o.codigo_vacante || '-'}</td>
                                   <td className="px-4 py-4 border-r border-gray-200">
-                                    <div className="font-bold text-[#002f6c]">{o.titulo_vacante || o.cargo || 'Sin título'}</div>
-                                    <div className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-bold">{o.nombre_prestador || 'Agencia de Empleo'}</div>
-                                    {isUrgent && <span className="inline-block mt-1 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-sm">URGENTE</span>}
+                                    <div className="flex items-center gap-3">
+                                      {o.url_imagen && (
+                                        <div className="w-12 h-12 shrink-0 bg-white border border-gray-200 rounded-md p-1 flex items-center justify-center overflow-hidden shadow-sm">
+                                          <img src={o.url_imagen} alt="Logo" className="w-full h-full object-contain" />
+                                        </div>
+                                      )}
+                                      <div>
+                                        <div className="font-bold text-[#002f6c] leading-tight">{o.titulo_vacante || o.cargo || 'Sin título'}</div>
+                                        <div className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-bold">{o.nombre_prestador || 'Agencia de Empleo'}</div>
+                                        {isUrgent && <span className="inline-block mt-1 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-sm">URGENTE</span>}
+                                      </div>
+                                    </div>
                                   </td>
                                   <td className="px-4 py-4 font-bold text-gray-700 text-center border-r border-gray-200">{o.rango_salarial || 'A Convenir'}</td>
                                   <td className="px-4 py-4 text-center font-black text-lg text-[#002f6c] border-r border-gray-200">{o.cantidad_vacantes || '1'}</td>
@@ -664,10 +676,23 @@ function OportunidadesClient() {
               {/* VISTA 3: CONVOCATORIAS (TARJETAS) */}
               {activeTab === "convocatorias" && (
                 <div className="space-y-6 animate-fade-in">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
+                  <div className="flex flex-col mb-6 gap-6">
                     <div>
                       <h2 className="font-display font-bold text-3xl text-fepv-darkblue">Convocatorias FEPV</h2>
-                      <p className="text-gray-500">Participa en nuestros proyectos sociales, becas y voluntariados.</p>
+                      <p className="text-gray-500 mt-1">Participa en nuestros proyectos sociales, becas y voluntariados, y accede a ofertas externas.</p>
+                    </div>
+                    
+                    {/* Descargo de Responsabilidad Legal */}
+                    <div className="bg-blue-50/80 border-l-4 border-[#002f6c] p-5 rounded-r-xl shadow-sm">
+                      <div className="flex gap-4">
+                        <span className="text-2xl mt-1">⚖️</span>
+                        <div>
+                           <p className="text-sm text-gray-700 font-medium leading-relaxed text-justify">
+                             <strong className="text-[#002f6c] block mb-1">Aviso Legal y Descargo de Responsabilidad:</strong>
+                             La Fundación Encuentros para la Vida (FEPV) actúa exclusivamente como un <strong>canal de difusión y puente informativo</strong>. Las ofertas de empleo, programas o convocatorias pertenecientes a entidades de terceros (tales como el SENA, Comfacesar u otras empresas e instituciones) publicadas en este portal son de entera y exclusiva responsabilidad de las organizaciones emisoras. La FEPV no interviene en los procesos de selección, no actúa como bolsa de empleo directa para estos terceros y no garantiza vinculación laboral alguna, por lo que <strong>se exime expresamente de cualquier responsabilidad jurídica, laboral, civil o contractual</strong> derivada de la postulación, participación o resultados en dichas ofertas externas. Toda información debe ser verificada en los canales oficiales de cada entidad ofertante.
+                           </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
