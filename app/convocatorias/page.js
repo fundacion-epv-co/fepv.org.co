@@ -341,131 +341,176 @@ function OportunidadesClient() {
                     </button>
                   </div>
 
-                  <div ref={printRefResumen} className="bg-gray-50 p-6 sm:p-10 space-y-6 rounded-3xl" style={{ fontFamily: 'sans-serif' }}>
-                    <div className="bg-[#002f6c] rounded-t-[40px] rounded-br-[40px] rounded-bl-sm p-8 md:p-12 text-white relative overflow-hidden shadow-lg">
-                      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="text-center md:text-left space-y-4">
-                          <div className="flex items-center gap-4 mb-6 bg-white p-4 rounded-xl w-max">
-                             <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
+                  <div ref={printRefResumen} className="bg-gray-50/50 p-6 sm:p-10 space-y-8 rounded-3xl" style={{ fontFamily: 'sans-serif' }}>
+                    
+                    {/* Header Principal */}
+                    <div className="bg-gradient-to-br from-[#002f6c] to-[#001736] rounded-3xl p-8 md:p-12 text-white relative shadow-[0_20px_50px_rgba(0,47,108,0.2)] overflow-hidden">
+                      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#8cc63f] opacity-20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+                      <div className="relative z-10 flex flex-col items-center text-center space-y-6">
+                        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl shadow-xl inline-block mb-2">
+                           <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '70px', width: 'auto', objectFit: 'contain' }} className="drop-shadow-lg" />
+                        </div>
+                        <h2 className="font-display font-black text-5xl md:text-7xl uppercase leading-[0.95] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-300">
+                          Oportunidades<br/>
+                          <span className="text-[#8cc63f] drop-shadow-md">De Empleo</span><br/>
+                          En El Cesar
+                        </h2>
+                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold px-8 py-3 rounded-full text-sm sm:text-base shadow-inner">
+                          <svg className="w-5 h-5 text-[#8cc63f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                          Impulsamos oportunidades, construimos futuro
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bento Box: Métricas */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      
+                      {/* Ofertas Disponibles */}
+                      <div 
+                        className="bg-gradient-to-br from-[#2d7a2d] to-[#1e521e] rounded-3xl p-8 flex items-center justify-between shadow-[0_15px_40px_rgba(45,122,45,0.2)] transform transition-transform hover:scale-[1.02] cursor-pointer relative overflow-hidden" 
+                        onClick={() => setActiveTab("ofertas")}
+                      >
+                        <div className="absolute -right-4 -bottom-4 opacity-10">
+                          <svg className="w-48 h-48" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" /><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" /></svg>
+                        </div>
+                        <div className="relative z-10 space-y-1 text-white">
+                          <div className="text-sm font-bold tracking-widest uppercase opacity-80 mb-2 flex items-center gap-2">
+                             <div className="w-2 h-2 bg-[#8cc63f] rounded-full animate-pulse"></div> 
+                             Activas Hoy
                           </div>
-                          <h2 className="font-display font-black text-4xl md:text-6xl uppercase leading-none tracking-tight">
-                            Oportunidades<br/>
-                            <span className="text-[#8cc63f]">De Empleo</span><br/>
-                            En El Cesar
-                          </h2>
-                          <div className="inline-block bg-[#001f4d] text-white font-bold px-6 py-2 rounded-full text-sm sm:text-base border border-[#003876]">
-                            Impulsamos oportunidades, construimos futuro
-                          </div>
+                          <div className="text-7xl sm:text-8xl font-black leading-none drop-shadow-md">{totalOfertas}</div>
                         </div>
-                      </div>
-                    </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-[#2d7a2d] text-white rounded-2xl p-6 sm:p-8 flex items-center gap-6 shadow-md transform hover:-translate-y-1 transition-transform cursor-pointer" onClick={() => setActiveTab("ofertas")}>
-                      <div className="text-6xl opacity-90">💼</div>
-                      <div className="flex-1 flex items-center gap-6">
-                        <div className="text-6xl sm:text-7xl font-black leading-none">{totalOfertas}</div>
-                        <div className="text-sm sm:text-base font-bold uppercase tracking-wider leading-tight border-l-2 border-white/30 pl-4">
-                          Ofertas<br/>De Empleo<br/>Disponibles
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white text-fepv-darkblue rounded-2xl p-6 sm:p-8 flex items-center gap-6 shadow-md border border-gray-200">
-                      <div className="w-16 h-16 bg-[#002f6c] text-white rounded-full flex items-center justify-center text-3xl font-black shrink-0">
-                        $
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Rango Salarial Promedio</div>
-                        <div className="text-2xl sm:text-3xl font-black text-[#002f6c] leading-tight mb-1">
-                          $ 1.5 a $4<br/>millones
-                        </div>
-                        <div className="text-[10px] sm:text-xs text-gray-400 font-medium">(Según cargo y experiencia)</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden relative">
-                    <div className="bg-white px-8 py-6 border-b border-gray-100 flex items-center gap-3">
-                       <span className="text-2xl text-[#2d7a2d]">📍</span>
-                       <h3 className="font-black text-xl text-[#2d7a2d] uppercase tracking-wide">Municipios con ofertas disponibles</h3>
-                    </div>
-                    <div className="p-8 flex flex-col md:flex-row gap-8 items-center">
-                      <div className="flex-1 w-full">
-                        {uniqueMunicipios.length > 0 ? (
-                          <div className="columns-2 sm:columns-3 gap-8 space-y-4">
-                            {uniqueMunicipios.map((m, idx) => (
-                              <div key={idx} className="flex items-center gap-2 text-sm text-gray-700 font-bold uppercase tracking-wider break-inside-avoid">
-                                <div className="w-1 h-4 bg-gray-300 rounded-full"></div>
-                                {m}
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-sm text-gray-500 text-center">No hay municipios disponibles por el momento.</p>
-                        )}
-                      </div>
-                      <div className="hidden md:flex w-1/3 justify-center border-l border-dashed border-gray-200 pl-8">
-                         <div className="text-[120px] opacity-80 filter drop-shadow-md">🗺️</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="relative pt-6">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#002f6c] text-white text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest z-10">
-                      Agencias de Empleo Aliadas
-                    </div>
-                    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-8 pt-10">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
-                        <div className="flex flex-col items-center justify-center py-4">
-                           <span className="font-black text-2xl text-[#0065ff] tracking-tight">Computrabajo</span>
-                           <span className="text-xs text-gray-400 mt-1">LeaderSearch</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center py-4">
-                           <span className="font-black text-3xl text-[#6e28d9] tracking-tight lowercase">magneto</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center py-4">
-                           <div className="flex items-center gap-1">
-                              <span className="text-xl">🍂</span>
-                              <span className="font-black text-xl text-red-600 uppercase tracking-tighter">Comfacesar</span>
+                        <div className="relative z-10 text-right">
+                           <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 inline-block shadow-inner border border-white/20">
+                             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                            </div>
-                           <span className="text-[10px] text-gray-400 mt-1">Estamos cumpliendo sueños</span>
+                           <div className="mt-4 text-white font-black text-xl uppercase tracking-wider leading-tight">
+                             Ofertas De<br/>Empleo
+                           </div>
+                        </div>
+                      </div>
+
+                      {/* Rango Salarial */}
+                      <div className="bg-white rounded-3xl p-8 flex items-center gap-6 shadow-[0_15px_40px_rgba(0,0,0,0.04)] border border-gray-100 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-[40px] -mr-10 -mt-10"></div>
+                        <div className="w-20 h-20 bg-gradient-to-br from-[#002f6c] to-[#0052b8] text-white rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3 border border-blue-400/30 relative z-10 shrink-0">
+                          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div className="relative z-10">
+                          <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                             Rango Salarial Promedio
+                          </div>
+                          <div className="text-3xl sm:text-4xl font-black text-[#002f6c] leading-tight mb-1 tracking-tight">
+                            $ 1.5 a $4
+                          </div>
+                          <div className="text-xl font-bold text-gray-500 mb-2">millones</div>
+                          <div className="text-xs text-gray-400 font-medium bg-gray-100 px-3 py-1 rounded-full inline-block">(Según cargo y experiencia)</div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-wrap justify-center sm:justify-between items-center gap-6 shadow-sm">
-                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-fepv-green text-white rounded-full flex items-center justify-center text-sm">✓</div>
-                        <span className="text-xs font-bold text-gray-700">Información<br/>verificada</span>
-                     </div>
-                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-[#0065ff] text-white rounded-full flex items-center justify-center text-sm">🎁</div>
-                        <span className="text-xs font-bold text-gray-700">Gratuita</span>
-                     </div>
-                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm">👥</div>
-                        <span className="text-xs font-bold text-gray-700">Para<br/>todos</span>
-                     </div>
-                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-fepv-green text-white rounded-full flex items-center justify-center text-sm">🤝</div>
-                        <span className="text-xs font-bold text-gray-700">Comprometidos<br/>con tu futuro</span>
-                     </div>
+                    {/* Municipios */}
+                    <div className="bg-white rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden relative">
+                      <div className="bg-gray-50/80 px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+                         <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 bg-[#2d7a2d]/10 rounded-xl flex items-center justify-center text-[#2d7a2d]">
+                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                           </div>
+                           <h3 className="font-black text-lg text-gray-800 uppercase tracking-widest">Municipios Disponibles</h3>
+                         </div>
+                      </div>
+                      <div className="p-8 flex flex-col md:flex-row gap-12 items-center">
+                        <div className="flex-1 w-full relative z-10">
+                          {uniqueMunicipios.length > 0 ? (
+                            <div className="columns-2 sm:columns-3 gap-x-8 gap-y-4 space-y-4">
+                              {uniqueMunicipios.map((m, idx) => (
+                                <div key={idx} className="flex items-center gap-3 text-sm text-gray-600 font-bold uppercase tracking-wider break-inside-avoid bg-gray-50/50 p-2 rounded-lg border border-gray-100 hover:bg-white hover:shadow-sm transition-all">
+                                  <div className="w-2 h-2 bg-[#8cc63f] rounded-sm transform rotate-45"></div>
+                                  {m}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-500 text-center">No hay municipios disponibles por el momento.</p>
+                          )}
+                        </div>
+                        <div className="hidden md:flex w-1/3 justify-center relative">
+                           {/* Decorative Map Graphic using simple CSS/SVG */}
+                           <div className="relative w-40 h-40">
+                             <div className="absolute inset-0 bg-[#8cc63f]/20 rounded-full blur-2xl"></div>
+                             <svg className="relative z-10 w-full h-full text-[#2d7a2d] drop-shadow-xl" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                             </svg>
+                             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -mt-4 animate-bounce z-20">
+                               <svg className="w-12 h-12 text-[#002f6c] drop-shadow-md" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
+                             </div>
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Agencias Aliadas */}
+                    <div className="bg-white rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.04)] border border-gray-100 p-8 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 bg-gray-50 w-full h-1/2 -z-10"></div>
+                      <div className="text-center mb-8">
+                         <span className="inline-block bg-[#002f6c] text-white text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest shadow-md">
+                           Agencias de Empleo Aliadas
+                         </span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                        <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
+                           <span className="font-black text-3xl text-[#0065ff] tracking-tight">Computrabajo</span>
+                           <span className="text-xs text-gray-400 font-medium uppercase tracking-widest mt-2">LeaderSearch</span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
+                           <span className="font-black text-4xl text-[#6e28d9] tracking-tight lowercase">magneto</span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer">
+                           <div className="flex items-center gap-2">
+                              <svg className="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+                              <span className="font-black text-2xl text-red-600 uppercase tracking-tighter">Comfacesar</span>
+                           </div>
+                           <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2">Estamos cumpliendo sueños</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Features Inferiores */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {[
+                        { icon: "✓", title: "Información", sub: "Verificada", color: "text-[#2d7a2d]", bg: "bg-[#2d7a2d]/10" },
+                        { icon: "🎁", title: "Totalmente", sub: "Gratuita", color: "text-[#0065ff]", bg: "bg-[#0065ff]/10" },
+                        { icon: "👥", title: "Disponible", sub: "Para todos", color: "text-orange-500", bg: "bg-orange-500/10" },
+                        { icon: "🤝", title: "Comprometidos", sub: "Con tu futuro", color: "text-[#2d7a2d]", bg: "bg-[#2d7a2d]/10" },
+                      ].map((feature, i) => (
+                        <div key={i} className="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                          <div className={`w-12 h-12 ${feature.bg} ${feature.color} rounded-full flex items-center justify-center text-xl mb-3`}>
+                             {feature.icon}
+                          </div>
+                          <span className="text-xs font-bold text-gray-500 uppercase">{feature.title}</span>
+                          <span className="text-sm font-black text-gray-800">{feature.sub}</span>
+                        </div>
+                      ))}
+                    </div>
+                  
                   </div>
                   
-                  <div className="mt-8">
+                  {/* Botón Ver Convocatorias */}
+                  <div className="pt-4">
                     <button 
                       onClick={() => setActiveTab("convocatorias")}
-                      className="w-full bg-[#002f6c] p-6 rounded-3xl shadow-sm hover:shadow-md transition-all text-center group border border-[#001f4d]"
+                      className="w-full bg-gradient-to-r from-[#002f6c] to-[#004e9a] p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all text-center group border border-[#001f4d] relative overflow-hidden"
                     >
-                      <h3 className="font-display font-bold text-2xl text-white mb-1 group-hover:text-fepv-orange transition-colors flex justify-center items-center gap-3">
-                        Ver Convocatorias de la Fundación <span className="bg-white/10 p-2 rounded-full text-sm">➔</span>
+                      <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <h3 className="font-display font-black text-3xl text-white mb-2 group-hover:text-[#8cc63f] transition-colors flex justify-center items-center gap-4">
+                        Ver Convocatorias de la Fundación 
+                        <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-sm group-hover:bg-[#8cc63f] group-hover:text-[#002f6c] transition-all">➔</div>
                       </h3>
-                      <p className="text-white/70 text-sm">Participa en proyectos sociales, formaciones y becas exclusivas.</p>
+                      <p className="text-blue-100/80 font-medium">Participa en proyectos sociales, formaciones y becas exclusivas.</p>
                     </button>
                   </div>
-                  </div>
+
                 </div>
               )}
 
