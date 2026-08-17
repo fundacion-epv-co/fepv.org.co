@@ -192,11 +192,11 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start gap-2">
             <span>&copy; {currentYear} {foundationName} ({config?.sigla || "FEPV"}). Todos los derechos reservados.</span>
             {/* Contador de Visitas */}
-            <a href="https://hits.seeyoufarm.com" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity mt-1">
+            <a href="https://visitorbadge.io/status?path=https%3A%2F%2Ffundacion-epv-co.github.io%2Ffepv.org.co" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity mt-1">
               <img 
-                src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Ffundacion-epv-co.github.io%2Ffepv.org.co&count_bg=%238CC63F&title_bg=%23002F6C&icon=&icon_color=%23E7E7E7&title=Visitas&edge_flat=false" 
+                src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Ffundacion-epv-co.github.io%2Ffepv.org.co&countColor=%238cc63f&labelColor=%23002f6c" 
                 alt="Contador de visitas FEPV" 
-                className="h-5"
+                className="h-6"
               />
             </a>
           </div>
