@@ -22,7 +22,8 @@ function OportunidadesClient() {
 
   // Exportar a imagen
   const [isExporting, setIsExporting] = useState(false);
-  const printRef = useRef(null);
+  const printRef = useRef(null); // Para Ofertas
+  const printRefResumen = useRef(null); // Para Resumen General
 
   const searchParams = useSearchParams();
   const catParam = searchParams.get("cat");
@@ -136,19 +137,43 @@ function OportunidadesClient() {
     }, 200);
   };
 
+  const handleExportResumen = async () => {
+    if (!printRefResumen.current) return;
+    setIsExporting(true);
+    
+    setTimeout(async () => {
+      try {
+        const dataUrl = await toJpeg(printRefResumen.current, { 
+          quality: 0.95,
+          backgroundColor: '#ffffff',
+          style: { transform: 'scale(1)', transformOrigin: 'top left' }
+        });
+        const link = document.createElement("a");
+        link.download = `boletin-resumen-fepv.jpg`;
+        link.href = dataUrl;
+        link.click();
+      } catch (e) {
+        console.error("Error al exportar resumen:", e);
+        alert("Hubo un error al generar el boletín.");
+      }
+      setIsExporting(false);
+    }, 200);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col pb-20 relative">
       
       {/* EXPORT TEMPLATE (HIDDEN) */}
       <div className="absolute top-[-9999px] left-[-9999px] w-[1000px] z-[-1]" aria-hidden="true">
-        <div ref={printRef} className="bg-white p-8 w-[1000px] flex flex-col gap-6" style={{ fontFamily: 'sans-serif' }}>
+        <div ref={printRef} className="bg-white w-[1000px] h-[1300px] flex flex-col justify-between" style={{ fontFamily: 'sans-serif' }}>
           
-          {/* Print Header */}
-          <div className="flex bg-[#002f6c] text-white rounded-2xl overflow-hidden shadow-sm relative">
-            <div className="w-1/3 bg-white p-6 flex items-center justify-center rounded-r-[50px] z-10 shadow-[5px_0_15px_rgba(0,0,0,0.2)]">
-               {/* Usamos directamente la ruta local con el basePath para evitar 404 en GitHub Pages */}
-               <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '100px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
-            </div>
+          <div className="flex flex-col gap-6 p-8">
+            {/* Print Header */}
+            <div className="flex bg-[#002f6c] text-white rounded-2xl overflow-hidden shadow-sm relative">
+              <div className="w-1/3 bg-white p-6 flex items-center justify-center rounded-r-[50px] z-10 shadow-[5px_0_15px_rgba(0,0,0,0.2)]">
+                 {/* Usamos directamente la ruta local con el basePath para evitar 404 en GitHub Pages */}
+                 <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '100px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
+              </div>
             <div className="w-2/3 p-8 flex flex-col justify-center relative">
               <div className="absolute top-4 right-4 bg-[#8cc63f] text-white px-6 py-2 rounded-xl text-center">
                  <div className="text-sm font-bold uppercase">Página</div>
@@ -235,6 +260,7 @@ function OportunidadesClient() {
                 Comparta<br/>esta información
              </div>
           </div>
+          </div>
         </div>
       </div>
       {/* END EXPORT TEMPLATE */}
@@ -303,25 +329,36 @@ function OportunidadesClient() {
               {/* VISTA 1: RESUMEN (DASHBOARD) */}
               {activeTab === "resumen" && (
                 <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
-                  <div className="bg-[#002f6c] rounded-t-[40px] rounded-br-[40px] rounded-bl-sm p-8 md:p-12 text-white relative overflow-hidden shadow-lg">
-                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                      <div className="text-center md:text-left space-y-4">
-                        <h2 className="font-display font-black text-4xl md:text-6xl uppercase leading-none tracking-tight">
-                          Oportunidades<br/>
-                          <span className="text-[#8cc63f]">De Empleo</span><br/>
-                          En El Cesar
-                        </h2>
-                        <div className="inline-block bg-[#001f4d] text-white font-bold px-6 py-2 rounded-full text-sm sm:text-base border border-[#003876]">
-                          Impulsamos oportunidades, construimos futuro
+                  
+                  {/* Botón Exportar Boletín */}
+                  <div className="flex justify-end mb-4">
+                    <button 
+                      onClick={handleExportResumen}
+                      disabled={isExporting}
+                      className="bg-[#2d7a2d] hover:bg-[#1e5c1e] text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-sm whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isExporting ? "Generando..." : "⬇️ Exportar Boletín"}
+                    </button>
+                  </div>
+
+                  <div ref={printRefResumen} className="bg-gray-50 p-6 sm:p-10 space-y-6 rounded-3xl" style={{ fontFamily: 'sans-serif' }}>
+                    <div className="bg-[#002f6c] rounded-t-[40px] rounded-br-[40px] rounded-bl-sm p-8 md:p-12 text-white relative overflow-hidden shadow-lg">
+                      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="text-center md:text-left space-y-4">
+                          <div className="flex items-center gap-4 mb-6 bg-white p-4 rounded-xl w-max">
+                             <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
+                          </div>
+                          <h2 className="font-display font-black text-4xl md:text-6xl uppercase leading-none tracking-tight">
+                            Oportunidades<br/>
+                            <span className="text-[#8cc63f]">De Empleo</span><br/>
+                            En El Cesar
+                          </h2>
+                          <div className="inline-block bg-[#001f4d] text-white font-bold px-6 py-2 rounded-full text-sm sm:text-base border border-[#003876]">
+                            Impulsamos oportunidades, construimos futuro
+                          </div>
                         </div>
                       </div>
-                      <div className="hidden md:block">
-                         <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20">
-                            <span className="text-6xl">🎯</span>
-                         </div>
-                      </div>
                     </div>
-                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-[#2d7a2d] text-white rounded-2xl p-6 sm:p-8 flex items-center gap-6 shadow-md transform hover:-translate-y-1 transition-transform cursor-pointer" onClick={() => setActiveTab("ofertas")}>
@@ -427,6 +464,7 @@ function OportunidadesClient() {
                       </h3>
                       <p className="text-white/70 text-sm">Participa en proyectos sociales, formaciones y becas exclusivas.</p>
                     </button>
+                  </div>
                   </div>
                 </div>
               )}
