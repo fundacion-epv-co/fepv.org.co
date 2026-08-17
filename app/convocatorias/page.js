@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_CONVOCATORIAS_CSV, GOOGLE_SHEETS_OFERTAS_CSV, getDirectDriveImageUrl } from "../../lib/api";
 import { useGlobalConfig } from "../../components/ConfigContext";
-import html2canvas from "html2canvas";
+import { toJpeg } from "html-to-image";
 
 function OportunidadesClient() {
   const [activeTab, setActiveTab] = useState("resumen");
@@ -114,23 +114,26 @@ function OportunidadesClient() {
     // Forzar renderizado y esperar
     setTimeout(async () => {
       try {
-        const canvas = await html2canvas(printRef.current, {
-          scale: 2, 
-          useCORS: true,
-          backgroundColor: "#ffffff",
-          windowWidth: 1000 // Fija un ancho virtual para que no se deforme
+        const dataUrl = await toJpeg(printRef.current, { 
+          quality: 0.95,
+          backgroundColor: '#ffffff',
+          width: 1000,
+          style: {
+            transform: 'scale(1)',
+            transformOrigin: 'top left',
+            width: '1000px'
+          }
         });
-        const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
         const link = document.createElement("a");
         link.download = `ofertas-empleo-fepv-pagina-${currentPage}.jpg`;
         link.href = dataUrl;
         link.click();
       } catch (e) {
         console.error("Error al exportar imagen:", e);
-        alert("Hubo un error al generar la imagen. Intenta nuevamente.");
+        alert("Hubo un error al generar la imagen. El diseño actual podría tener estilos no soportados por el exportador.");
       }
       setIsExporting(false);
-    }, 100);
+    }, 200);
   };
 
   return (
@@ -239,7 +242,7 @@ function OportunidadesClient() {
       <section 
         className="relative flex items-center justify-center bg-fepv-darkblue overflow-hidden"
         style={{
-          minHeight: bgImageUrl ? '500px' : 'auto',
+          minHeight: bgImageUrl ? '250px' : 'auto',
           paddingTop: bgImageUrl ? '0' : '6rem',
           paddingBottom: bgImageUrl ? '0' : '4rem',
           backgroundImage: bgImageUrl ? `url(${bgImageUrl})` : 'none', 
