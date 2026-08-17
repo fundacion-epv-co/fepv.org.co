@@ -341,23 +341,29 @@ function OportunidadesClient() {
 
                   <div ref={printRefResumen} className="bg-gray-50/50 p-6 sm:p-10 space-y-8 rounded-3xl" style={{ fontFamily: 'sans-serif' }}>
                     
-                    {/* Header Principal */}
-                    <div className="bg-gradient-to-br from-[#002f6c] to-[#001736] rounded-3xl p-8 md:p-12 text-white relative shadow-[0_20px_50px_rgba(0,47,108,0.2)] overflow-hidden">
-                      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#8cc63f] opacity-20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
-                      <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-                        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl shadow-xl inline-block mb-2">
-                           <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '70px', width: 'auto', objectFit: 'contain' }} className="drop-shadow-lg" />
-                        </div>
-                        <h2 className="font-display font-black text-5xl md:text-7xl uppercase leading-[0.95] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-300">
+                    {/* Header Principal (Diseño Fiel al Original) */}
+                    <div className="bg-[#002f6c] rounded-3xl text-white relative shadow-[0_20px_50px_rgba(0,47,108,0.2)] overflow-hidden flex flex-col md:flex-row">
+                      
+                      {/* Caja Blanca del Logo (Izquierda) */}
+                      <div className="bg-white p-8 md:p-12 md:rounded-br-[80px] flex items-center justify-center shrink-0 w-full md:w-[35%] relative z-10 shadow-lg">
+                         <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '120px', width: 'auto', objectFit: 'contain' }} />
+                      </div>
+                      
+                      {/* Textos y Pill (Derecha) */}
+                      <div className="p-8 md:p-12 flex flex-col justify-center flex-1 z-10 text-center md:text-left">
+                        <h2 className="font-display font-black text-4xl sm:text-5xl lg:text-6xl uppercase leading-[0.95] tracking-tight mb-6">
                           Oportunidades<br/>
-                          <span className="text-[#8cc63f] drop-shadow-md">De Empleo</span><br/>
+                          <span className="text-[#8cc63f] drop-shadow-sm">De Empleo</span><br/>
                           En El Cesar
                         </h2>
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold px-8 py-3 rounded-full text-sm sm:text-base shadow-inner">
-                          <svg className="w-5 h-5 text-[#8cc63f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                          Impulsamos oportunidades, construimos futuro
+                        <div>
+                          <div className="inline-flex items-center gap-2 bg-[#001736] border border-[#003876] text-white font-bold px-6 py-3 rounded-full text-sm sm:text-base shadow-inner">
+                            <svg className="w-5 h-5 text-[#8cc63f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Impulsamos oportunidades, construimos futuro
+                          </div>
                         </div>
                       </div>
+
                     </div>
 
                     {/* Bento Box: Métricas */}
