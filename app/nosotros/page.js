@@ -54,8 +54,8 @@ export default function Nosotros() {
           const mapped = alliesData.map(item => ({
             id: item.id || `AL-${Math.random()}`,
             nombre: item.nombre || "Aliado",
-            logo: getDirectDriveImageUrl(item.logo),
-            enlace_web: item.enlace_web || ""
+            logo: getDirectDriveImageUrl(item.logo || item.url_imagen || item.enlace_imagen),
+            enlace_web: item.enlace_web || item.url || ""
           }));
           setAliados(mapped);
         } else {
@@ -288,9 +288,10 @@ export default function Nosotros() {
         )}
       </section>
 
-      {/* Bloque 5.5: Aliados y Patrocinadores */}
+      {/* Bloque 5.5: SECCIÓN ALIADOS */}
+      <div id="aliados" className="scroll-mt-24"></div>
       {!isLoading && aliados.length > 0 && (
-        <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-100" id="aliados">
+        <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-100">
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
             <h3 className="font-display font-bold text-2xl text-fepv-darkblue">
               Organizaciones y Aliados
@@ -299,29 +300,31 @@ export default function Nosotros() {
               Trabajamos de la mano con entidades públicas, privadas y de cooperación para la sostenibilidad territorial.
             </p>
           </div>
-          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
-            {aliados.map((aliado) => (
-              <a
-                key={aliado.id}
-                href={aliado.enlace_web || "#"}
-                target={aliado.enlace_web ? "_blank" : "_self"}
-                rel="noopener noreferrer"
-                className="block opacity-70 hover:opacity-100 transition-all duration-300 filter grayscale hover:grayscale-0"
-                title={aliado.nombre}
-              >
-                {aliado.logo ? (
-                  <img
-                    src={aliado.logo}
-                    alt={aliado.nombre}
-                    className="h-10 sm:h-12 max-w-[150px] object-contain"
-                  />
-                ) : (
-                  <span className="text-xs font-bold text-fepv-gray bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 block">
-                    {aliado.nombre}
-                  </span>
-                )}
-              </a>
-            ))}
+          <div className="relative overflow-hidden flex w-full" style={{ WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)", maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}>
+            <div className="flex whitespace-nowrap animate-marquee items-center min-w-max">
+              {[...aliados, ...aliados, ...aliados, ...aliados].map((aliado, i) => (
+                <a
+                  key={`${aliado.id}-${i}`}
+                  href={aliado.enlace_web || "#"}
+                  target={aliado.enlace_web ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
+                  className="mx-6 sm:mx-10 opacity-70 hover:opacity-100 transition-all duration-300 filter grayscale hover:grayscale-0 flex-shrink-0"
+                  title={aliado.nombre}
+                >
+                  {aliado.logo ? (
+                    <img
+                      src={aliado.logo}
+                      alt={aliado.nombre}
+                      className="h-10 sm:h-12 w-auto max-w-[160px] object-contain inline-block"
+                    />
+                  ) : (
+                    <span className="text-xs font-bold text-fepv-gray bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 inline-block">
+                      {aliado.nombre}
+                    </span>
+                  )}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
       )}

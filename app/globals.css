@@ -4,11 +4,11 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
   
-  /* Nuevos Colores Oficiales FEPV */
-  --color-fepv-azul: #287ABA;
+  /* Colores FEPV (Restaurando el Azul original) */
+  --color-fepv-azul: #002D62;
   --color-fepv-verde: #71A13D;
   --color-fepv-naranja: #F3A226;
-  --color-fepv-azul-profundo: #12396C;
+  --color-fepv-azul-profundo: #001f4d;
   --color-fepv-blanco: #FFFFFF;
   --color-fepv-fondo: #F7FAF8;
   --color-fepv-gris-claro: #EEF2F3;
@@ -18,12 +18,12 @@
   /* Aliases para compatibilidad con clases Tailwind existentes */
   --color-fepv-green: #71A13D;
   --color-fepv-vividgreen: #71A13D;
-  --color-fepv-dark: #12396C;
-  --color-fepv-darkblue: #12396C;
+  --color-fepv-dark: #001f4d;
+  --color-fepv-darkblue: #002D62;
   --color-fepv-light: #EEF2F3;
   --color-fepv-yellow: #F3A226;
-  --color-fepv-blue: #287ABA;
-  --color-fepv-lightblue: #287ABA;
+  --color-fepv-blue: #002D62;
+  --color-fepv-lightblue: #002D62;
   --color-fepv-white: #FFFFFF;
   
   --radius-fepv: 12px;
@@ -86,6 +86,23 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-fepv-white);
   color: var(--color-fepv-green);
   border: 2px solid var(--color-fepv-green);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 .fepv-btn-secondary:hover {
