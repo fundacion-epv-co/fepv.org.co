@@ -172,8 +172,16 @@ export default function Intranet() {
   const loadDocumentos = async () => {
     try {
       const data = await fetchGoogleSheetData(GOOGLE_SHEETS_INTRANET_CSV);
-      // La pestaña Formatos_Internos tiene: clave_acceso, titulo, tipo, enlace_drive
-      const docsValidos = data.filter(item => item.titulo && item.titulo.trim() !== "");
+      // Mapear los headers originales del CSV (Título, Tipo, Enlace Drive) a las claves que usa el código
+      const mappedData = data.map(item => ({
+        id: item["ID"] || "",
+        titulo: item["Título"] || item["titulo"] || "",
+        tipo: item["Tipo"] || item["tipo"] || "",
+        enlace_drive: item["Enlace Drive"] || item["enlace_drive"] || "",
+        clave_acceso: item["ID"] || ""
+      }));
+      
+      const docsValidos = mappedData.filter(item => item.titulo && item.titulo.trim() !== "");
       setDocumentos(docsValidos);
     } catch (e) {
       console.error("Error cargando documentos", e);
