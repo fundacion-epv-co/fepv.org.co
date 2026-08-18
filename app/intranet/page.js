@@ -223,19 +223,28 @@ export default function Intranet() {
     }
 
     try {
-      // Volvemos a encriptar la contraseña porque el usuario confirmó que en su Excel sí están encriptadas
       const hashedPassword = await hashPassword(password);
+      
+      // TRAMPA DE DEBUG: Vamos a imprimir en la consola (F12) exactamente qué está pasando
+      console.log("=== INICIO DE LOGIN ===");
+      console.log("1. Correo digitado:", email);
+      console.log("2. Contraseña original (oculta):", password.replace(/./g, '*'));
+      console.log("3. Hash generado por la web:", hashedPassword);
+      
       const res = await postToIntranetAPI("login", { email, password: hashedPassword });
       
+      console.log("4. Respuesta del servidor de Google:", res);
+      console.log("=== FIN DE LOGIN ===");
+
       if (res.success) {
-        // Asignamos 'empleado' por defecto si la columna de Rol está vacía en Excel
         const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado" };
         setSession(newSession);
         setConsEmail(email);
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
         loadDocumentos();
       } else {
-        setError(res.message);
+        // Mostramos el mensaje en pantalla pero con una marca para saber que viene de GAS
+        setError("Error desde el servidor: " + res.message);
       }
     } catch (err) {
       setError("No se pudo conectar con el servidor de la Intranet (Error CORS o de red). Revisa Google Apps Script.");
