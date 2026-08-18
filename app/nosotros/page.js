@@ -81,12 +81,21 @@ export default function Nosotros() {
       try {
         const docData = await fetchGoogleSheetData(GOOGLE_SHEETS_INTRANET_CSV);
         if (docData && docData.length > 0) {
+          const namesToMatch = [
+            "Certificado de Existencia y Representación Legal",
+            "Estatutos Oficiales de la Fundación",
+            "Política de Tratamiento de Datos Personales",
+            "Código de Ética y Conducta Institucional",
+            "Manual de Control Interno y Transparencia",
+            "Formato de Consentimiento para Uso de Imagen"
+          ];
           const mapped = docData.map(item => ({
             title: item["Título"] || item["titulo"] || "",
             type: item["Tipo"] || item["tipo"] || "PDF",
             url: item["Enlace Drive"] || item["enlace_drive"] || "",
+            etiqueta: item["Etiqueta"] || item["etiqueta"] || "publico",
             date: "Actualizado 2026"
-          })).filter(doc => doc.title && doc.type.toUpperCase() === "TRANSPARENCIA");
+          })).filter(doc => doc.title && (doc.type.toUpperCase() === "TRANSPARENCIA" || namesToMatch.some(n => n.toLowerCase() === doc.title.toLowerCase())));
           
           if (mapped.length > 0) {
             setTransparencyDocs(mapped);
@@ -380,10 +389,11 @@ export default function Nosotros() {
                 
                 {doc.url ? (
                   <Link
-                    href={`/visualizar?url=${encodeURIComponent(doc.url)}&title=${encodeURIComponent(doc.title)}`}
+                    href={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? `/visualizar?url=${encodeURIComponent(doc.url)}&title=${encodeURIComponent(doc.title)}&protected=true` : doc.url}
                     target="_blank"
+                    rel={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? "" : "noopener noreferrer"}
                     className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green hover:bg-fepv-green hover:text-white transition-colors cursor-pointer"
-                    title="Ver documento seguro"
+                    title={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? "Ver documento protegido" : "Descargar / Ver"}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

@@ -9,9 +9,20 @@ function VisualizarContent() {
   const router = useRouter();
   const fileUrl = searchParams.get("url") || "";
   const fileTitle = searchParams.get("title") || "Documento";
+  const isProtected = searchParams.get("protected") === "true";
 
   const [viewerUrl, setViewerUrl] = useState("");
   const [error, setError] = useState(false);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      window.close();
+      // En caso de que el navegador bloquee window.close()
+      setTimeout(() => { router.push("/"); }, 300);
+    }
+  };
 
   useEffect(() => {
     if (!fileUrl) return;
@@ -67,28 +78,46 @@ function VisualizarContent() {
 
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             <button
-              onClick={() => router.back()}
+              onClick={handleBack}
               className="text-xs font-bold text-fepv-gray hover:text-fepv-darkblue px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-xl transition-all cursor-pointer"
             >
               &larr; Volver
             </button>
-            <a
-              href={fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="fepv-btn fepv-btn-primary text-xs py-2 px-5 font-bold shadow-sm whitespace-nowrap"
-            >
-              Abrir Original ↗
-            </a>
+            {!isProtected && (
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fepv-btn fepv-btn-primary text-xs py-2 px-5 font-bold shadow-sm whitespace-nowrap"
+              >
+                Abrir Original ↗
+              </a>
+            )}
+            {isProtected && (
+              <span className="bg-red-50 text-red-600 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                Documento Protegido
+              </span>
+            )}
           </div>
         </div>
 
         {/* Marco del visor (iframe) */}
         <div className="bg-white border border-gray-150 rounded-3xl overflow-hidden shadow-md relative min-h-[75vh] w-full flex items-center justify-center">
+          {isProtected && (
+            <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden flex flex-col justify-around items-center opacity-[0.05] rotate-[-30deg]">
+              {Array.from({ length: 15 }).map((_, i) => (
+                <span key={i} className="text-4xl sm:text-6xl font-black whitespace-nowrap text-fepv-darkblue uppercase tracking-[1em]">
+                  DOCUMENTO PROTEGIDO POR FEPV
+                </span>
+              ))}
+            </div>
+          )}
+
           {viewerUrl ? (
             <iframe
               src={viewerUrl}
-              className="absolute inset-0 w-full h-full border-0"
+              className="absolute inset-0 w-full h-full border-0 z-0"
               allow="autoplay"
               title={fileTitle}
               onError={() => setError(true)}
