@@ -479,26 +479,29 @@ function OportunidadesClient() {
                       </div>
                       {agencias.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
-                          {agencias.map((agencia, i) => (
-                            <Link 
-                              key={i} 
-                              href={agencia.url || "#"} 
-                              target={agencia.url ? "_blank" : "_self"} 
-                              rel="noopener noreferrer"
-                              className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer"
-                            >
-                              {agencia.url_imagen ? (
-                                <img src={agencia.url_imagen} alt={agencia.nombre} className="h-16 w-auto object-contain mb-2 drop-shadow-sm" />
-                              ) : (
-                                <span className="font-black text-2xl text-[#002f6c] tracking-tight text-center">{agencia.nombre}</span>
-                              )}
-                              {agencia.eslogan && (
-                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2 text-center">
-                                  {agencia.eslogan}
-                                </span>
-                              )}
-                            </Link>
-                          ))}
+                          {agencias.map((agencia, i) => {
+                            const imgUrl = agencia.url_imagen ? getDirectDriveImageUrl(agencia.url_imagen) : null;
+                            return (
+                              <Link 
+                                key={i} 
+                                href={agencia.url || "#"} 
+                                target={agencia.url ? "_blank" : "_self"} 
+                                rel="noopener noreferrer"
+                                className="flex flex-col items-center justify-center p-4 hover:scale-105 transition-transform cursor-pointer"
+                              >
+                                {imgUrl ? (
+                                  <img src={imgUrl} alt={agencia.nombre} className="h-16 w-auto object-contain mb-2 drop-shadow-sm" />
+                                ) : (
+                                  <span className="font-black text-2xl text-[#002f6c] tracking-tight text-center">{agencia.nombre}</span>
+                                )}
+                                {agencia.eslogan && (
+                                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-2 text-center">
+                                    {agencia.eslogan}
+                                  </span>
+                                )}
+                              </Link>
+                            );
+                          })}
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
