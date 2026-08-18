@@ -223,10 +223,11 @@ export default function Intranet() {
     }
 
     try {
-      const hashedPassword = await hashPassword(password);
-      const res = await postToIntranetAPI("login", { email, password: hashedPassword });
+      // Se envía la contraseña sin encriptar para que coincida directamente con lo que el usuario escribe en el Excel
+      const res = await postToIntranetAPI("login", { email, password });
       if (res.success) {
-        const newSession = { email, rol: res.rol };
+        // Asignamos 'empleado' por defecto si la columna de Rol está vacía en Excel
+        const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado" };
         setSession(newSession);
         setConsEmail(email);
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
@@ -257,11 +258,10 @@ export default function Intranet() {
     setSuccessMsg("");
 
     try {
-      const hashedPassword = await hashPassword(newUserPassword);
       const res = await postToIntranetAPI("addUser", {
         adminEmail: session.email,
         newEmail: newUserEmail,
-        newPassword: hashedPassword,
+        newPassword: newUserPassword,
         newRol: newUserRol
       });
       if (res.success) {
