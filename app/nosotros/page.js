@@ -81,21 +81,13 @@ export default function Nosotros() {
       try {
         const docData = await fetchGoogleSheetData(GOOGLE_SHEETS_INTRANET_CSV);
         if (docData && docData.length > 0) {
-          const namesToMatch = [
-            "Certificado de Existencia y Representación Legal",
-            "Estatutos Oficiales de la Fundación",
-            "Política de Tratamiento de Datos Personales",
-            "Código de Ética y Conducta Institucional",
-            "Manual de Control Interno y Transparencia",
-            "Formato de Consentimiento para Uso de Imagen"
-          ];
           const mapped = docData.map(item => ({
             title: item["Título"] || item["titulo"] || "",
-            type: item["Tipo"] || item["tipo"] || "PDF",
+            type: item["Tipo"] || item["tipo"] || item["Tipo de archivo"] || "PDF",
             url: item["Enlace Drive"] || item["enlace_drive"] || "",
             etiqueta: item["Etiqueta"] || item["etiqueta"] || "publico",
-            date: "Actualizado 2026"
-          })).filter(doc => doc.title && (doc.type.toUpperCase() === "TRANSPARENCIA" || namesToMatch.some(n => n.toLowerCase() === doc.title.toLowerCase())));
+            date: item["Versión"] || item["version"] || "Actualizado 2026"
+          })).filter(doc => doc.title && doc.type.toUpperCase() === "TRANSPARENCIA");
           
           if (mapped.length > 0) {
             setTransparencyDocs(mapped);
