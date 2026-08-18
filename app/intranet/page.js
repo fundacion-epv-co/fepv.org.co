@@ -154,6 +154,12 @@ export default function Intranet() {
           const url = new URL(target.href);
           // Si intenta navegar fuera de la intranet en la misma web
           if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
+            
+            // Excepciones: si va al visualizador o se abre en nueva pestaña, dejarlo pasar
+            if (target.target === "_blank" || url.pathname.includes('/visualizar')) {
+              return;
+            }
+
             e.preventDefault();
             e.stopPropagation();
             setPendingNavigationUrl(target.href);
@@ -624,6 +630,7 @@ export default function Intranet() {
                           {doc.enlace_drive ? (
                             <Link
                               href={`/visualizar?url=${encodeURIComponent(doc.enlace_drive)}&title=${encodeURIComponent(doc.titulo)}`}
+                              target="_blank"
                               className="text-fepv-gray hover:text-fepv-darkblue bg-white border border-gray-200 hover:border-fepv-darkblue p-2 rounded-lg transition-colors cursor-pointer"
                               title="Ver Documento"
                             >

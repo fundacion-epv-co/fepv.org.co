@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_EQUIPO_CSV, GOOGLE_SHEETS_ALIADOS_CSV, getDirectDriveImageUrl } from "../../lib/api";
+import Link from "next/link";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_EQUIPO_CSV, GOOGLE_SHEETS_ALIADOS_CSV, GOOGLE_SHEETS_INTRANET_CSV, getDirectDriveImageUrl } from "../../lib/api";
 
 const MOCK_EQUIPO = [
   {
@@ -18,9 +19,19 @@ const MOCK_ALIADOS = [
   { id: "AL-2", nombre: "Cámara de Comercio", logo: "", enlace_web: "https://ccvalledupar.org.co" }
 ];
 
+const MOCK_TRANSPARENCIA = [
+  { title: "Certificado de Existencia y Representación Legal", type: "PDF", date: "Actualizado Jun 2026", url: "" },
+  { title: "Estatutos Oficiales de la Fundación", type: "PDF", date: "Vigente 2026", url: "" },
+  { title: "Política de Tratamiento de Datos Personales", type: "PDF", date: "Ley 1581 de 2012", url: "" },
+  { title: "Código de Ética y Conducta Institucional", type: "PDF", date: "Aprobado 2026", url: "" },
+  { title: "Manual de Control Interno y Transparencia", type: "PDF", date: "Aprobado 2026", url: "" },
+  { title: "Formato de Consentimiento para Uso de Imagen", type: "PDF", date: "Protección de Menores", url: "" }
+];
+
 export default function Nosotros() {
   const [equipo, setEquipo] = useState([]);
   const [aliados, setAliados] = useState([]);
+  const [transparencyDocs, setTransparencyDocs] = useState(MOCK_TRANSPARENCIA);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -66,6 +77,25 @@ export default function Nosotros() {
         setAliados(MOCK_ALIADOS);
       }
 
+      // Cargar Documentos de Transparencia
+      try {
+        const docData = await fetchGoogleSheetData(GOOGLE_SHEETS_INTRANET_CSV);
+        if (docData && docData.length > 0) {
+          const mapped = docData.map(item => ({
+            title: item["Título"] || item["titulo"] || "",
+            type: item["Tipo"] || item["tipo"] || "PDF",
+            url: item["Enlace Drive"] || item["enlace_drive"] || "",
+            date: "Actualizado 2026"
+          })).filter(doc => doc.title && doc.type.toUpperCase() === "TRANSPARENCIA");
+          
+          if (mapped.length > 0) {
+            setTransparencyDocs(mapped);
+          }
+        }
+      } catch (e) {
+        console.error("Error cargando documentos transparencia", e);
+      }
+
       setIsLoading(false);
     }
     loadNosotrosData();
@@ -90,15 +120,6 @@ export default function Nosotros() {
     { date: "JUNIO 2026", title: "Consolidación Institucional", desc: "Estructuración de estatutos, políticas internas y conformación del equipo directivo." },
     { date: "JULIO 2026", title: "Primeros Procesos y Alianzas", desc: "Mapeo territorial del municipio de Codazzi y primeros acercamientos con cooperantes técnicos." },
     { date: "2030", title: "Visión Institucional", desc: "Consolidación de FEPV como organización líder en el Cesar y Colombia por su innovación y transformación social." }
-  ];
-
-  const transparencyDocs = [
-    { title: "Certificado de Existencia y Representación Legal", type: "PDF", date: "Actualizado Jun 2026" },
-    { title: "Estatutos Oficiales de la Fundación", type: "PDF", date: "Vigente 2026" },
-    { title: "Política de Tratamiento de Datos Personales", type: "PDF", date: "Ley 1581 de 2012" },
-    { title: "Código de Ética y Conducta Institucional", type: "PDF", date: "Aprobado 2026" },
-    { title: "Manual de Control Interno y Transparencia", type: "PDF", date: "Aprobado 2026" },
-    { title: "Formato de Consentimiento para Uso de Imagen", type: "PDF", date: "Protección de Menores" }
   ];
 
   return (
@@ -357,16 +378,27 @@ export default function Nosotros() {
                   <span className="text-[9px] text-fepv-gray/60 block">{doc.date}</span>
                 </div>
                 
-                {/* Botón Simulado de Descarga */}
-                <button
-                  onClick={() => alert(`Simulación de descarga del documento: ${doc.title}`)}
-                  className="bg-fepv-light/50 p-2 rounded-xl text-fepv-green hover:bg-fepv-green hover:text-white transition-colors cursor-pointer"
-                  aria-label={`Descargar ${doc.title}`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                  </svg>
-                </button>
+                {doc.url ? (
+                  <Link
+                    href={`/visualizar?url=${encodeURIComponent(doc.url)}&title=${encodeURIComponent(doc.title)}`}
+                    target="_blank"
+                    className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green hover:bg-fepv-green hover:text-white transition-colors cursor-pointer"
+                    title="Ver documento seguro"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </Link>
+                ) : (
+                  <button
+                    className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green cursor-default opacity-50"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                  </button>
+                )}
               </div>
             ))}
           </div>
