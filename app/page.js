@@ -369,29 +369,48 @@ export default function Home() {
       
       {/* BLOQUE 0: BANNER DINÁMICO */}
       {bannerItems.length > 0 && (
-        <section className="relative w-full bg-[#EEF2F3] group" style={{ aspectRatio: "1773/799" }}>
+        <section className="relative w-full h-[300px] md:h-[380px] bg-fepv-darkblue group">
           {bannerItems.map((item, idx) => (
             <div 
               key={idx}
-              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${idx === currentBannerIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentBannerIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
             >
-              <div className="w-full h-full block">
-                {item.enlace ? (
-                  <Link href={item.enlace} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                    <img 
-                      src={getDirectDriveImageUrl(item.imagen)} 
-                      alt={item.titulo || `Banner ${idx + 1}`} 
-                      className="w-full h-full object-cover sm:object-fill"
-                    />
-                  </Link>
-                ) : (
-                  <img 
-                    src={getDirectDriveImageUrl(item.imagen)} 
-                    alt={item.titulo || `Banner ${idx + 1}`} 
-                    className="w-full h-full object-cover sm:object-fill"
-                  />
+              {/* Imagen de fondo */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center" 
+                style={{ backgroundImage: `url(${getDirectDriveImageUrl(item.imagen)})` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent mix-blend-multiply"></div>
+              </div>
+              
+              {/* Contenido (Textos) centrado */}
+              <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-12 md:px-24 max-w-5xl mx-auto">
+                {item.titulo && (
+                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-3 drop-shadow-lg leading-tight">
+                    {item.titulo}
+                  </h2>
+                )}
+                {item.descripcion && (
+                  <p className="text-sm md:text-lg text-gray-100 mb-6 max-w-3xl drop-shadow-md font-medium">
+                    {item.descripcion}
+                  </p>
                 )}
               </div>
+
+              {/* Botón de Contacto - Siempre al fondo del banner */}
+              {item.enlace && (
+                <Link 
+                  href={item.enlace} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 inline-flex items-center gap-2 bg-fepv-green hover:bg-[#5a822f] text-white font-bold py-2.5 px-6 rounded-full transition-colors shadow-lg text-sm cursor-pointer"
+                >
+                  Contacto
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </Link>
+              )}
             </div>
           ))}
 
