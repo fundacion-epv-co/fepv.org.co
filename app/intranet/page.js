@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_INTRANET_CSV, postToIntranetAPI, GOOGLE_APPS_SCRIPT_INTRANET_URL } from "../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_INTRANET_CSV, GOOGLE_SHEETS_CONFIG_CSV, postToIntranetAPI, GOOGLE_APPS_SCRIPT_INTRANET_URL } from "../../lib/api";
 
 // Helper para hashear la contraseña en el cliente y no enviarla en texto plano
 async function hashPassword(password) {
@@ -235,7 +235,7 @@ export default function Intranet() {
         setError(res.message);
       }
     } catch (err) {
-      setError("No se pudo conectar con el servidor.");
+      setError("No se pudo conectar con el servidor de la Intranet (Error CORS o de red). Revisa Google Apps Script.");
     }
     setIsLoading(false);
   };

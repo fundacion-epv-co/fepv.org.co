@@ -377,7 +377,7 @@ export default function Home() {
             >
               {/* Imagen de fondo */}
               <div 
-                className="absolute inset-0 bg-cover bg-center" 
+                className="absolute inset-0 bg-contain bg-center bg-no-repeat" 
                 style={{ backgroundImage: `url(${getDirectDriveImageUrl(item.imagen)})` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent mix-blend-multiply"></div>

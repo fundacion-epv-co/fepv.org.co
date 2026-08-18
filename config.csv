@@ -1,0 +1,27 @@
+clave,valor,descripcion
+primary_color,#1976D2,Color principal del sitio web
+logo_url,https://drive.google.com/file/d/19GYs025s-512938dbBKYFefAjrlLOMC0/view?usp=sharing,URL del logo de la fundación
+contact_email,fundacion.epv.co@gmail.com,Correo de contacto principal
+google_analytics_id,G-XXXXXXXXXX,ID de Google Analytics
+enlace_formulario_web,https://script.google.com/macros/s/AKfycbx4bbdTNmMaqgF2uVPxGZy3kICgwKj-c1KDHtUXA5D9T58R4NztND1rK9K_eIlhntFffQ/exec,
+beneficiario_estado,ABIERTO,
+beneficiario_link,https://forms.gle/58CCmnwynCwMH9M9A,
+voluntario_estado,CERRADO,
+voluntario_link,https://forms.gle/JhQ6KLpZKcLcuBic7,
+aliado_estado,CERRADO,
+aliado_link,https://forms.gle/aV4FEV85mgVzUGcs8,
+clave,valor,
+cuenta_nequi,En gestion,
+cuenta_davivienda,En gestion,
+imagen_qr_pago,En gestion,
+meta_donaciones,"$10,000,000.00",
+total_donaciones_recibidas,$0.00,
+prog1_nombre,Programas de Salud Mental y Apoyo Psicosocial,
+prog1_pct,40,
+prog2_nombre,Material Pedagógico y Capacitación,
+prog2_pct,20,
+prog3_nombre,Actividades Comunitarias y Conservación,
+prog3_pct,20,
+prog4_nombre,Bienestar y Protección Animal,
+prog4_pct,20,
+banner_oportunidades_url,https://drive.google.com/file/d/1WShF7WC_sDPMhhs9t7h7wZ3aIvTP3e_s/view?usp=sharing,
