@@ -4,24 +4,44 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
   
-  --color-fepv-green: #1B8A5A;
-  --color-fepv-vividgreen: #7AC142;
-  --color-fepv-dark: #12613F;
-  --color-fepv-darkblue: #002D62;
-  --color-fepv-light: #DDF3E8;
-  --color-fepv-yellow: #F4C542;
-  --color-fepv-orange: #F39200;
-  --color-fepv-blue: #2C6E91;
-  --color-fepv-lightblue: #0085CA;
+  /* Nuevos Colores Oficiales FEPV */
+  --color-fepv-azul: #287ABA;
+  --color-fepv-verde: #71A13D;
+  --color-fepv-naranja: #F3A226;
+  --color-fepv-azul-profundo: #12396C;
+  --color-fepv-blanco: #FFFFFF;
+  --color-fepv-fondo: #F7FAF8;
+  --color-fepv-gris-claro: #EEF2F3;
+  --color-fepv-gris: #6B7280;
+  --color-fepv-texto: #263238;
+
+  /* Aliases para compatibilidad con clases Tailwind existentes */
+  --color-fepv-green: #71A13D;
+  --color-fepv-vividgreen: #71A13D;
+  --color-fepv-dark: #12396C;
+  --color-fepv-darkblue: #12396C;
+  --color-fepv-light: #EEF2F3;
+  --color-fepv-yellow: #F3A226;
+  --color-fepv-blue: #287ABA;
+  --color-fepv-lightblue: #287ABA;
   --color-fepv-white: #FFFFFF;
-  --color-fepv-gray: #1E293B;
   
   --radius-fepv: 12px;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #263238;
+  --fepv-azul: #287ABA;
+  --fepv-verde: #71A13D;
+  --fepv-naranja: #F3A226;
+  --fepv-azul-profundo: #12396C;
+  --fepv-blanco: #FFFFFF;
+  --fepv-fondo: #F7FAF8;
+  --fepv-gris-claro: #EEF2F3;
+  --fepv-gris: #6B7280;
+  --fepv-texto: #263238;
+
+  --background: var(--fepv-fondo);
+  --foreground: var(--fepv-texto);
 }
 
 html {

@@ -104,8 +104,8 @@ export default function Header() {
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <button
-                      className={`px-3 py-2 rounded-lg text-[15px] font-medium flex items-center gap-1 transition-colors duration-200 cursor-pointer ${
-                        isActive ? "text-fepv-green" : "text-fepv-gray/80 hover:text-fepv-green hover:bg-fepv-light/30"
+                      className={`px-3 py-2 rounded-lg text-[15px] font-bold flex items-center gap-1 transition-colors duration-200 cursor-pointer ${
+                        isActive ? "text-fepv-blue bg-fepv-blue/5" : "text-fepv-darkblue hover:text-fepv-green hover:bg-fepv-green/10"
                       }`}
                       aria-expanded={isDropdownOpen}
                       aria-haspopup="true"
@@ -119,14 +119,14 @@ export default function Header() {
                     {/* Dropdown Menu */}
                     {isDropdownOpen && (
                       <div className="absolute left-0 pt-2 w-56 z-50">
-                        <div className="rounded-xl bg-[#002f6c] border border-[#001f4d] shadow-lg py-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                        <div className="rounded-xl bg-white border border-gray-100 shadow-lg py-2 animate-in fade-in slide-in-from-top-1 duration-200">
                            {link.submenu.map((subitem) => (
                             <Link
                               key={subitem.name}
                               href={subitem.href}
                               prefetch={false}
                               onClick={() => setActiveDropdown(null)}
-                              className="block px-4 py-2 text-[14px] text-white hover:bg-[#8cc63f] hover:text-white transition-colors duration-150"
+                              className="block px-4 py-2 text-[14px] font-medium text-fepv-darkblue hover:bg-fepv-green/10 hover:text-fepv-green transition-colors duration-150"
                             >
                               {subitem.name}
                             </Link>
@@ -143,8 +143,8 @@ export default function Header() {
                   key={link.name}
                   href={link.href}
                   prefetch={false}
-                  className={`px-3 py-2 rounded-lg text-[15px] font-medium transition-colors duration-200 ${
-                    isActive ? "text-fepv-green" : "text-fepv-gray/80 hover:text-fepv-green hover:bg-fepv-light/30"
+                  className={`px-3 py-2 rounded-lg text-[15px] font-bold transition-colors duration-200 ${
+                    isActive ? "text-fepv-blue bg-fepv-blue/5" : "text-fepv-darkblue hover:text-fepv-green hover:bg-fepv-green/10"
                   }`}
                 >
                   {link.name}
@@ -198,7 +198,7 @@ export default function Header() {
                   <div key={link.name} className="py-1">
                     <button
                       onClick={() => handleDropdownToggle(link.name.toLowerCase())}
-                      className="w-full text-left px-3 py-2 rounded-lg text-base font-semibold flex items-center justify-between text-fepv-gray"
+                      className="w-full text-left px-3 py-2 rounded-lg text-base font-bold flex items-center justify-between text-fepv-darkblue"
                     >
                       {link.name}
                       <svg className={`w-5 h-5 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -217,7 +217,7 @@ export default function Header() {
                               setMobileMenuOpen(false);
                               setActiveDropdown(null);
                             }}
-                            className="block px-3 py-2 text-sm text-fepv-gray/80 hover:text-fepv-green"
+                            className="block px-3 py-2 text-sm font-medium text-fepv-darkblue hover:text-fepv-green hover:bg-fepv-green/5 rounded-md"
                           >
                             {subitem.name}
                           </Link>
@@ -234,8 +234,8 @@ export default function Header() {
                   href={link.href}
                   prefetch={false}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-lg text-base font-semibold ${
-                    isActive ? "text-fepv-green bg-fepv-light/20" : "text-fepv-gray hover:text-fepv-green"
+                  className={`block px-3 py-2 rounded-lg text-base font-bold ${
+                    isActive ? "text-fepv-blue bg-fepv-blue/5" : "text-fepv-darkblue hover:text-fepv-green hover:bg-fepv-green/10"
                   }`}
                 >
                   {link.name}
