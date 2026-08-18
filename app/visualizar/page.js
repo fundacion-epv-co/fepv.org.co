@@ -27,15 +27,25 @@ function VisualizarContent() {
   useEffect(() => {
     if (!fileUrl) return;
 
-    // Helper para verificar y formatear enlaces de Google Drive
-    // Formato estándar: drive.google.com/file/d/ID/view o drive.google.com/open?id=ID
     const driveRegex = /(?:drive\.google\.com\/file\/d\/|drive\.google\.com\/open\?id=)([^/?\s]+)/;
-    const match = fileUrl.match(driveRegex);
+    const docsRegex = /(?:docs\.google\.com\/(?:document|spreadsheets|presentation)\/d\/)([^/?\s]+)/;
 
-    if (match && match[1]) {
-      const fileId = match[1];
-      // Usar el reproductor/visor interactivo integrado de Google Drive para iframes
-      setViewerUrl(`https://drive.google.com/file/d/${fileId}/preview`);
+    const driveMatch = fileUrl.match(driveRegex);
+    const docsMatch = fileUrl.match(docsRegex);
+
+    if (driveMatch && driveMatch[1]) {
+      const fileId = driveMatch[1];
+      // rm=minimal removes the popout button!
+      setViewerUrl(`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`);
+    } else if (docsMatch && docsMatch[1]) {
+      const fileId = docsMatch[1];
+      // Check if document, spreadsheet, or presentation
+      const isDoc = fileUrl.includes('/document/');
+      const isSheet = fileUrl.includes('/spreadsheets/');
+      const isPres = fileUrl.includes('/presentation/');
+      
+      const type = isDoc ? 'document' : isSheet ? 'spreadsheets' : 'presentation';
+      setViewerUrl(`https://docs.google.com/${type}/d/${fileId}/preview?rm=minimal`);
     } else {
       // Para otros archivos (Direct PDFs, Word .docx, .doc, .xlsx, .pptx)
       // Usamos el visor oficial de Google Docs para incrustar sin forzar descarga
