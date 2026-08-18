@@ -223,8 +223,10 @@ export default function Intranet() {
     }
 
     try {
-      // Se envía la contraseña sin encriptar para que coincida directamente con lo que el usuario escribe en el Excel
-      const res = await postToIntranetAPI("login", { email, password });
+      // Volvemos a encriptar la contraseña porque el usuario confirmó que en su Excel sí están encriptadas
+      const hashedPassword = await hashPassword(password);
+      const res = await postToIntranetAPI("login", { email, password: hashedPassword });
+      
       if (res.success) {
         // Asignamos 'empleado' por defecto si la columna de Rol está vacía en Excel
         const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado" };
