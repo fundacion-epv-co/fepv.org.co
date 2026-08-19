@@ -341,7 +341,7 @@ export default function Nosotros() {
                     <img
                       src={aliado.logo}
                       alt={aliado.nombre}
-                      className="h-10 sm:h-12 w-auto max-w-[160px] object-contain inline-block"
+                      className="h-16 sm:h-20 w-auto max-w-[200px] object-contain inline-block"
                     />
                   ) : (
                     <span className="text-xs font-bold text-fepv-gray bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-200 inline-block">
