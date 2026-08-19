@@ -37,6 +37,12 @@ export default function Intranet() {
   const [docType, setDocType] = useState("Plantilla");
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Modal de Solicitud de Cambio State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDocForEdit, setSelectedDocForEdit] = useState(null);
+  const [solicitudForm, setSolicitudForm] = useState({ nombre: "", modificacion: "", mensaje: "" });
+  const [isSubmittingSolicitud, setIsSubmittingSolicitud] = useState(false);
+
   // Perfil State
   const [oldPassword, setOldPassword] = useState("");
   const [newPasswordProfile, setNewPasswordProfile] = useState("");
@@ -360,6 +366,31 @@ export default function Intranet() {
     setIsLoading(false);
   };
 
+  const handleSolicitarCambio = async (e) => {
+    e.preventDefault();
+    if (isSubmittingSolicitud) return;
+    setIsSubmittingSolicitud(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      const res = await postToIntranetAPI("solicitudCambio", {
+        documento: selectedDocForEdit?.titulo || selectedDocForEdit?.codigo || "Documento desconocido",
+        ...solicitudForm
+      });
+      if (res.success) {
+        setSuccessMsg("¡Tu solicitud de cambio ha sido enviada con éxito!");
+        setIsModalOpen(false);
+        setSolicitudForm({ nombre: "", modificacion: "", mensaje: "" });
+      } else {
+        setError(res.message);
+      }
+    } catch (err) {
+      setError("Error de conexión al enviar la solicitud.");
+    }
+    setIsSubmittingSolicitud(false);
+  };
+
   const startEditingUser = (u) => {
     setEditingUserEmail(u.email);
     setEditUserPassword("");
@@ -636,7 +667,23 @@ export default function Intranet() {
                       </div>
                     </div>
                     
-                    {filteredDocs.length === 0 ? (
+                    {isLoading ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                          <div key={i} className="p-5 rounded-2xl border border-gray-100 bg-gray-50 h-[120px] animate-pulse flex justify-between items-start">
+                            <div className="space-y-3 w-3/4 mt-1">
+                              <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+                              <div className="h-4 bg-gray-200 rounded w-full"></div>
+                              <div className="h-2 bg-gray-200 rounded w-2/3"></div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <div className="w-8 h-8 bg-gray-200 rounded-xl"></div>
+                              <div className="w-8 h-8 bg-gray-200 rounded-xl"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : filteredDocs.length === 0 ? (
                       <div className="text-center py-10 bg-gray-50 rounded-2xl border border-gray-100">
                         <span className="text-4xl block mb-2">📂</span>
                         <p className="text-fepv-gray/70">No se encontraron documentos.</p>
@@ -684,15 +731,18 @@ export default function Intranet() {
                                 <span className="text-xs text-gray-400 border border-gray-200 p-2 rounded-lg flex items-center justify-center">N/A</span>
                               )}
                               
-                              <a
-                                href={`mailto:fundacion.epv.co@gmail.com?subject=Solicitud%20de%20Cambio%20-%20Formato%20${doc.codigo || doc.titulo}&body=Hola%20equipo,%0D%0A%0D%0ASolicito%20una%20revisi%C3%B3n/cambio%20en%20el%20siguiente%20formato:%0D%0AT%C3%ADtulo:%20${doc.titulo}%0D%0AC%C3%B3digo:%20${doc.codigo || 'N/A'}%0D%0A%0D%0ADetalle%20del%20cambio%20sugerido:%0D%0A`}
+                              <button
+                                onClick={() => {
+                                  setSelectedDocForEdit(doc);
+                                  setIsModalOpen(true);
+                                }}
                                 className="text-amber-500 hover:text-white bg-white hover:bg-amber-500 border border-amber-200 p-2 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
                                 title="Solicitar cambio o arreglo"
                               >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                              </a>
+                              </button>
                             </div>
                           </div>
                         ))}
@@ -1057,6 +1107,49 @@ export default function Intranet() {
                   Cerrar Sesión y Salir
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Solicitud de Cambio */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-fepv-darkblue/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-fade-in-up">
+            <div className="bg-amber-500 p-4 flex justify-between items-center">
+              <h3 className="font-display font-bold text-white text-lg">Solicitar Modificación</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-white hover:text-amber-100 cursor-pointer">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-sm text-fepv-gray/70 mb-4">
+                Estás solicitando cambios para el documento: <strong className="text-fepv-darkblue block mt-1">{selectedDocForEdit?.titulo}</strong>
+              </p>
+              
+              <form onSubmit={handleSolicitarCambio} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Tu Nombre o Usuario</label>
+                  <input type="text" required value={solicitudForm.nombre} onChange={e=>setSolicitudForm({...solicitudForm, nombre: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm" placeholder="Ej. Juan Pérez" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Modificación Propuesta</label>
+                  <input type="text" required value={solicitudForm.modificacion} onChange={e=>setSolicitudForm({...solicitudForm, modificacion: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm" placeholder="Ej. Actualizar logo" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Mensaje / Detalle</label>
+                  <textarea required value={solicitudForm.mensaje} onChange={e=>setSolicitudForm({...solicitudForm, mensaje: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm h-24" placeholder="Explica detalladamente qué cambiar..."></textarea>
+                </div>
+
+                <div className="pt-2 flex justify-end gap-3">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm text-fepv-gray hover:text-fepv-darkblue">
+                    Cancelar
+                  </button>
+                  <button type="submit" disabled={isSubmittingSolicitud} className="px-4 py-2 text-sm text-white bg-amber-500 hover:bg-amber-600 rounded-lg disabled:opacity-50">
+                    {isSubmittingSolicitud ? "Enviando..." : "Enviar Solicitud"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

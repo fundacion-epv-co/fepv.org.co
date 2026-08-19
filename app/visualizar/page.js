@@ -116,9 +116,15 @@ function VisualizarContent() {
             <>
               {/* Bloqueador de clic para la esquina superior derecha (botón ventana emergente Drive) */}
               <div className="absolute top-0 right-0 w-20 h-20 bg-transparent z-20 cursor-not-allowed"></div>
-              <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden flex flex-col justify-around items-center opacity-[0.05] rotate-[-30deg]">
+              <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden flex flex-col justify-around items-center rotate-[-30deg]">
+                {/* Logo gigante de fondo */}
+                <img 
+                  src="/fepv.org.co/logo.png" 
+                  alt="Watermark Logo" 
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] object-contain opacity-10 grayscale" 
+                />
               {Array.from({ length: 15 }).map((_, i) => (
-                <span key={i} className="text-4xl sm:text-6xl font-black whitespace-nowrap text-fepv-darkblue uppercase tracking-[1em]">
+                <span key={i} className="text-4xl sm:text-6xl font-black whitespace-nowrap text-fepv-darkblue uppercase tracking-[1em] relative z-10 opacity-5">
                   DOCUMENTO PROTEGIDO POR FEPV
                 </span>
               ))}

@@ -316,7 +316,7 @@ export default function Nosotros() {
 
       {/* Bloque 5.5: SECCIÓN ALIADOS */}
       <div id="aliados" className="scroll-mt-24"></div>
-      {!isLoading && aliados.length > 0 && (
+      {(isLoading || aliados.length > 0) && (
         <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-100">
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
             <h3 className="font-display font-bold text-2xl text-fepv-darkblue">
@@ -326,7 +326,15 @@ export default function Nosotros() {
               Trabajamos de la mano con entidades públicas, privadas y de cooperación para la sostenibilidad territorial.
             </p>
           </div>
-          <div className="relative overflow-hidden flex w-full" style={{ WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)", maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}>
+          
+          {isLoading ? (
+            <div className="flex justify-center space-x-8 sm:space-x-12 overflow-hidden opacity-50">
+              {[1, 2, 3, 4, 5].map(i => (
+                 <div key={i} className="h-16 sm:h-20 w-24 sm:w-32 bg-gray-200 rounded-xl animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="relative overflow-hidden flex w-full" style={{ WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)", maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}>
             <div className="flex whitespace-nowrap animate-marquee items-center min-w-max">
               {[...aliados, ...aliados, ...aliados, ...aliados].map((aliado, i) => (
                 <a
@@ -352,6 +360,7 @@ export default function Nosotros() {
               ))}
             </div>
           </div>
+          )}
         </section>
       )}
 
@@ -367,7 +376,20 @@ export default function Nosotros() {
             </p>
           </div>
 
-          {transparencyDocs.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between h-24 animate-pulse">
+                  <div className="space-y-3 w-3/4">
+                    <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    <div className="h-2 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0"></div>
+                </div>
+              ))}
+            </div>
+          ) : transparencyDocs.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {transparencyDocs.map((doc, idx) => (
                 <div
