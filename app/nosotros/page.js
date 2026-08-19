@@ -31,7 +31,7 @@ const MOCK_TRANSPARENCIA = [
 export default function Nosotros() {
   const [equipo, setEquipo] = useState([]);
   const [aliados, setAliados] = useState([]);
-  const [transparencyDocs, setTransparencyDocs] = useState(MOCK_TRANSPARENCIA);
+  const [transparencyDocs, setTransparencyDocs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -82,16 +82,20 @@ export default function Nosotros() {
         const docData = await fetchGoogleSheetData(GOOGLE_SHEETS_INTRANET_CSV);
         if (docData && docData.length > 0) {
           const mapped = docData.map(item => ({
-            title: item["Título"] || item["titulo"] || "",
-            type: item["Tipo"] || item["tipo"] || item["Tipo de archivo"] || "PDF",
+            title: item["Título"] || item["titulo"] || item["Nombre de Archivo"] || "",
+            type: item["Tipo"] || item["tipo"] || "PDF",
             url: item["Enlace Drive"] || item["enlace_drive"] || "",
             etiqueta: item["Etiqueta"] || item["etiqueta"] || "publico",
             date: item["Versión"] || item["version"] || "Actualizado 2026"
-          })).filter(doc => doc.title && doc.type.toUpperCase() === "TRANSPARENCIA");
+          })).filter(doc => doc.title && doc.type && doc.type.toUpperCase().includes("TRANSPARENCIA"));
           
           if (mapped.length > 0) {
             setTransparencyDocs(mapped);
+          } else {
+            setTransparencyDocs([]);
           }
+        } else {
+           setTransparencyDocs([]);
         }
       } catch (e) {
         console.error("Error cargando documentos transparencia", e);
@@ -363,53 +367,59 @@ export default function Nosotros() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {transparencyDocs.map((doc, idx) => (
-              <div
-                key={idx}
-                className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:border-fepv-green/20 transition-all duration-300"
-              >
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold bg-fepv-light text-fepv-green px-2 py-0.5 rounded-full inline-block">
-                    {doc.type}
-                  </span>
-                  <h4 className="font-display font-semibold text-xs text-fepv-darkblue leading-snug pr-2">
-                    {doc.title}
-                  </h4>
-                  <span className="text-[9px] text-fepv-gray/60 block">{doc.date}</span>
-                </div>
-                
-                {doc.url ? (
-                  <Link
-                    href={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? `/visualizar?url=${encodeURIComponent(doc.url)}&title=${encodeURIComponent(doc.title)}&protected=true` : doc.url}
-                    target="_blank"
-                    rel={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? "" : "noopener noreferrer"}
-                    className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green hover:bg-fepv-green hover:text-white transition-colors cursor-pointer"
-                    title={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? "Ver documento protegido" : "Descargar / Ver"}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      {doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? (
-                        <>
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </>
-                      ) : (
+          {transparencyDocs.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {transparencyDocs.map((doc, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:border-fepv-green/20 transition-all duration-300"
+                >
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold bg-fepv-light text-fepv-green px-2 py-0.5 rounded-full inline-block">
+                      {doc.type}
+                    </span>
+                    <h4 className="font-display font-semibold text-xs text-fepv-darkblue leading-snug pr-2">
+                      {doc.title}
+                    </h4>
+                    <span className="text-[9px] text-fepv-gray/60 block">{doc.date}</span>
+                  </div>
+                  
+                  {doc.url ? (
+                    <Link
+                      href={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? `/visualizar?url=${encodeURIComponent(doc.url)}&title=${encodeURIComponent(doc.title)}&protected=true` : doc.url}
+                      target="_blank"
+                      rel={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? "" : "noopener noreferrer"}
+                      className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green hover:bg-fepv-green hover:text-white transition-colors cursor-pointer"
+                      title={doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? "Ver documento protegido" : "Descargar / Ver"}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") ? (
+                          <>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </>
+                        ) : (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        )}
+                      </svg>
+                    </Link>
+                  ) : (
+                    <button
+                      className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green cursor-default opacity-50"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                      )}
-                    </svg>
-                  </Link>
-                ) : (
-                  <button
-                    className="w-10 h-10 flex-shrink-0 bg-gray-50 rounded-full flex items-center justify-center text-fepv-green cursor-default opacity-50"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 bg-gray-50 rounded-2xl border border-gray-100">
+              <p className="text-sm text-fepv-gray font-medium">No hay documentos de transparencia publicados en este momento.</p>
+            </div>
+          )}
         </div>
       </section>
 
