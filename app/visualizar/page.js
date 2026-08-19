@@ -35,17 +35,15 @@ function VisualizarContent() {
 
     if (driveMatch && driveMatch[1]) {
       const fileId = driveMatch[1];
-      // rm=minimal removes the popout button!
       setViewerUrl(`https://drive.google.com/file/d/${fileId}/preview?rm=minimal`);
     } else if (docsMatch && docsMatch[1]) {
       const fileId = docsMatch[1];
-      // Check if document, spreadsheet, or presentation
       const isDoc = fileUrl.includes('/document/');
       const isSheet = fileUrl.includes('/spreadsheets/');
       const isPres = fileUrl.includes('/presentation/');
       
       const type = isDoc ? 'document' : isSheet ? 'spreadsheets' : 'presentation';
-      setViewerUrl(`https://docs.google.com/${type}/d/${fileId}/preview?rm=minimal`);
+      setViewerUrl(`https://docs.google.com/${type}/d/${fileId}/preview`);
     } else {
       // Para otros archivos (Direct PDFs, Word .docx, .doc, .xlsx, .pptx)
       // Usamos el visor oficial de Google Docs para incrustar sin forzar descarga
@@ -115,13 +113,17 @@ function VisualizarContent() {
         {/* Marco del visor (iframe) */}
         <div className="bg-white border border-gray-150 rounded-3xl overflow-hidden shadow-md relative min-h-[75vh] w-full flex items-center justify-center">
           {isProtected && (
-            <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden flex flex-col justify-around items-center opacity-[0.05] rotate-[-30deg]">
+            <>
+              {/* Bloqueador de clic para la esquina superior derecha (botón ventana emergente Drive) */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-transparent z-20 cursor-not-allowed"></div>
+              <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden flex flex-col justify-around items-center opacity-[0.05] rotate-[-30deg]">
               {Array.from({ length: 15 }).map((_, i) => (
                 <span key={i} className="text-4xl sm:text-6xl font-black whitespace-nowrap text-fepv-darkblue uppercase tracking-[1em]">
                   DOCUMENTO PROTEGIDO POR FEPV
                 </span>
               ))}
             </div>
+            </>
           )}
 
           {viewerUrl ? (
