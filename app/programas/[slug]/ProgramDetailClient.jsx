@@ -38,7 +38,7 @@ export default function ProgramDetailClient({ slug }) {
             enlace_formulario: item.enlace_formulario || ""
           })).filter(opp => 
             opp.status.toLowerCase().trim() === "abierta" && 
-            opp.programa && opp.programa.toLowerCase().trim() === slug.toLowerCase().trim()
+            opp.programa && opp.programa.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase().replace(/\s+/g, '-')
           );
           setOportunidades(activeOpps);
         }
@@ -51,7 +51,7 @@ export default function ProgramDetailClient({ slug }) {
     async function loadProgram() {
       try {
         const dynamicPrograms = await getDynamicPrograms();
-        const prog = dynamicPrograms.find(p => p.id === slug);
+        const prog = dynamicPrograms.find(p => p.id.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase().replace(/\s+/g, '-'));
         if (prog) {
           setProgram(prog);
         }
