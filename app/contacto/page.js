@@ -45,6 +45,38 @@ export default function Contacto() {
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // Consulta de PQRS
+  const [consultaRadicado, setConsultaRadicado] = useState("");
+  const [consultaResultado, setConsultaResultado] = useState(null);
+  const [consultaLoading, setConsultaLoading] = useState(false);
+  const [consultaError, setConsultaError] = useState("");
+
+  const handleConsultar = async (e) => {
+    e.preventDefault();
+    if (!consultaRadicado.trim()) return;
+    setConsultaLoading(true);
+    setConsultaError("");
+    setConsultaResultado(null);
+    try {
+      const { GOOGLE_APPS_SCRIPT_INTRANET_URL } = await import('../../lib/api');
+      const response = await fetch(GOOGLE_APPS_SCRIPT_INTRANET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "consultarPQRS", radicado: consultaRadicado.trim() })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setConsultaResultado(data.pqrs);
+      } else {
+        setConsultaError(data.message);
+      }
+    } catch (err) {
+      setConsultaError("Error de conexión al consultar el radicado.");
+    } finally {
+      setConsultaLoading(false);
+    }
+  };
+
   // Estados de Preguntas Frecuentes
   const [faqs, setFaqs] = useState([]);
   const [isLoadingFaqs, setIsLoadingFaqs] = useState(true);
@@ -192,6 +224,45 @@ export default function Contacto() {
                 </p>
               </div>
             </div>
+            
+            {/* Consulta de Radicado */}
+            <div className="mt-8 bg-fepv-green/10 border border-fepv-green/20 p-6 rounded-2xl">
+              <h4 className="font-bold text-fepv-darkblue mb-3">¿Ya enviaste una PQRS?</h4>
+              <p className="text-xs text-fepv-gray/80 mb-4">Consulta el estado de tu radicado aquí.</p>
+              
+              <form onSubmit={handleConsultar} className="space-y-3">
+                <input 
+                  type="text" 
+                  required 
+                  value={consultaRadicado} 
+                  onChange={(e) => setConsultaRadicado(e.target.value)}
+                  placeholder="Ej: PQRS-20260823-1" 
+                  className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green text-sm"
+                />
+                <button 
+                  type="submit" 
+                  disabled={consultaLoading}
+                  className="w-full py-3 bg-fepv-green text-white font-bold rounded-xl hover:bg-fepv-dark transition-colors disabled:opacity-50 text-sm"
+                >
+                  {consultaLoading ? "Consultando..." : "Consultar Estado"}
+                </button>
+              </form>
+
+              {consultaError && <p className="mt-3 text-xs text-red-500 font-medium">{consultaError}</p>}
+
+              {consultaResultado && (
+                <div className="mt-4 p-4 bg-white rounded-xl shadow-sm border border-fepv-green/30 space-y-2">
+                  <p className="text-xs text-fepv-gray"><strong>Estado:</strong> <span className="text-fepv-orange uppercase tracking-wide font-bold">{consultaResultado.estado}</span></p>
+                  <p className="text-xs text-fepv-gray"><strong>Fecha:</strong> {new Date(consultaResultado.fecha).toLocaleDateString()}</p>
+                  <p className="text-xs text-fepv-gray"><strong>Asunto:</strong> {consultaResultado.asunto}</p>
+                  <div className="pt-2 border-t border-gray-100">
+                    <p className="text-xs text-fepv-darkblue font-bold mb-1">Respuesta oficial:</p>
+                    <p className="text-xs text-fepv-gray italic leading-relaxed">{consultaResultado.respuesta}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
 
