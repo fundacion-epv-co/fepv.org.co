@@ -146,14 +146,17 @@ export default function Contacto() {
       
       if (data.success) {
         setSuccess(data.radicado || true);
-      setFormData({
-        nombre: "",
-        correo: "",
-        telefono: "",
-        tipoSolicitud: "peticion",
-        mensaje: "",
-        aceptaDatos: false
-      });
+        setFormData({
+          nombre: "",
+          correo: "",
+          telefono: "",
+          tipoSolicitud: "peticion",
+          mensaje: "",
+          aceptaDatos: false
+        });
+      } else {
+        throw new Error(data.message || "Error del servidor");
+      }
     } catch (error) {
       console.error("Error enviando el formulario:", error);
       alert("Hubo un error al enviar el mensaje. Por favor intenta más tarde o escríbenos directamente a nuestro correo.");
