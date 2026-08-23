@@ -93,7 +93,8 @@ export default function Contacto() {
     setSubmitting(true);
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbwqoAf39R46KFa7ylwO7KIWF5N5tZnJiMMdT2j3qpYKpeDwn873MuhXZ5XsEP5tK8H5/exec", {
+      const { GOOGLE_APPS_SCRIPT_INTRANET_URL } = await import('../../lib/api');
+      const response = await fetch(GOOGLE_APPS_SCRIPT_INTRANET_URL, {
         method: "POST",
         mode: "no-cors",
         headers: {

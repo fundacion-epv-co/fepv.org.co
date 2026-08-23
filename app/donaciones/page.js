@@ -66,36 +66,32 @@ export default function Donaciones() {
     
     setSubmitting(true);
     
-    if (config?.enlace_formulario_web) {
-      try {
-        const payload = {
-          Rol: "DONANTE",
-          monto: finalAmount,
-          nombre: formData.nombre,
-          documento: formData.documento,
-          telefono: formData.telefono,
-          correo: formData.correo
-        };
+    try {
+      const payload = {
+        Rol: "DONANTE",
+        monto: finalAmount,
+        nombre: formData.nombre,
+        documento: formData.documento,
+        telefono: formData.telefono,
+        correo: formData.correo
+      };
 
-        await fetch(config.enlace_formulario_web, {
-          method: 'POST',
-          body: JSON.stringify(payload),
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },
-          mode: 'no-cors'
-        });
+      const { GOOGLE_APPS_SCRIPT_INTRANET_URL } = await import('../../lib/api');
+      await fetch(GOOGLE_APPS_SCRIPT_INTRANET_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        mode: 'no-cors'
+      });
 
-        setSuccessMessage(true);
-        setFormData({ nombre: "", documento: "", telefono: "", correo: "" });
-      } catch (error) {
-        console.error("Error al enviar intención de donación:", error);
-        alert("Ocurrió un error al enviar tu solicitud. Intenta nuevamente.");
-      } finally {
-        setSubmitting(false);
-      }
-    } else {
-      alert("Error: El sistema no tiene configurado el enlace del servidor. Intenta más tarde.");
+      setSuccessMessage(true);
+      setFormData({ nombre: "", documento: "", telefono: "", correo: "" });
+    } catch (error) {
+      console.error("Error al enviar", error);
+      alert("Hubo un problema al conectar con el servidor.");
+    } finally {
       setSubmitting(false);
     }
   };
