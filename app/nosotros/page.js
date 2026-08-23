@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_EQUIPO_CSV, GOOGLE_SHEETS_ALIADOS_CSV, GOOGLE_SHEETS_INTRANET_CSV, getDirectDriveImageUrl } from "../../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_EQUIPO_CSV, GOOGLE_SHEETS_ALIADOS_CSV, GOOGLE_SHEETS_INTRANET_CSV, getDirectDriveImageUrl, fetchEnfoques, fetchHitosHistoria } from "../../lib/api";
 
 const MOCK_EQUIPO = [
   {
@@ -32,6 +32,8 @@ export default function Nosotros() {
   const [equipo, setEquipo] = useState([]);
   const [aliados, setAliados] = useState([]);
   const [transparencyDocs, setTransparencyDocs] = useState([]);
+  const [enfoquesData, setEnfoquesData] = useState([]);
+  const [hitosData, setHitosData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -99,6 +101,25 @@ export default function Nosotros() {
         }
       } catch (e) {
         console.error("Error cargando documentos transparencia", e);
+      }
+
+      // Cargar Enfoques y Hitos
+      try {
+        const [enfoquesRes, hitosRes] = await Promise.all([fetchEnfoques(), fetchHitosHistoria()]);
+        if (enfoquesRes && enfoquesRes.length > 0) {
+          setEnfoquesData(enfoquesRes.map(item => ({ name: item.titulo || "", icon: item.icono || "🎯", desc: item.descripcion || "" })));
+        } else {
+          setEnfoquesData(enfoques);
+        }
+        if (hitosRes && hitosRes.length > 0) {
+          setHitosData(hitosRes.map(item => ({ date: item.ano || "", title: item.titulo || "", desc: item.descripcion || "" })));
+        } else {
+          setHitosData(milestones);
+        }
+      } catch (e) {
+        console.error("Error cargando enfoques o hitos", e);
+        setEnfoquesData(enfoques);
+        setHitosData(milestones);
       }
 
       setIsLoading(false);
@@ -210,7 +231,7 @@ export default function Nosotros() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {enfoques.map((e, idx) => (
+          {enfoquesData.map((e, idx) => (
             <div
               key={idx}
               className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center hover:border-fepv-green/30 hover:shadow-md transition-all duration-300"
@@ -234,7 +255,7 @@ export default function Nosotros() {
           </div>
 
           <div className="relative border-l-2 border-fepv-green/30 ml-4 sm:ml-32 space-y-12">
-            {milestones.map((m, idx) => (
+            {hitosData.map((m, idx) => (
               <div key={idx} className="relative pl-8 sm:pl-10">
                 {/* Indicador de Línea de Tiempo */}
                 <div className="absolute -left-[9px] top-1 bg-white border-2 border-fepv-green w-4 h-4 rounded-full flex items-center justify-center">

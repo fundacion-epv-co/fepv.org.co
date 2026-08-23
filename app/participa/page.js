@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGlobalConfig } from "../../components/ConfigContext";
 
 export default function Participa() {
@@ -10,6 +10,23 @@ export default function Participa() {
 
   const officialEmail = config?.correo_contacto || "fundacion.epv.co@gmail.com";
   const officialPhone = config?.telefono_contacto || "+57 316 689 9250";
+
+  const [participacionData, setParticipacionData] = useState([]);
+
+  useEffect(() => {
+    async function loadParticipacion() {
+      try {
+        const { fetchParticipacionDetalles } = await import('../../lib/api');
+        const data = await fetchParticipacionDetalles();
+        if (data && data.length > 0) {
+          setParticipacionData(data);
+        }
+      } catch (e) {
+        console.error("Error fetching participacion detalles", e);
+      }
+    }
+    loadParticipacion();
+  }, []);
 
   // Función para obtener el estado y enlace desde la configuración
   const getConfigTab = () => {
@@ -116,41 +133,7 @@ export default function Participa() {
               // VISTA DE CONVOCATORIA ABIERTA (ACEPTACIÓN DE CONDICIONES)
               <div className="max-w-2xl mx-auto space-y-8">
                 
-                {activeTab === "beneficiario" && (
-                  <div className="space-y-4">
-                    <h3 className="font-display font-bold text-2xl text-fepv-darkblue text-center">Registro Único de Beneficiarios</h3>
-                    <p className="text-sm text-fepv-gray leading-relaxed text-justify">
-                      Inscríbete para acceder a nuestros procesos de apoyo psicosocial, capacitación técnica o programas de fortalecimiento familiar y comunitario. 
-                      A continuación, serás redirigido al formulario oficial de caracterización poblacional.
-                    </p>
-                  </div>
-                )}
-
-                {activeTab === "voluntario" && (
-                  <div className="space-y-4">
-                    <h3 className="font-display font-bold text-2xl text-fepv-darkblue text-center">Registro de Voluntariado</h3>
-                    <p className="text-sm text-fepv-gray leading-relaxed text-justify">
-                      Únete a FEPV aportando tu tiempo y conocimientos profesionales en nuestros proyectos territoriales. 
-                      En el formulario oficial deberás cargar tu Hoja de Vida y responder a algunas preguntas de selección y perfilamiento.
-                    </p>
-                    <div className="p-4 bg-fepv-light/30 border border-fepv-green/30 rounded-xl">
-                      <p className="text-xs font-bold text-fepv-darkblue mb-2">📄 Nota importante:</p>
-                      <p className="text-xs text-fepv-gray leading-relaxed">
-                        Ten preparado tu documento de identidad y tu Hoja de Vida en formato PDF, ya que serán solicitados durante el registro oficial.
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "aliado" && (
-                  <div className="space-y-4">
-                    <h3 className="font-display font-bold text-2xl text-fepv-darkblue text-center">Registro de Alianzas y Cooperación</h3>
-                    <p className="text-sm text-fepv-gray leading-relaxed text-justify">
-                      Dirigido a empresas, ONGs, entidades públicas u organismos de cooperación que deseen formular y co-ejecutar convenios con la fundación.
-                      Completa el formulario institucional para presentarnos tu propuesta.
-                    </p>
-                  </div>
-                )}
+                {participacionData.filter(d => d.tipo?.toLowerCase() === activeTab).map((data, idx) => (<div key={idx} className="space-y-4"><h3 className="font-display font-bold text-2xl text-fepv-darkblue text-center">{data.titulo}</h3><p className="text-sm text-fepv-gray leading-relaxed text-justify">{data.descripcion}</p>{data.beneficios && (<div className="p-4 bg-fepv-light/30 border border-fepv-green/30 rounded-xl"><ul className="list-disc pl-5 text-sm text-fepv-gray space-y-1">{data.beneficios.split("|").map((b, i) => <li key={i}>{b.trim()}</li>)}</ul></div>)}</div>))}
 
                 {/* Casilla de aceptación común */}
                 <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200">

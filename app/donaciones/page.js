@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGlobalConfig } from "../../components/ConfigContext";
 
 export default function Donaciones() {
@@ -29,12 +29,20 @@ export default function Donaciones() {
   const recaudado = parseInt(cleanCurrency(config?.total_donaciones_recibidas)) || 0;
   const progressPercent = Math.min(100, Math.round((recaudado / meta) * 100)) || 0;
 
-  const presets = [
-    { value: "20000", label: "$20.000" },
-    { value: "50000", label: "$50.000" },
-    { value: "100000", label: "$100.000" },
-    { value: "200000", label: "$200.000" }
-  ];
+  let presets = [];
+  if (config?.valores_donacion) {
+    presets = config.valores_donacion.split(',').map(val => {
+      const num = val.trim();
+      return { value: num, label: "$" + parseInt(num).toLocaleString('es-CO') };
+    });
+  } else {
+    presets = [
+      { value: "20000", label: "$20.000" },
+      { value: "50000", label: "$50.000" },
+      { value: "100000", label: "$100.000" },
+      { value: "200000", label: "$200.000" }
+    ];
+  }
 
   const handlePresetSelect = (val) => {
     setSelectedValue(val);
@@ -92,28 +100,34 @@ export default function Donaciones() {
     }
   };
 
-  const budgetAllocation = [
-    { 
-      area: config?.prog1_nombre || "Programas de Salud Mental y Apoyo Psicosocial", 
-      pct: parseInt(config?.prog1_pct) || 60, 
-      color: "bg-fepv-green" 
-    },
-    { 
-      area: config?.prog2_nombre || "Material Pedagógico y Capacitación", 
-      pct: parseInt(config?.prog2_pct) || 20, 
-      color: "bg-fepv-blue" 
-    },
-    { 
-      area: config?.prog3_nombre || "Actividades Comunitarias y Conservación", 
-      pct: parseInt(config?.prog3_pct) || 10, 
-      color: "bg-fepv-orange" 
-    },
-    { 
-      area: config?.prog4_nombre || "Bienestar y Protección Animal", 
-      pct: parseInt(config?.prog4_pct) || 10, 
-      color: "bg-red-400" 
+  const [budgetAllocation, setBudgetAllocation] = useState([]);
+
+  useEffect(() => {
+    async function loadFondos() {
+      try {
+        const { fetchTransparenciaFondos } = await import('../../lib/api');
+        const data = await fetchTransparenciaFondos();
+        if (data && data.length > 0) {
+          setBudgetAllocation(data.map(item => ({
+            area: item.categoria || item.descripcion || "",
+            pct: parseInt(item.porcentaje) || 0,
+            color: item.color || "bg-fepv-green"
+          })));
+        } else {
+          // Fallback
+          setBudgetAllocation([
+            { area: config?.prog1_nombre || "Programas de Salud Mental y Apoyo Psicosocial", pct: parseInt(config?.prog1_pct) || 60, color: "bg-fepv-green" },
+            { area: config?.prog2_nombre || "Material Pedagógico y Capacitación", pct: parseInt(config?.prog2_pct) || 20, color: "bg-fepv-blue" },
+            { area: config?.prog3_nombre || "Actividades Comunitarias y Conservación", pct: parseInt(config?.prog3_pct) || 10, color: "bg-fepv-orange" },
+            { area: config?.prog4_nombre || "Gestión Administrativa y Logística", pct: parseInt(config?.prog4_pct) || 10, color: "bg-gray-400" }
+          ]);
+        }
+      } catch (e) {
+        console.error("Error fetching fondos", e);
+      }
     }
-  ];
+    loadFondos();
+  }, [config]);
 
   return (
     <div className="w-full bg-white pb-20">
