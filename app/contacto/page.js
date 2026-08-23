@@ -96,9 +96,8 @@ export default function Contacto() {
       const { GOOGLE_APPS_SCRIPT_INTRANET_URL } = await import('../../lib/api');
       const response = await fetch(GOOGLE_APPS_SCRIPT_INTRANET_URL, {
         method: "POST",
-        mode: "no-cors",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "text/plain;charset=utf-8",
         },
         body: JSON.stringify({
           tipo: formData.tipoSolicitud,
@@ -111,8 +110,10 @@ export default function Contacto() {
         }),
       });
 
-      // Al usar no-cors, la respuesta es opaca, asumimos éxito si no lanza error de red
-      setSuccess(true);
+      const data = await response.json();
+      
+      if (data.success) {
+        setSuccess(data.radicado || true);
       setFormData({
         nombre: "",
         correo: "",
@@ -205,6 +206,12 @@ export default function Contacto() {
                 <p className="text-xs text-fepv-gray/80 leading-relaxed">
                   Hemos recibido tu solicitud y la hemos registrado en nuestro sistema. El equipo de la Fundación Encuentros Para la Vida se pondrá en contacto contigo muy pronto a través del correo o teléfono que nos proporcionaste.
                 </p>
+                {typeof success === "string" && success !== "true" && (
+                  <div className="mt-4 p-3 bg-white rounded-lg border border-gray-100">
+                    <p className="text-xs text-gray-500 mb-1">Tu número de radicado para seguimiento es:</p>
+                    <p className="font-bold text-fepv-darkblue text-lg tracking-wider">{success}</p>
+                  </div>
+                )}
               </div>
             ) : (
               <form onSubmit={handleFormSubmit} className="space-y-4 text-xs sm:text-sm">
