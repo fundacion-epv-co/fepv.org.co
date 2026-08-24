@@ -32,6 +32,10 @@ export default function Intranet() {
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserRol, setNewUserRol] = useState("empleado");
+  const [newUserNombre, setNewUserNombre] = useState("");
+  const [newUserCargo, setNewUserCargo] = useState("");
+  const [newUserDireccion, setNewUserDireccion] = useState("");
+  const [newUserTelefono, setNewUserTelefono] = useState("");
   const [docFile, setDocFile] = useState(null);
   const [docTitle, setDocTitle] = useState("");
   const [docType, setDocType] = useState("Plantilla");
@@ -262,7 +266,7 @@ export default function Intranet() {
       console.log("=== FIN DE LOGIN ===");
 
       if (res.success) {
-        const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado", token: res.token };
+        const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado", token: res.token, nombre: res.nombre, cargo: res.cargo, direccion: res.direccion, telefono: res.telefono };
         setSession(newSession);
         setConsEmail(email);
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
@@ -298,7 +302,11 @@ export default function Intranet() {
         token: session.token,
         newEmail: newUserEmail,
         newPassword: newUserPassword,
-        newRol: newUserRol
+        newRol: newUserRol,
+        newNombre: newUserNombre,
+        newCargo: newUserCargo,
+        newDireccion: newUserDireccion,
+        newTelefono: newUserTelefono
       });
       if (res.success) {
         setSuccessMsg("Usuario agregado con éxito");
