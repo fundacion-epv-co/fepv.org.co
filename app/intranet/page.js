@@ -209,7 +209,7 @@ export default function Intranet() {
     if (!session || session.rol !== "admin" || isPending) return;
     setIsLoading(true);
     try {
-      const res = await postToIntranetAPI("getUsers", { adminEmail: session.email });
+      const res = await postToIntranetAPI("getUsers", { token: session.token });
       if (res.success) {
         setUsuarios(res.users);
       } else {
@@ -262,7 +262,7 @@ export default function Intranet() {
       console.log("=== FIN DE LOGIN ===");
 
       if (res.success) {
-        const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado" };
+        const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado", token: res.token };
         setSession(newSession);
         setConsEmail(email);
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
@@ -295,7 +295,7 @@ export default function Intranet() {
 
     try {
       const res = await postToIntranetAPI("addUser", {
-        adminEmail: session.email,
+        token: session.token,
         newEmail: newUserEmail,
         newPassword: newUserPassword,
         newRol: newUserRol
@@ -322,7 +322,7 @@ export default function Intranet() {
     
     try {
       const res = await postToIntranetAPI("removeUser", {
-        adminEmail: session.email,
+        token: session.token,
         userEmail: userEmailToRemove
       });
       if (res.success) {
@@ -348,7 +348,7 @@ export default function Intranet() {
       const hashedNew = await hashPassword(newPasswordProfile);
       
       const res = await postToIntranetAPI("updateOwnPassword", {
-        email: session.email,
+        token: session.token,
         oldPassword: hashedOld,
         newPassword: hashedNew
       });
@@ -413,7 +413,7 @@ export default function Intranet() {
       const hashedNew = editUserPassword ? await hashPassword(editUserPassword) : "";
       
       const res = await postToIntranetAPI("adminUpdateUser", {
-        adminEmail: session.email,
+        token: session.token,
         targetEmail: editingUserEmail,
         newPassword: hashedNew,
         newRol: editUserRol
@@ -484,7 +484,7 @@ export default function Intranet() {
       
       try {
         const res = await postToIntranetAPI("uploadDocument", {
-          adminEmail: session.email,
+          token: session.token,
           fileBase64: base64Data,
           filename: docFile.name,
           mimeType: docFile.type,
