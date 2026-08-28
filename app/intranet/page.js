@@ -48,6 +48,12 @@ export default function Intranet() {
   const [isSubmittingSolicitud, setIsSubmittingSolicitud] = useState(false);
 
   // Perfil State
+  
+  const [profileNombre, setProfileNombre] = useState("");
+  const [profileCargo, setProfileCargo] = useState("");
+  const [profileDireccion, setProfileDireccion] = useState("");
+  const [profileTelefono, setProfileTelefono] = useState("");
+
   const [oldPassword, setOldPassword] = useState("");
   const [newPasswordProfile, setNewPasswordProfile] = useState("");
 
@@ -342,6 +348,44 @@ export default function Intranet() {
       setError("Error de conexión");
     }
     setIsLoading(false);
+  };
+
+  
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    if (isPending) return setError("Conecta Google Apps Script primero");
+    setIsLoading(true);
+    setError("");
+    setSuccessMsg("");
+
+    try {
+      let hashedNew = "";
+      if (newPasswordProfile) {
+        hashedNew = await hashPassword(newPasswordProfile);
+      }
+      
+      const res = await postToIntranetAPI("updateProfile", {
+        token: session.token,
+        newPassword: hashedNew,
+        newNombre: profileNombre,
+        newCargo: profileCargo,
+        newDireccion: profileDireccion,
+        newTelefono: profileTelefono
+      });
+
+      if (res.success) {
+        setSuccessMsg("¡Tu perfil ha sido actualizado con éxito!");
+        setNewPasswordProfile("");
+        // Update local session
+        setSession({ ...session, nombre: profileNombre, cargo: profileCargo, direccion: profileDireccion, telefono: profileTelefono });
+      } else {
+        setError(res.message);
+      }
+    } catch (err) {
+      setError("Error de conexión al actualizar perfil");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUpdateOwnPassword = async (e) => {
@@ -862,37 +906,48 @@ export default function Intranet() {
               {activeTab === "perfil" && (
                 <div className="max-w-md">
                   <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Mi Perfil</h2>
-                  <p className="text-sm text-fepv-gray/70 mb-8">Actualiza tu contraseña de acceso a la Intranet.</p>
+                  <p className="text-sm text-fepv-gray/70 mb-8">Actualiza tu información personal y contraseña.</p>
 
-                  <form onSubmit={handleUpdateOwnPassword} className="space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
+                  
+                  <form onSubmit={handleUpdateProfile} className="space-y-4 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Contraseña Actual</label>
-                      <input 
-                        type="password" 
-                        required 
-                        value={oldPassword} 
-                        onChange={(e) => setOldPassword(e.target.value)} 
-                        className="w-full p-3 border border-gray-200 rounded-xl text-sm bg-white" 
-                        placeholder="••••••••" 
-                      />
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nombre Completo</label>
+                      <input type="text" value={profileNombre} onChange={(e) => setProfileNombre(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Tu nombre" />
                     </div>
-
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Cargo / Rol</label>
+                        <input type="text" value={profileCargo} onChange={(e) => setProfileCargo(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Ej. Psicóloga" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Teléfono</label>
+                        <input type="text" value={profileTelefono} onChange={(e) => setProfileTelefono(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Celular" />
+                      </div>
+                    </div>
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Nueva Contraseña</label>
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Dirección</label>
+                      <input type="text" value={profileDireccion} onChange={(e) => setProfileDireccion(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Dirección" />
+                    </div>
+                    
+                    <hr className="my-4 border-gray-200" />
+                    <h3 className="text-sm font-bold text-fepv-darkblue">Cambio de Contraseña (Opcional)</h3>
+                    
+                    <div>
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nueva Contraseña</label>
                       <input 
                         type="password" 
-                        required 
                         value={newPasswordProfile} 
                         onChange={(e) => setNewPasswordProfile(e.target.value)} 
-                        className="w-full p-3 border border-gray-200 rounded-xl text-sm bg-white" 
-                        placeholder="Mínimo 6 caracteres" 
+                        className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" 
+                        placeholder="Deja en blanco para no cambiarla" 
                       />
                     </div>
 
-                    <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-primary w-full py-3 cursor-pointer disabled:opacity-50">
-                      {isLoading ? "Actualizando..." : "Cambiar Contraseña"}
+                    <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-primary w-full py-3 mt-4 cursor-pointer disabled:opacity-50">
+                      {isLoading ? "Actualizando..." : "Actualizar Perfil"}
                     </button>
                   </form>
+
                 </div>
               )}
 
