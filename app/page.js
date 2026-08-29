@@ -38,6 +38,81 @@ export default function Home() {
   const [programImagesMap, setProgramImagesMap] = useState({});
   const [poblacionesImagesMap, setPoblacionesImagesMap] = useState({});
 
+  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
+  const [beneficiaries, setBeneficiaries] = useState(FALLBACK_BENEFICIARIES);
+  const [activePrograms, setActivePrograms] = useState(FALLBACK_PROGRAMS);
+  const [mockOpportunities, setMockOpportunities] = useState(FALLBACK_OPPORTUNITIES);
+  const [participationPaths, setParticipationPaths] = useState(FALLBACK_PARTICIPATION);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadAllData() {
+      try {
+        // 1. Lineas Estratégicas
+        const cats = await fetchLineasEstrategicas();
+        if (cats && cats.length > 0) {
+          const mappedCats = cats.map((c, i) => ({
+            id: c.id || String(i),
+            title: c.titulo || c.title || "",
+            icon: c.icono || "🌟",
+            desc: c.descripcion || c.desc || "",
+            color: c.color || "border-fepv-green bg-fepv-light/10"
+          }));
+          if (mappedCats.length > 0) setCategories(mappedCats);
+        }
+
+        // 2. Programas
+        const progs = await getDynamicPrograms();
+        if (progs && progs.length > 0) {
+          const mappedProgs = progs.map(p => ({
+            title: p.nombre || p.title,
+            desc: p.descripcion_corta || p.desc,
+            actionText: p.actionText || "Conocer programa",
+            href: `/programas#${p.id || p.slug || ''}`
+          }));
+          if (mappedProgs.length > 0) setActivePrograms(mappedProgs);
+        }
+
+        // 3. Oportunidades (Convocatorias)
+        const URL_CONV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub?gid=0&single=true&output=csv";
+        const convs = await fetchGoogleSheetData(URL_CONV);
+        if (convs && convs.length > 0) {
+          const mappedConvs = convs.slice(0, 3).map(c => ({
+            category: "Convocatoria",
+            badgeColor: "bg-fepv-orange text-white",
+            status: c.estado || "ABIERTA",
+            title: c.titulo || c.nombre || "Convocatoria",
+            location: c.municipio || c.ubicacion || "Virtual / Presencial",
+            deadline: c.fecha_cierre || c.fecha || "Pronto",
+            target: c.perfil || c.publico || "Público General"
+          }));
+          if (mappedConvs.length > 0) setMockOpportunities(mappedConvs);
+        }
+
+      
+        // 4. Rutas de Participación
+        const part = await fetchParticipacionDetalles();
+        if (part && part.length > 0) {
+          const mappedPart = part.map(p => ({
+            title: p.titulo || p.title || p.tipo,
+            desc: p.descripcion || p.desc,
+            btnText: p.boton || "Ver más",
+            href: `/participa?rol=${p.tipo?.toLowerCase() || ''}`,
+            icon: "🤝"
+          }));
+          if (mappedPart.length > 0) setParticipationPaths(mappedPart);
+        }
+
+      } catch (e) {
+        console.error("Error cargando datos dinámicos en Home:", e);
+      } finally {
+        setIsDataLoaded(true);
+      }
+    }
+    loadAllData();
+  }, []);
+
+
   useEffect(() => {
     async function loadAllImages() {
       try {
@@ -190,7 +265,7 @@ export default function Home() {
     setCurrentBannerIndex((prev) => (prev - 1 + bannerItems.length) % bannerItems.length);
   };
 
-  const categories = [
+  const FALLBACK_CATEGORIES = [
     {
       id: "salud-mental",
       title: "Salud Mental",
@@ -249,7 +324,7 @@ export default function Home() {
     }
   ];
 
-  const beneficiaries = [
+  const FALLBACK_BENEFICIARIES = [
     { id: "ninas-ninos", altId: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
     { id: "adolescentes", altId: "adolescentes", name: "Adolescentes", img: "🎒" },
     { id: "jovenes", altId: "jovenes", name: "Jóvenes", img: "⚡" },
@@ -260,7 +335,7 @@ export default function Home() {
     { id: "organizaciones", altId: "organizaciones", name: "Organizaciones de Base", img: "📢" }
   ];
 
-  const activePrograms = [
+  const FALLBACK_PROGRAMS = [
     {
       title: "PAPSIVI",
       desc: "Programa de Atención Psicosocial y Salud Integral a Víctimas del conflicto armado en el territorio.",
@@ -287,7 +362,7 @@ export default function Home() {
     }
   ];
 
-  const mockOpportunities = [
+  const FALLBACK_OPPORTUNITIES = [
     {
       category: "Cursos",
       badgeColor: "bg-fepv-green text-white",
@@ -317,7 +392,7 @@ export default function Home() {
     }
   ];
 
-  const participationPaths = [
+  const FALLBACK_PARTICIPATION = [
     {
       title: "Soy beneficiario",
       desc: "Quiero participar en los programas psicosociales, educativos o comunitarios.",
@@ -762,6 +837,63 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      
+      {/* BLOQUE OPORTUNIDADES Y CONVOCATORIAS */}
+      {mockOpportunities.length > 0 && (
+        <section className="py-20 bg-white border-t border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+              <div className="max-w-2xl space-y-4">
+                <span className="text-xs font-bold text-fepv-orange uppercase tracking-wider block">
+                  Últimas Oportunidades
+                </span>
+                <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-darkblue">
+                  Convocatorias y Vacantes Activas
+                </h2>
+                <p className="font-sans text-base text-fepv-gray/80">
+                  Descubre las últimas ofertas de empleo y convocatorias disponibles para nuestra comunidad.
+                </p>
+              </div>
+              <Link href="/convocatorias" className="whitespace-nowrap fepv-btn fepv-btn-secondary cursor-pointer bg-white text-fepv-darkblue hover:bg-gray-50 border border-gray-200">
+                Ver todas las oportunidades
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mockOpportunities.map((op, idx) => (
+                <div key={idx} className="bg-white border border-gray-100 p-6 sm:p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-start gap-4">
+                      <span className={`text-[10px] font-bold px-3 py-1 uppercase tracking-wider rounded-full ${op.badgeColor || 'bg-fepv-orange text-white'}`}>
+                        {op.category}
+                      </span>
+                      <span className="text-[10px] font-bold text-fepv-gray bg-gray-100 px-3 py-1 rounded-full uppercase">
+                        {op.status}
+                      </span>
+                    </div>
+                    <h3 className="font-display font-bold text-lg text-fepv-darkblue leading-tight line-clamp-3">
+                      {op.title}
+                    </h3>
+                  </div>
+                  <div className="mt-8 space-y-3">
+                    <div className="flex items-center gap-2 text-xs text-fepv-gray">
+                      <span>📍</span> <span>{op.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-fepv-gray">
+                      <span>📅</span> <span>Cierre: {op.deadline}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-fepv-gray">
+                      <span>👥</span> <span>{op.target}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
 
       {/* BLOQUE 8: ¿QUIERES HACER PARTE? */}
       <section className="py-20 bg-fepv-light/20">
