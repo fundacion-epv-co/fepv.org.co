@@ -25,6 +25,180 @@ const INITIAL_TESTIMONIALS = [
   }
 ];
 
+const FALLBACK_CATEGORIES = [
+    {
+      id: "salud-mental",
+      title: "Salud Mental",
+      icon: "🧠",
+      desc: "Promoción del bienestar emocional, atención psicosocial y fortalecimiento de capacidades.",
+      color: "border-fepv-green bg-fepv-light/10"
+    },
+    {
+      id: "familias",
+      title: "Familias",
+      icon: "👨‍👩‍👧",
+      desc: "Fortalecimiento familiar, orientación y construcción de entornos protectores.",
+      color: "border-fepv-blue bg-blue-50/30"
+    },
+    {
+      id: "educacion",
+      title: "Educación",
+      icon: "📚",
+      desc: "Formación, talleres y oportunidades para aprender y desarrollar habilidades.",
+      color: "border-fepv-orange bg-yellow-50/30"
+    },
+    {
+      id: "inclusion-derechos",
+      title: "Inclusión y Derechos",
+      icon: "🤝",
+      desc: "Promoción de derechos, participación ciudadana e inclusión social activa.",
+      color: "border-fepv-green bg-fepv-light/10"
+    },
+    {
+      id: "medio-ambiente",
+      title: "Medio Ambiente",
+      icon: "🌱",
+      desc: "Educación ambiental, reforestación y conservación comunitaria sostenible.",
+      color: "border-fepv-blue bg-blue-50/30"
+    },
+    {
+      id: "bienestar-animal",
+      title: "Bienestar Animal",
+      icon: "🐾",
+      desc: "Protección animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
+      color: "border-fepv-orange bg-yellow-50/30"
+    },
+    {
+      id: "emprendimiento",
+      title: "Emprendimiento",
+      icon: "💼",
+      desc: "Autonomía económica, emprendimiento social y fortalecimiento de capacidades locales.",
+      color: "border-fepv-green bg-fepv-light/10"
+    },
+    {
+      id: "cultura-deporte",
+      title: "Cultura y Deporte",
+      icon: "⚽",
+      desc: "Actividades artísticas, recreativas y deportivas que integran y sanan el tejido social.",
+      color: "border-fepv-blue bg-blue-50/30"
+    }
+  ];
+
+const FALLBACK_BENEFICIARIES = [
+    { id: "ninas-ninos", altId: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
+    { id: "adolescentes", altId: "adolescentes", name: "Adolescentes", img: "🎒" },
+    { id: "jovenes", altId: "jovenes", name: "Jóvenes", img: "⚡" },
+    { id: "familias", altId: "familias-poblacion", name: "Familias", img: "🏡" },
+    { id: "discapacidad", altId: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
+    { id: "victimas", altId: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
+    { id: "comunidades-rurales", altId: "rurales", name: "Comunidades Rurales", img: "🌽" },
+    { id: "organizaciones", altId: "organizaciones", name: "Organizaciones de Base", img: "📢" }
+  ];
+
+const FALLBACK_PROGRAMS = [
+    {
+      title: "PAPSIVI",
+      desc: "Programa de Atención Psicosocial y Salud Integral a Víctimas del conflicto armado en el territorio.",
+      actionText: "Conocer programa",
+      href: "/programas#salud-mental"
+    },
+    {
+      title: "Escuela de Formación",
+      desc: "Procesos educativos y comunitarios integrales para el desarrollo de competencias locales.",
+      actionText: "Ver programas",
+      href: "/programas#educacion"
+    },
+    {
+      title: "Eco-Encuentros",
+      desc: "Iniciativas comunitarias orientadas a la educación ambiental y protección de microcuencas.",
+      actionText: "Conocer iniciativa",
+      href: "/programas#ambiente"
+    },
+    {
+      title: "Cuidado de Huellas",
+      desc: "Acciones territoriales de esterilización, concientización y tenencia responsable de mascotas.",
+      actionText: "Conocer iniciativa",
+      href: "/programas#bienestar-animal"
+    }
+  ];
+
+const FALLBACK_OPPORTUNITIES = [
+    {
+      category: "Cursos",
+      badgeColor: "bg-fepv-green text-white",
+      status: "ABIERTA",
+      title: "Taller de Fortalecimiento Emocional y Resiliencia",
+      location: "Agustín Codazzi",
+      deadline: "15/08/2026",
+      target: "Jóvenes y adultos"
+    },
+    {
+      category: "Voluntariado",
+      badgeColor: "bg-fepv-blue text-white",
+      status: "ABIERTA",
+      title: "Campaña de Reforestación Comunitaria 'Siembre de Vida'",
+      location: "Vereda Las Flores",
+      deadline: "20/08/2026",
+      target: "Toda la comunidad"
+    },
+    {
+      category: "Convocatorias",
+      badgeColor: "bg-fepv-orange text-fepv-gray",
+      status: "ABIERTA",
+      title: "Fondo de Emprendimiento Social: Capital Semilla FEPV 2026",
+      location: "Agustín Codazzi",
+      deadline: "30/08/2026",
+      target: "Emprendedores locales"
+    }
+  ];
+
+const FALLBACK_PARTICIPATION = [
+    {
+      title: "Soy beneficiario",
+      desc: "Quiero participar en los programas psicosociales, educativos o comunitarios.",
+      btnText: "Inscribirme",
+      href: "/participa?rol=beneficiario",
+      icon: (
+        <svg className="w-8 h-8 text-fepv-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+      )
+    },
+    {
+      title: "Quiero donar",
+      desc: "Quiero apoyar económicamente y apadrinar procesos que transforman vidas.",
+      btnText: "Aportar ahora",
+      href: "/donaciones",
+      icon: (
+        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+      )
+    },
+    {
+      title: "Quiero ser aliado",
+      desc: "Represento a una entidad y quiero colaborar activamente con proyectos.",
+      btnText: "Unirme como aliado",
+      href: "/participa?rol=aliado",
+      icon: (
+        <svg className="w-8 h-8 text-fepv-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      )
+    },
+    {
+      title: "Quiero ser voluntario",
+      desc: "Quiero aportar mi tiempo, capacidades y vocación de servicio social.",
+      btnText: "Postularme",
+      href: "/participa?rol=voluntario",
+      icon: (
+        <svg className="w-8 h-8 text-fepv-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+        </svg>
+      )
+    }
+  ];
+
 export default function Home() {
   // Banner state
   const [bannerItems, setBannerItems] = useState([]);
@@ -265,179 +439,15 @@ export default function Home() {
     setCurrentBannerIndex((prev) => (prev - 1 + bannerItems.length) % bannerItems.length);
   };
 
-  const FALLBACK_CATEGORIES = [
-    {
-      id: "salud-mental",
-      title: "Salud Mental",
-      icon: "🧠",
-      desc: "Promoción del bienestar emocional, atención psicosocial y fortalecimiento de capacidades.",
-      color: "border-fepv-green bg-fepv-light/10"
-    },
-    {
-      id: "familias",
-      title: "Familias",
-      icon: "👨‍👩‍👧",
-      desc: "Fortalecimiento familiar, orientación y construcción de entornos protectores.",
-      color: "border-fepv-blue bg-blue-50/30"
-    },
-    {
-      id: "educacion",
-      title: "Educación",
-      icon: "📚",
-      desc: "Formación, talleres y oportunidades para aprender y desarrollar habilidades.",
-      color: "border-fepv-orange bg-yellow-50/30"
-    },
-    {
-      id: "inclusion-derechos",
-      title: "Inclusión y Derechos",
-      icon: "🤝",
-      desc: "Promoción de derechos, participación ciudadana e inclusión social activa.",
-      color: "border-fepv-green bg-fepv-light/10"
-    },
-    {
-      id: "medio-ambiente",
-      title: "Medio Ambiente",
-      icon: "🌱",
-      desc: "Educación ambiental, reforestación y conservación comunitaria sostenible.",
-      color: "border-fepv-blue bg-blue-50/30"
-    },
-    {
-      id: "bienestar-animal",
-      title: "Bienestar Animal",
-      icon: "🐾",
-      desc: "Protección animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
-      color: "border-fepv-orange bg-yellow-50/30"
-    },
-    {
-      id: "emprendimiento",
-      title: "Emprendimiento",
-      icon: "💼",
-      desc: "Autonomía económica, emprendimiento social y fortalecimiento de capacidades locales.",
-      color: "border-fepv-green bg-fepv-light/10"
-    },
-    {
-      id: "cultura-deporte",
-      title: "Cultura y Deporte",
-      icon: "⚽",
-      desc: "Actividades artísticas, recreativas y deportivas que integran y sanan el tejido social.",
-      color: "border-fepv-blue bg-blue-50/30"
-    }
-  ];
+  
 
-  const FALLBACK_BENEFICIARIES = [
-    { id: "ninas-ninos", altId: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
-    { id: "adolescentes", altId: "adolescentes", name: "Adolescentes", img: "🎒" },
-    { id: "jovenes", altId: "jovenes", name: "Jóvenes", img: "⚡" },
-    { id: "familias", altId: "familias-poblacion", name: "Familias", img: "🏡" },
-    { id: "discapacidad", altId: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
-    { id: "victimas", altId: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
-    { id: "comunidades-rurales", altId: "rurales", name: "Comunidades Rurales", img: "🌽" },
-    { id: "organizaciones", altId: "organizaciones", name: "Organizaciones de Base", img: "📢" }
-  ];
+  
 
-  const FALLBACK_PROGRAMS = [
-    {
-      title: "PAPSIVI",
-      desc: "Programa de Atención Psicosocial y Salud Integral a Víctimas del conflicto armado en el territorio.",
-      actionText: "Conocer programa",
-      href: "/programas#salud-mental"
-    },
-    {
-      title: "Escuela de Formación",
-      desc: "Procesos educativos y comunitarios integrales para el desarrollo de competencias locales.",
-      actionText: "Ver programas",
-      href: "/programas#educacion"
-    },
-    {
-      title: "Eco-Encuentros",
-      desc: "Iniciativas comunitarias orientadas a la educación ambiental y protección de microcuencas.",
-      actionText: "Conocer iniciativa",
-      href: "/programas#ambiente"
-    },
-    {
-      title: "Cuidado de Huellas",
-      desc: "Acciones territoriales de esterilización, concientización y tenencia responsable de mascotas.",
-      actionText: "Conocer iniciativa",
-      href: "/programas#bienestar-animal"
-    }
-  ];
+  
 
-  const FALLBACK_OPPORTUNITIES = [
-    {
-      category: "Cursos",
-      badgeColor: "bg-fepv-green text-white",
-      status: "ABIERTA",
-      title: "Taller de Fortalecimiento Emocional y Resiliencia",
-      location: "Agustín Codazzi",
-      deadline: "15/08/2026",
-      target: "Jóvenes y adultos"
-    },
-    {
-      category: "Voluntariado",
-      badgeColor: "bg-fepv-blue text-white",
-      status: "ABIERTA",
-      title: "Campaña de Reforestación Comunitaria 'Siembre de Vida'",
-      location: "Vereda Las Flores",
-      deadline: "20/08/2026",
-      target: "Toda la comunidad"
-    },
-    {
-      category: "Convocatorias",
-      badgeColor: "bg-fepv-orange text-fepv-gray",
-      status: "ABIERTA",
-      title: "Fondo de Emprendimiento Social: Capital Semilla FEPV 2026",
-      location: "Agustín Codazzi",
-      deadline: "30/08/2026",
-      target: "Emprendedores locales"
-    }
-  ];
+  
 
-  const FALLBACK_PARTICIPATION = [
-    {
-      title: "Soy beneficiario",
-      desc: "Quiero participar en los programas psicosociales, educativos o comunitarios.",
-      btnText: "Inscribirme",
-      href: "/participa?rol=beneficiario",
-      icon: (
-        <svg className="w-8 h-8 text-fepv-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Quiero donar",
-      desc: "Quiero apoyar económicamente y apadrinar procesos que transforman vidas.",
-      btnText: "Aportar ahora",
-      href: "/donaciones",
-      icon: (
-        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Quiero ser aliado",
-      desc: "Represento a una entidad y quiero colaborar activamente con proyectos.",
-      btnText: "Unirme como aliado",
-      href: "/participa?rol=aliado",
-      icon: (
-        <svg className="w-8 h-8 text-fepv-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Quiero ser voluntario",
-      desc: "Quiero aportar mi tiempo, capacidades y vocación de servicio social.",
-      btnText: "Postularme",
-      href: "/participa?rol=voluntario",
-      icon: (
-        <svg className="w-8 h-8 text-fepv-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-        </svg>
-      )
-    }
-  ];
+  
 
   return (
     <div className="w-full">
