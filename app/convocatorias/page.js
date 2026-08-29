@@ -18,6 +18,7 @@ function OportunidadesClient() {
   // Filtros y Paginación
   const [filterMunicipio, setFilterMunicipio] = useState("");
   const [filterCargo, setFilterCargo] = useState("");
+  const [filterSalario, setFilterSalario] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -108,13 +109,15 @@ function OportunidadesClient() {
     const mun = (o.municipio || "CESAR").toUpperCase().trim();
     municipiosMap[mun] = true;
   });
+  const uniqueSalarios = Array.from(new Set(ofertas.map(o => (o.salario || "A convenir").trim()).filter(Boolean))).sort();
   const uniqueMunicipios = Object.keys(municipiosMap).sort();
 
   // Lógica de Paginación y Filtrado
   const filteredOfertas = ofertas.filter(o => {
     const matchMun = filterMunicipio === "" || (o.municipio || "").toLowerCase().includes(filterMunicipio.toLowerCase());
     const matchCargo = filterCargo === "" || (o.titulo_vacante || o.cargo || "").toLowerCase().includes(filterCargo.toLowerCase());
-    return matchMun && matchCargo;
+    const matchSal = filterSalario === "" || (o.salario || "").toLowerCase().includes(filterSalario.toLowerCase());
+    return matchMun && matchCargo && matchSal;
   });
 
   const totalPages = Math.ceil(filteredOfertas.length / itemsPerPage) || 1;
@@ -587,6 +590,7 @@ function OportunidadesClient() {
                             <option key={idx} value={m}>{m}</option>
                           ))}
                         </select>
+                        <select value={filterSalario} onChange={(e) => { setFilterSalario(e.target.value); setCurrentPage(1); }} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-fepv-blue focus:border-fepv-blue block w-full sm:w-48 p-3 outline-none"><option value="">Cualquier Salario</option>{uniqueSalarios.map((s, idx) => (<option key={idx} value={s}>{s}</option>))}</select>
                         <div className="relative w-full sm:w-64">
                           <input 
                             type="text" 
