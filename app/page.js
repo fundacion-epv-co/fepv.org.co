@@ -202,7 +202,7 @@ const FALLBACK_PARTICIPATION = [
 
 export default function Home() {
   const config = useGlobalConfig();
-  const videoUrl = config?.["video_personaje"] || "";
+  const videoUrl = config?.["Video_personaje"] || config?.["video_personaje"] || "";
   let videoId = "";
   if(videoUrl.includes("drive.google.com")) {
     const match = videoUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
