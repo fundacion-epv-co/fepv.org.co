@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useGlobalConfig } from "../components/ConfigContext";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, fetchPoblacionesImagesMap, isImageUrl, fetchLineasEstrategicas, getDynamicPrograms, fetchEnfoques } from "../lib/api";
 
 const INITIAL_TESTIMONIALS = [
@@ -200,6 +201,17 @@ const FALLBACK_PARTICIPATION = [
   ];
 
 export default function Home() {
+  const config = useGlobalConfig();
+  const videoUrl = config?.["video_personaje"] || "";
+  let videoId = "";
+  if(videoUrl.includes("drive.google.com")) {
+    const match = videoUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) videoId = match[1];
+    else {
+      const match2 = videoUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (match2) videoId = match2[1];
+    }
+  }
   // Banner state
   const [bannerItems, setBannerItems] = useState([]);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
