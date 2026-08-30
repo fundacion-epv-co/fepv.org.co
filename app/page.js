@@ -235,7 +235,7 @@ export default function Home() {
     async function loadAllData() {
       try {
         // 1. Lineas Estratégicas
-        const cats = await fetchLineasEstrategicas();
+        try { const cats = await fetchLineasEstrategicas();
         if (cats && cats.length > 0) {
           const mappedCats = cats.map((c, i) => ({
             id: c.id || String(i),
@@ -245,10 +245,10 @@ export default function Home() {
             color: c.color || "border-fepv-green bg-fepv-light/10"
           }));
           if (mappedCats.length > 0) setCategories(mappedCats);
-        }
+        } } catch(e) { console.error(e); }
 
         // 2. Programas
-        const progs = await getDynamicPrograms();
+        try { const progs = await getDynamicPrograms();
         if (progs && progs.length > 0) {
           const mappedProgs = progs.map(p => ({
             title: p.nombre || p.title,
@@ -257,10 +257,10 @@ export default function Home() {
             href: `/programas#${p.id || p.slug || ''}`
           }));
           if (mappedProgs.length > 0) setActivePrograms(mappedProgs);
-        }
+        } } catch(e) { console.error(e); }
 
         // 3. Oportunidades (Convocatorias)
-        const URL_CONV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub?gid=0&single=true&output=csv";
+        try { const URL_CONV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub?gid=0&single=true&output=csv";
         const convs = await fetchGoogleSheetData(URL_CONV);
         if (convs && convs.length > 0) {
           const mappedConvs = convs.slice(0, 3).map(c => ({
@@ -273,11 +273,11 @@ export default function Home() {
             target: c.perfil || c.publico || "Público General"
           }));
           if (mappedConvs.length > 0) setMockOpportunities(mappedConvs);
-        }
+        } } catch(e) { console.error(e); }
 
       
         // 4. Rutas de Participación
-        const part = await fetchParticipacionDetalles();
+        try { const part = await fetchParticipacionDetalles();
         if (part && part.length > 0) {
           const mappedPart = part.map(p => ({
             title: p.titulo || p.title || p.tipo,
@@ -287,7 +287,7 @@ export default function Home() {
             icon: "🤝"
           }));
           if (mappedPart.length > 0) setParticipationPaths(mappedPart);
-        }
+        } } catch(e) { console.error(e); }
 
       } catch (e) {
         console.error("Error cargando datos dinámicos en Home:", e);
