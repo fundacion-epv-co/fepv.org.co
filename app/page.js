@@ -594,13 +594,14 @@ export default function Home() {
               <div className="relative w-full max-w-[420px] aspect-[9/16] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
                 {videoUrl ? (
                   videoId ? (
-                    <iframe 
-                      src={`https://drive.google.com/file/d/${videoId}/preview?autoplay=1&mute=1&controls=0`}
-                      className="w-full h-full object-cover pointer-events-none" 
-                      frameBorder="0" 
-                      allow="autoplay; encrypted-media" 
-                      allowFullScreen
-                    ></iframe>
+                    <video 
+                      src={`https://drive.google.com/uc?export=download&id=${videoId}`}
+                      className="w-full h-full object-cover" 
+                      autoPlay 
+                      muted 
+                      loop 
+                      playsInline
+                    ></video>
                   ) : (
                     <video 
                       src={videoUrl} 
