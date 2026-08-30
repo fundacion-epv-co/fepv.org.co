@@ -23,8 +23,7 @@ export function ConfigProvider({ children }) {
     // 1. Cargar instantáneamente desde el caché local (si existe)
     if (typeof window !== "undefined") {
       try {
-        localStorage.removeItem("fepv_cache_global_config");
-        const cached = null;
+        const cached = localStorage.getItem("fepv_cache_global_config");
         if (cached) {
           const parsed = JSON.parse(cached);
           setConfig(prev => ({ ...prev, ...parsed }));
