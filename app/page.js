@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useGlobalConfig } from "../components/ConfigContext";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, fetchPoblacionesImagesMap, isImageUrl, fetchLineasEstrategicas, getDynamicPrograms, fetchEnfoques } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, fetchPoblacionesImagesMap, isImageUrl, fetchLineasEstrategicas, getDynamicPrograms, fetchEnfoques, fetchParticipacionDetalles } from "../lib/api";
 
 const INITIAL_TESTIMONIALS = [
   {
