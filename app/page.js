@@ -251,8 +251,9 @@ export default function Home() {
         try { const progs = await getDynamicPrograms();
         if (progs && progs.length > 0) {
           const mappedProgs = progs.map(p => ({
-            title: p.nombre || p.title,
-            desc: p.descripcion_corta || p.desc,
+            title: p.title || p.nombre,
+            desc: p.subtitle || p.descripcion_corta || p.desc || "",
+            img: p.icon || "",
             actionText: p.actionText || "Conocer programa",
             href: `/programas#${p.id || p.slug || ''}`
           }));
@@ -782,23 +783,32 @@ export default function Home() {
             {activePrograms.map((p, idx) => (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow duration-300"
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden"
               >
-                <div>
-                  <div className="bg-fepv-light/40 text-fepv-darkblue font-display font-bold text-sm px-3.5 py-1.5 rounded-lg inline-block mb-4">
-                    {p.title}
+                {p.img && (
+                  <div className="h-40 w-full relative bg-gray-100 flex-shrink-0">
+                    <img src={p.img} alt={p.title} className="w-full h-full object-cover" />
                   </div>
-                  <p className="text-sm text-fepv-gray/85 leading-relaxed mb-6">
-                    {p.desc}
-                  </p>
+                )}
+                <div className="p-6 flex flex-col justify-between flex-1">
+                  <div>
+                    <div className="bg-fepv-light/40 text-fepv-darkblue font-display font-bold text-sm px-3.5 py-1.5 rounded-lg inline-block mb-4">
+                      {p.title}
+                    </div>
+                    {p.desc && (
+                      <p className="text-sm text-fepv-gray/85 leading-relaxed mb-6">
+                        {p.desc}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    href={p.href}
+                    className="text-xs font-bold text-fepv-green hover:text-fepv-darkblue flex items-center gap-1 group mt-auto"
+                  >
+                    {p.actionText}
+                    <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
+                  </Link>
                 </div>
-                <Link
-                  href={p.href}
-                  className="text-xs font-bold text-fepv-green hover:text-fepv-darkblue flex items-center gap-1 group"
-                >
-                  {p.actionText}
-                  <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
-                </Link>
               </div>
             ))}
           </div>
