@@ -251,9 +251,10 @@ export default function Home() {
         try { const progs = await getDynamicPrograms();
         if (progs && progs.length > 0) {
           const mappedProgs = progs.map(p => ({
+            id: p.id || p.slug || "",
             title: p.title || p.nombre,
             desc: p.subtitle || p.descripcion_corta || p.desc || "",
-            img: p.icon || "",
+            img: getDirectDriveImageUrl(p.icon || ""),
             actionText: p.actionText || "Conocer programa",
             href: `/programas#${p.id || p.slug || ''}`
           }));
@@ -780,14 +781,17 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {activePrograms.map((p, idx) => (
+            {activePrograms.map((p, idx) => {
+              const programImg = p.img || (p.id && programImagesMap[p.id.toLowerCase()]) || null;
+              const directImg = programImg ? getDirectDriveImageUrl(programImg) : null;
+              return (
               <div
                 key={idx}
                 className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden"
               >
-                {p.img && (
-                  <div className="h-40 w-full relative bg-gray-100 flex-shrink-0">
-                    <img src={p.img} alt={p.title} className="w-full h-full object-cover" />
+                {directImg && (
+                  <div className="h-44 w-full relative bg-gray-100 flex-shrink-0 overflow-hidden">
+                    <img src={directImg} alt={p.title} className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
                   </div>
                 )}
                 <div className="p-6 flex flex-col justify-between flex-1">
@@ -810,7 +814,7 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-            ))}
+            );})}
           </div>
         </div>
       </section>
