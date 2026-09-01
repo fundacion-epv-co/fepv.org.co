@@ -34,8 +34,7 @@ export default function ProgramDetailClient({ slug }) {
             categoria: item.categoria || "",
             programa: item.programa || "",
             lugar: item.lugar || "",
-            enlace_drive: item.enlace_drive || "",
-            enlace_formulario: item.enlace_formulario || ""
+            enlace: item.enlace || item.enlace_formulario || item.enlace_drive || ""
           })).filter(opp => 
             opp.status.toLowerCase().trim() === "abierta" && 
             opp.programa && opp.programa.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase().replace(/\s+/g, '-')
@@ -390,7 +389,7 @@ export default function ProgramDetailClient({ slug }) {
                   )}
                 </div>
                 <a 
-                  href={opp.enlace_formulario || opp.enlace_drive || "#"} 
+                  href={opp.enlace || "#"} 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-[10px] font-bold bg-fepv-green hover:bg-fepv-darkblue text-white px-4 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap"
