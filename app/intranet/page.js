@@ -106,27 +106,10 @@ export default function Intranet() {
     if (savedSession) {
       const parsed = JSON.parse(savedSession);
       setSession(parsed);
-      setProfileNombre(parsed.nombre || "");
-      setProfileCargo(parsed.cargo || "");
-      setProfileDireccion(parsed.direccion || "");
-      setProfileTelefono(parsed.telefono || "");
       setConsEmail(parsed.email || "");
-      if (parsed.nombre) {
-        setConsResponsable(`${parsed.nombre} (${parsed.cargo || 'Funcionario'})`);
-      }
       loadDocumentos();
     }
   }, []);
-
-  // Sincronizar campos de perfil cada vez que se navega a la pestaña de perfil
-  useEffect(() => {
-    if (session) {
-      if (session.nombre) setProfileNombre(session.nombre);
-      if (session.cargo) setProfileCargo(session.cargo);
-      if (session.direccion) setProfileDireccion(session.direccion);
-      if (session.telefono) setProfileTelefono(session.telefono);
-    }
-  }, [activeTab, session]);
 
   // Reloj en tiempo real
   useEffect(() => {
@@ -289,24 +272,9 @@ export default function Intranet() {
       console.log("=== FIN DE LOGIN ===");
 
       if (res.success) {
-        const newSession = { 
-          email, 
-          rol: res.rol ? res.rol.trim().toLowerCase() : "empleado", 
-          token: res.token, 
-          nombre: res.nombre || "", 
-          cargo: res.cargo || "", 
-          direccion: res.direccion || "", 
-          telefono: res.telefono || "" 
-        };
+        const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado", token: res.token, nombre: res.nombre, cargo: res.cargo, direccion: res.direccion, telefono: res.telefono };
         setSession(newSession);
-        setProfileNombre(res.nombre || "");
-        setProfileCargo(res.cargo || "");
-        setProfileDireccion(res.direccion || "");
-        setProfileTelefono(res.telefono || "");
         setConsEmail(email);
-        if (res.nombre) {
-          setConsResponsable(`${res.nombre} (${res.cargo || 'Funcionario'})`);
-        }
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
         loadDocumentos();
       } else {
@@ -408,13 +376,8 @@ export default function Intranet() {
       if (res.success) {
         setSuccessMsg("¡Tu perfil ha sido actualizado con éxito!");
         setNewPasswordProfile("");
-        // Update local session & sessionStorage
-        const updatedSession = { ...session, nombre: profileNombre, cargo: profileCargo, direccion: profileDireccion, telefono: profileTelefono };
-        setSession(updatedSession);
-        if (profileNombre) {
-          setConsResponsable(`${profileNombre} (${profileCargo || 'Funcionario'})`);
-        }
-        sessionStorage.setItem("fepv_session", JSON.stringify(updatedSession));
+        // Update local session
+        setSession({ ...session, nombre: profileNombre, cargo: profileCargo, direccion: profileDireccion, telefono: profileTelefono });
       } else {
         setError(res.message);
       }
@@ -619,7 +582,7 @@ export default function Intranet() {
             <div className="flex flex-wrap items-center justify-between md:justify-end gap-4 w-full md:w-auto">
               <div className="text-left md:text-right">
                 <p className="text-sm font-bold text-fepv-vividgreen">
-                  ¡Hola, {session.nombre || getDisplayName(session.email)}! 👋
+                  ¡Hola, {getDisplayName(session.email)}! 👋
                 </p>
                 <p className="text-[11px] text-white/60 font-medium mt-0.5">
                   {session.email} ({session.rol.toUpperCase()})

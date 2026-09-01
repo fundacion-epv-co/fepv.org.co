@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useGlobalConfig } from "../components/ConfigContext";
-import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, fetchPoblacionesImagesMap, isImageUrl, fetchLineasEstrategicas, getDynamicPrograms, fetchEnfoques, fetchParticipacionDetalles } from "../lib/api";
+import { fetchGoogleSheetData, GOOGLE_SHEETS_METRICAS_CSV, GOOGLE_SHEETS_BANNER_CSV, getDirectDriveImageUrl, GOOGLE_SHEETS_TESTIMONIOS_CSV, fetchProgramImagesMap, fetchPoblacionesImagesMap, isImageUrl, fetchLineasEstrategicas, getDynamicPrograms, fetchEnfoques } from "../lib/api";
 
 const INITIAL_TESTIMONIALS = [
   {
@@ -26,192 +25,7 @@ const INITIAL_TESTIMONIALS = [
   }
 ];
 
-const FALLBACK_CATEGORIES = [
-    {
-      id: "salud-mental",
-      title: "Salud Mental",
-      icon: "🧠",
-      desc: "Promoción del bienestar emocional, atención psicosocial y fortalecimiento de capacidades.",
-      color: "border-fepv-green bg-fepv-light/10"
-    },
-    {
-      id: "familias",
-      title: "Familias",
-      icon: "👨‍👩‍👧",
-      desc: "Fortalecimiento familiar, orientación y construcción de entornos protectores.",
-      color: "border-fepv-blue bg-blue-50/30"
-    },
-    {
-      id: "educacion",
-      title: "Educación",
-      icon: "📚",
-      desc: "Formación, talleres y oportunidades para aprender y desarrollar habilidades.",
-      color: "border-fepv-orange bg-yellow-50/30"
-    },
-    {
-      id: "inclusion-derechos",
-      title: "Inclusión y Derechos",
-      icon: "🤝",
-      desc: "Promoción de derechos, participación ciudadana e inclusión social activa.",
-      color: "border-fepv-green bg-fepv-light/10"
-    },
-    {
-      id: "medio-ambiente",
-      title: "Medio Ambiente",
-      icon: "🌱",
-      desc: "Educación ambiental, reforestación y conservación comunitaria sostenible.",
-      color: "border-fepv-blue bg-blue-50/30"
-    },
-    {
-      id: "bienestar-animal",
-      title: "Bienestar Animal",
-      icon: "🐾",
-      desc: "Protección animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
-      color: "border-fepv-orange bg-yellow-50/30"
-    },
-    {
-      id: "emprendimiento",
-      title: "Emprendimiento",
-      icon: "💼",
-      desc: "Autonomía económica, emprendimiento social y fortalecimiento de capacidades locales.",
-      color: "border-fepv-green bg-fepv-light/10"
-    },
-    {
-      id: "cultura-deporte",
-      title: "Cultura y Deporte",
-      icon: "⚽",
-      desc: "Actividades artísticas, recreativas y deportivas que integran y sanan el tejido social.",
-      color: "border-fepv-blue bg-blue-50/30"
-    }
-  ];
-
-const FALLBACK_BENEFICIARIES = [
-    { id: "ninas-ninos", altId: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
-    { id: "adolescentes", altId: "adolescentes", name: "Adolescentes", img: "🎒" },
-    { id: "jovenes", altId: "jovenes", name: "Jóvenes", img: "⚡" },
-    { id: "familias", altId: "familias-poblacion", name: "Familias", img: "🏡" },
-    { id: "discapacidad", altId: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
-    { id: "victimas", altId: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
-    { id: "comunidades-rurales", altId: "rurales", name: "Comunidades Rurales", img: "🌽" },
-    { id: "organizaciones", altId: "organizaciones", name: "Organizaciones de Base", img: "📢" }
-  ];
-
-const FALLBACK_PROGRAMS = [
-    {
-      title: "PAPSIVI",
-      desc: "Programa de Atención Psicosocial y Salud Integral a Víctimas del conflicto armado en el territorio.",
-      actionText: "Conocer programa",
-      href: "/programas#salud-mental"
-    },
-    {
-      title: "Escuela de Formación",
-      desc: "Procesos educativos y comunitarios integrales para el desarrollo de competencias locales.",
-      actionText: "Ver programas",
-      href: "/programas#educacion"
-    },
-    {
-      title: "Eco-Encuentros",
-      desc: "Iniciativas comunitarias orientadas a la educación ambiental y protección de microcuencas.",
-      actionText: "Conocer iniciativa",
-      href: "/programas#ambiente"
-    },
-    {
-      title: "Cuidado de Huellas",
-      desc: "Acciones territoriales de esterilización, concientización y tenencia responsable de mascotas.",
-      actionText: "Conocer iniciativa",
-      href: "/programas#bienestar-animal"
-    }
-  ];
-
-const FALLBACK_OPPORTUNITIES = [
-    {
-      category: "Cursos",
-      badgeColor: "bg-fepv-green text-white",
-      status: "ABIERTA",
-      title: "Taller de Fortalecimiento Emocional y Resiliencia",
-      location: "Agustín Codazzi",
-      deadline: "15/08/2026",
-      target: "Jóvenes y adultos"
-    },
-    {
-      category: "Voluntariado",
-      badgeColor: "bg-fepv-blue text-white",
-      status: "ABIERTA",
-      title: "Campaña de Reforestación Comunitaria 'Siembre de Vida'",
-      location: "Vereda Las Flores",
-      deadline: "20/08/2026",
-      target: "Toda la comunidad"
-    },
-    {
-      category: "Convocatorias",
-      badgeColor: "bg-fepv-orange text-fepv-gray",
-      status: "ABIERTA",
-      title: "Fondo de Emprendimiento Social: Capital Semilla FEPV 2026",
-      location: "Agustín Codazzi",
-      deadline: "30/08/2026",
-      target: "Emprendedores locales"
-    }
-  ];
-
-const FALLBACK_PARTICIPATION = [
-    {
-      title: "Soy beneficiario",
-      desc: "Quiero participar en los programas psicosociales, educativos o comunitarios.",
-      btnText: "Inscribirme",
-      href: "/participa?rol=beneficiario",
-      icon: (
-        <svg className="w-8 h-8 text-fepv-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Quiero donar",
-      desc: "Quiero apoyar económicamente y apadrinar procesos que transforman vidas.",
-      btnText: "Aportar ahora",
-      href: "/donaciones",
-      icon: (
-        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Quiero ser aliado",
-      desc: "Represento a una entidad y quiero colaborar activamente con proyectos.",
-      btnText: "Unirme como aliado",
-      href: "/participa?rol=aliado",
-      icon: (
-        <svg className="w-8 h-8 text-fepv-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-        </svg>
-      )
-    },
-    {
-      title: "Quiero ser voluntario",
-      desc: "Quiero aportar mi tiempo, capacidades y vocación de servicio social.",
-      btnText: "Postularme",
-      href: "/participa?rol=voluntario",
-      icon: (
-        <svg className="w-8 h-8 text-fepv-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-        </svg>
-      )
-    }
-  ];
-
 export default function Home() {
-  const config = useGlobalConfig();
-  const videoUrl = config?.["Video_personaje"] || config?.["video_personaje"] || "";
-  let videoId = "";
-  if(videoUrl.includes("drive.google.com")) {
-    const match = videoUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match) videoId = match[1];
-    else {
-      const match2 = videoUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      if (match2) videoId = match2[1];
-    }
-  }
   // Banner state
   const [bannerItems, setBannerItems] = useState([]);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -223,83 +37,6 @@ export default function Home() {
   // Mapas de imágenes separados
   const [programImagesMap, setProgramImagesMap] = useState({});
   const [poblacionesImagesMap, setPoblacionesImagesMap] = useState({});
-
-  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
-  const [beneficiaries, setBeneficiaries] = useState(FALLBACK_BENEFICIARIES);
-  const [activePrograms, setActivePrograms] = useState(FALLBACK_PROGRAMS);
-  const [mockOpportunities, setMockOpportunities] = useState(FALLBACK_OPPORTUNITIES);
-  const [participationPaths, setParticipationPaths] = useState(FALLBACK_PARTICIPATION);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-
-  useEffect(() => {
-    async function loadAllData() {
-      try {
-        // 1. Lineas Estratégicas
-        try { const cats = await fetchLineasEstrategicas();
-        if (cats && cats.length > 0) {
-          const mappedCats = cats.map((c, i) => ({
-            id: c.id || String(i),
-            title: c.titulo || c.title || "",
-            icon: c.icono || "🌟",
-            desc: c.descripcion || c.desc || "",
-            color: c.color || "border-fepv-green bg-fepv-light/10"
-          }));
-          if (mappedCats.length > 0) setCategories(mappedCats);
-        } } catch(e) { console.error(e); }
-
-        // 2. Programas
-        try { const progs = await getDynamicPrograms();
-        if (progs && progs.length > 0) {
-          const mappedProgs = progs.map(p => ({
-            id: p.id || p.slug || "",
-            title: p.title || p.nombre,
-            desc: p.subtitle || p.descripcion_corta || p.desc || "",
-            img: getDirectDriveImageUrl(p.icon || ""),
-            actionText: p.actionText || "Conocer programa",
-            href: `/programas#${p.id || p.slug || ''}`
-          }));
-          if (mappedProgs.length > 0) setActivePrograms(mappedProgs);
-        } } catch(e) { console.error(e); }
-
-        // 3. Oportunidades (Convocatorias)
-        try { const URL_CONV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSvhGd3raf0l8PJyLnqU49p8Qli10E8eR8Jbc-6vwyk9_Jgjj7WJDdAEmejgSVtPqTroDIXgJ8kMpxu/pub?gid=0&single=true&output=csv";
-        const convs = await fetchGoogleSheetData(URL_CONV);
-        if (convs && convs.length > 0) {
-          const mappedConvs = convs.slice(0, 3).map(c => ({
-            category: "Convocatoria",
-            badgeColor: "bg-fepv-orange text-white",
-            status: c.estado || "ABIERTA",
-            title: c.titulo || c.nombre || "Convocatoria",
-            location: c.municipio || c.ubicacion || "Virtual / Presencial",
-            deadline: c.fecha_cierre || c.fecha || "Pronto",
-            target: c.perfil || c.publico || "Público General"
-          }));
-          if (mappedConvs.length > 0) setMockOpportunities(mappedConvs);
-        } } catch(e) { console.error(e); }
-
-      
-        // 4. Rutas de Participación
-        try { const part = await fetchParticipacionDetalles();
-        if (part && part.length > 0) {
-          const mappedPart = part.map(p => ({
-            title: p.titulo || p.title || p.tipo,
-            desc: p.descripcion || p.desc,
-            btnText: p.boton || "Ver más",
-            href: `/participa?rol=${p.tipo?.toLowerCase() || ''}`,
-            icon: "🤝"
-          }));
-          if (mappedPart.length > 0) setParticipationPaths(mappedPart);
-        } } catch(e) { console.error(e); }
-
-      } catch (e) {
-        console.error("Error cargando datos dinámicos en Home:", e);
-      } finally {
-        setIsDataLoaded(true);
-      }
-    }
-    loadAllData();
-  }, []);
-
 
   useEffect(() => {
     async function loadAllImages() {
@@ -453,15 +190,179 @@ export default function Home() {
     setCurrentBannerIndex((prev) => (prev - 1 + bannerItems.length) % bannerItems.length);
   };
 
-  
+  const categories = [
+    {
+      id: "salud-mental",
+      title: "Salud Mental",
+      icon: "🧠",
+      desc: "Promoción del bienestar emocional, atención psicosocial y fortalecimiento de capacidades.",
+      color: "border-fepv-green bg-fepv-light/10"
+    },
+    {
+      id: "familias",
+      title: "Familias",
+      icon: "👨‍👩‍👧",
+      desc: "Fortalecimiento familiar, orientación y construcción de entornos protectores.",
+      color: "border-fepv-blue bg-blue-50/30"
+    },
+    {
+      id: "educacion",
+      title: "Educación",
+      icon: "📚",
+      desc: "Formación, talleres y oportunidades para aprender y desarrollar habilidades.",
+      color: "border-fepv-orange bg-yellow-50/30"
+    },
+    {
+      id: "inclusion-derechos",
+      title: "Inclusión y Derechos",
+      icon: "🤝",
+      desc: "Promoción de derechos, participación ciudadana e inclusión social activa.",
+      color: "border-fepv-green bg-fepv-light/10"
+    },
+    {
+      id: "medio-ambiente",
+      title: "Medio Ambiente",
+      icon: "🌱",
+      desc: "Educación ambiental, reforestación y conservación comunitaria sostenible.",
+      color: "border-fepv-blue bg-blue-50/30"
+    },
+    {
+      id: "bienestar-animal",
+      title: "Bienestar Animal",
+      icon: "🐾",
+      desc: "Protección animal, tenencia responsable y acciones de salud veterinaria comunitaria.",
+      color: "border-fepv-orange bg-yellow-50/30"
+    },
+    {
+      id: "emprendimiento",
+      title: "Emprendimiento",
+      icon: "💼",
+      desc: "Autonomía económica, emprendimiento social y fortalecimiento de capacidades locales.",
+      color: "border-fepv-green bg-fepv-light/10"
+    },
+    {
+      id: "cultura-deporte",
+      title: "Cultura y Deporte",
+      icon: "⚽",
+      desc: "Actividades artísticas, recreativas y deportivas que integran y sanan el tejido social.",
+      color: "border-fepv-blue bg-blue-50/30"
+    }
+  ];
 
-  
+  const beneficiaries = [
+    { id: "ninas-ninos", altId: "ninas-ninos", name: "Niñas y Niños", img: "👧👦" },
+    { id: "adolescentes", altId: "adolescentes", name: "Adolescentes", img: "🎒" },
+    { id: "jovenes", altId: "jovenes", name: "Jóvenes", img: "⚡" },
+    { id: "familias", altId: "familias-poblacion", name: "Familias", img: "🏡" },
+    { id: "discapacidad", altId: "discapacidad", name: "Personas con Discapacidad", img: "♿" },
+    { id: "victimas", altId: "victimas", name: "Víctimas del Conflicto", img: "🕊️" },
+    { id: "comunidades-rurales", altId: "rurales", name: "Comunidades Rurales", img: "🌽" },
+    { id: "organizaciones", altId: "organizaciones", name: "Organizaciones de Base", img: "📢" }
+  ];
 
-  
+  const activePrograms = [
+    {
+      title: "PAPSIVI",
+      desc: "Programa de Atención Psicosocial y Salud Integral a Víctimas del conflicto armado en el territorio.",
+      actionText: "Conocer programa",
+      href: "/programas#salud-mental"
+    },
+    {
+      title: "Escuela de Formación",
+      desc: "Procesos educativos y comunitarios integrales para el desarrollo de competencias locales.",
+      actionText: "Ver programas",
+      href: "/programas#educacion"
+    },
+    {
+      title: "Eco-Encuentros",
+      desc: "Iniciativas comunitarias orientadas a la educación ambiental y protección de microcuencas.",
+      actionText: "Conocer iniciativa",
+      href: "/programas#ambiente"
+    },
+    {
+      title: "Cuidado de Huellas",
+      desc: "Acciones territoriales de esterilización, concientización y tenencia responsable de mascotas.",
+      actionText: "Conocer iniciativa",
+      href: "/programas#bienestar-animal"
+    }
+  ];
 
-  
+  const mockOpportunities = [
+    {
+      category: "Cursos",
+      badgeColor: "bg-fepv-green text-white",
+      status: "ABIERTA",
+      title: "Taller de Fortalecimiento Emocional y Resiliencia",
+      location: "Agustín Codazzi",
+      deadline: "15/08/2026",
+      target: "Jóvenes y adultos"
+    },
+    {
+      category: "Voluntariado",
+      badgeColor: "bg-fepv-blue text-white",
+      status: "ABIERTA",
+      title: "Campaña de Reforestación Comunitaria 'Siembre de Vida'",
+      location: "Vereda Las Flores",
+      deadline: "20/08/2026",
+      target: "Toda la comunidad"
+    },
+    {
+      category: "Convocatorias",
+      badgeColor: "bg-fepv-orange text-fepv-gray",
+      status: "ABIERTA",
+      title: "Fondo de Emprendimiento Social: Capital Semilla FEPV 2026",
+      location: "Agustín Codazzi",
+      deadline: "30/08/2026",
+      target: "Emprendedores locales"
+    }
+  ];
 
-  
+  const participationPaths = [
+    {
+      title: "Soy beneficiario",
+      desc: "Quiero participar en los programas psicosociales, educativos o comunitarios.",
+      btnText: "Inscribirme",
+      href: "/participa?rol=beneficiario",
+      icon: (
+        <svg className="w-8 h-8 text-fepv-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+      )
+    },
+    {
+      title: "Quiero donar",
+      desc: "Quiero apoyar económicamente y apadrinar procesos que transforman vidas.",
+      btnText: "Aportar ahora",
+      href: "/donaciones",
+      icon: (
+        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+      )
+    },
+    {
+      title: "Quiero ser aliado",
+      desc: "Represento a una entidad y quiero colaborar activamente con proyectos.",
+      btnText: "Unirme como aliado",
+      href: "/participa?rol=aliado",
+      icon: (
+        <svg className="w-8 h-8 text-fepv-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      )
+    },
+    {
+      title: "Quiero ser voluntario",
+      desc: "Quiero aportar mi tiempo, capacidades y vocación de servicio social.",
+      btnText: "Postularme",
+      href: "/participa?rol=voluntario",
+      icon: (
+        <svg className="w-8 h-8 text-fepv-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+        </svg>
+      )
+    }
+  ];
 
   return (
     <div className="w-full">
@@ -593,34 +494,12 @@ export default function Home() {
 
             {/* Lado Derecho (Fotografía Comunitaria Premium) */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-[420px] aspect-[9/16] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
-                {videoUrl ? (
-                  videoId ? (
-                    <video 
-                      src={`https://drive.google.com/uc?export=download&id=${videoId}`}
-                      className="w-full h-full object-cover" 
-                      autoPlay 
-                      muted 
-                      loop 
-                      playsInline
-                    ></video>
-                  ) : (
-                    <video 
-                      src={videoUrl} 
-                      className="w-full h-full object-cover" 
-                      autoPlay 
-                      loop 
-                      muted 
-                      playsInline 
-                    />
-                  )
-                ) : (
-                  <img 
-                    src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" 
-                    alt="Comunidad FEPV" 
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                )}
+              <div className="relative w-full max-w-[420px] aspect-[4/5] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" 
+                  alt="Comunidad FEPV" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
                 
                 {/* Floating Micro-Badges */}
                 <div className="absolute top-6 -right-2 md:right-[-20px] bg-white px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-2">
@@ -763,6 +642,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* BLOQUE 4: NUESTROS PROGRAMAS */}
+      <section className="py-20 bg-white" id="programas">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div className="space-y-4">
+              <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
+                Programas en el Territorio
+              </h2>
+              <p className="text-fepv-gray/80 max-w-xl">
+                Iniciativas estructuradas y con metas medibles que implementamos junto a comunidades y aliados cooperantes.
+              </p>
+            </div>
+            <Link href="/programas" className="fepv-btn fepv-btn-secondary self-start md:self-auto cursor-pointer">
+              Ver todos los programas
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {activePrograms.map((p, idx) => (
+              <div
+                key={idx}
+                className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow duration-300"
+              >
+                <div>
+                  <div className="bg-fepv-light/40 text-fepv-darkblue font-display font-bold text-sm px-3.5 py-1.5 rounded-lg inline-block mb-4">
+                    {p.title}
+                  </div>
+                  <p className="text-sm text-fepv-gray/85 leading-relaxed mb-6">
+                    {p.desc}
+                  </p>
+                </div>
+                <Link
+                  href={p.href}
+                  className="text-xs font-bold text-fepv-green hover:text-fepv-darkblue flex items-center gap-1 group"
+                >
+                  {p.actionText}
+                  <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* BLOQUE 5: IMPACTO */}
       <section className="py-16 bg-fepv-dark text-white" id="impacto">
@@ -840,63 +762,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      
-      {/* BLOQUE OPORTUNIDADES Y CONVOCATORIAS */}
-      {mockOpportunities.length > 0 && (
-        <section className="py-20 bg-white border-t border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-              <div className="max-w-2xl space-y-4">
-                <span className="text-xs font-bold text-fepv-orange uppercase tracking-wider block">
-                  Últimas Oportunidades
-                </span>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl text-fepv-darkblue">
-                  Convocatorias y Vacantes Activas
-                </h2>
-                <p className="font-sans text-base text-fepv-gray/80">
-                  Descubre las últimas ofertas de empleo y convocatorias disponibles para nuestra comunidad.
-                </p>
-              </div>
-              <Link href="/convocatorias" className="whitespace-nowrap fepv-btn fepv-btn-secondary cursor-pointer bg-white text-fepv-darkblue hover:bg-gray-50 border border-gray-200">
-                Ver todas las oportunidades
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockOpportunities.map((op, idx) => (
-                <div key={idx} className="bg-white border border-gray-100 p-6 sm:p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-start gap-4">
-                      <span className={`text-[10px] font-bold px-3 py-1 uppercase tracking-wider rounded-full ${op.badgeColor || 'bg-fepv-orange text-white'}`}>
-                        {op.category}
-                      </span>
-                      <span className="text-[10px] font-bold text-fepv-gray bg-gray-100 px-3 py-1 rounded-full uppercase">
-                        {op.status}
-                      </span>
-                    </div>
-                    <h3 className="font-display font-bold text-lg text-fepv-darkblue leading-tight line-clamp-3">
-                      {op.title}
-                    </h3>
-                  </div>
-                  <div className="mt-8 space-y-3">
-                    <div className="flex items-center gap-2 text-xs text-fepv-gray">
-                      <span>📍</span> <span>{op.location}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-fepv-gray">
-                      <span>📅</span> <span>Cierre: {op.deadline}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-fepv-gray">
-                      <span>👥</span> <span>{op.target}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
 
       {/* BLOQUE 8: ¿QUIERES HACER PARTE? */}
       <section className="py-20 bg-fepv-light/20">
