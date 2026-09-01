@@ -763,61 +763,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BLOQUE 4: NUESTROS PROGRAMAS */}
-      <section className="py-20 bg-white" id="programas">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div className="space-y-4">
-              <h2 className="font-display font-bold text-3xl text-fepv-darkblue">
-                Programas en el Territorio
-              </h2>
-              <p className="text-fepv-gray/80 max-w-xl">
-                Iniciativas estructuradas y con metas medibles que implementamos junto a comunidades y aliados cooperantes.
-              </p>
-            </div>
-            <Link href="/programas" className="fepv-btn fepv-btn-secondary self-start md:self-auto cursor-pointer">
-              Ver todos los programas
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {activePrograms.map((p, idx) => {
-              const programImg = p.img || (p.id && programImagesMap[p.id.toLowerCase()]) || null;
-              const directImg = programImg ? getDirectDriveImageUrl(programImg) : null;
-              return (
-              <div
-                key={idx}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden"
-              >
-                {directImg && (
-                  <div className="h-44 w-full relative bg-gray-100 flex-shrink-0 overflow-hidden">
-                    <img src={directImg} alt={p.title} className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300" />
-                  </div>
-                )}
-                <div className="p-6 flex flex-col justify-between flex-1">
-                  <div>
-                    <div className="bg-fepv-light/40 text-fepv-darkblue font-display font-bold text-sm px-3.5 py-1.5 rounded-lg inline-block mb-4">
-                      {p.title}
-                    </div>
-                    {p.desc && (
-                      <p className="text-sm text-fepv-gray/85 leading-relaxed mb-6">
-                        {p.desc}
-                      </p>
-                    )}
-                  </div>
-                  <Link
-                    href={p.href}
-                    className="text-xs font-bold text-fepv-green hover:text-fepv-darkblue flex items-center gap-1 group mt-auto"
-                  >
-                    {p.actionText}
-                    <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
-                  </Link>
-                </div>
-              </div>
-            );})}
-          </div>
-        </div>
-      </section>
 
       {/* BLOQUE 5: IMPACTO */}
       <section className="py-16 bg-fepv-dark text-white" id="impacto">
