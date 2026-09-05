@@ -509,16 +509,12 @@ export default function Home() {
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-[420px] aspect-[4/5] bg-white rounded-3xl shadow-xl shadow-fepv-green/10 border-4 border-white overflow-hidden">
                 {videoId ? (
-                  <video 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  >
-                    <source src={`https://drive.google.com/uc?export=download&id=${videoId}`} type="video/mp4" />
-                    Tu navegador no soporta el video.
-                  </video>
+                  <iframe 
+                    src={`https://drive.google.com/file/d/${videoId}/preview`} 
+                    className="w-full h-full object-cover"
+                    allow="autoplay"
+                    frameBorder="0"
+                  ></iframe>
                 ) : (
                   <img 
                     src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=800&q=80" 
