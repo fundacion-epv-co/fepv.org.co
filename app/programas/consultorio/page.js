@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useGlobalConfig } from "../../components/ConfigContext";
+import { useGlobalConfig } from "../../../components/ConfigContext";
 
 export default function ConsultorioPage() {
   const config = useGlobalConfig();
