@@ -211,6 +211,23 @@ export default function ProgramDetailClient({ slug }) {
             {program.subtitle}
           </p>
         </div>
+
+        {slug === 'salud-mental' && (
+          <div className="mb-10 bg-fepv-darkblue rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-fepv-green/20 relative overflow-hidden">
+             <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+             <div className="relative z-10">
+               <span className="inline-block px-3 py-1 bg-fepv-green/20 text-fepv-green text-xs font-bold rounded-full mb-2 uppercase tracking-wider">Atención Especializada</span>
+               <h3 className="text-white font-display font-bold text-2xl mb-2">Consultorio Psicosocial</h3>
+               <p className="text-gray-300 text-sm max-w-lg">Ofrecemos espacios de valoración y seguimiento profesional en Psicología y Trabajo Social. Agenda tu cita con nuestros especialistas.</p>
+             </div>
+             <div className="relative z-10 flex-shrink-0 w-full md:w-auto">
+               <Link href="/programas/consultorio" className="inline-flex justify-center w-full md:w-auto items-center gap-2 px-6 py-3 bg-fepv-green hover:bg-[#5da914] text-white font-bold rounded-xl transition-colors shadow-lg shadow-fepv-green/30">
+                 Agendar Cita
+                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+               </Link>
+             </div>
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* El Desafío */}
           <div className="lg:col-span-6 bg-white p-6 sm:p-8 rounded-3xl border border-gray-150 shadow-sm flex flex-col justify-between text-left space-y-4">

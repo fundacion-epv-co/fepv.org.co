@@ -41,8 +41,7 @@ export default function Header() {
       name: "Programas",
       href: "/programas",
       submenu: [
-        { name: "Salud Mental", href: "/programas/salud-mental" },
-        { name: "Consultorio Psicosocial", href: "/programas/consultorio" },
+        { name: "Apoyo Psicosocial", href: "/programas/salud-mental" },
         { name: "Familias", href: "/programas/familias" },
         { name: "Educación", href: "/programas/educacion" },
         { name: "Inclusión y Derechos", href: "/programas/inclusion-derechos" },
