@@ -42,6 +42,7 @@ export default function Header() {
       href: "/programas",
       submenu: [
         { name: "Salud Mental", href: "/programas/salud-mental" },
+        { name: "Consultorio Psicosocial", href: "/programas/consultorio" },
         { name: "Familias", href: "/programas/familias" },
         { name: "Educación", href: "/programas/educacion" },
         { name: "Inclusión y Derechos", href: "/programas/inclusion-derechos" },
@@ -58,7 +59,6 @@ export default function Header() {
     },
     { name: "Noticias", href: "/noticias" },
     { name: "Galería", href: "/galeria" },
-    { name: "Consultorio", href: "/consultorio" },
     { name: "Participa", href: "/participa" },
     { name: "Contacto", href: "/contacto" },
   ];
