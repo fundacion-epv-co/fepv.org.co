@@ -106,7 +106,7 @@ export default function Intranet() {
     if (savedSession) {
       const parsed = JSON.parse(savedSession);
       setSession(parsed);
-      setConsEmail(parsed.email || "");
+      setConsEmail(parsed.email || ""); setProfileNombre(parsed.nombre || ""); setProfileCargo(parsed.cargo || ""); setProfileDireccion(parsed.direccion || ""); setProfileTelefono(parsed.telefono || "");
       loadDocumentos();
     }
   }, []);
