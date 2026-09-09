@@ -248,6 +248,10 @@ export default function Intranet() {
         const mockSession = { email, rol: "admin" };
         setSession(mockSession);
         setConsEmail(email);
+        setProfileNombre(res.nombre || "");
+        setProfileCargo(res.cargo || "");
+        setProfileDireccion(res.direccion || "");
+        setProfileTelefono(res.telefono || "");
         sessionStorage.setItem("fepv_session", JSON.stringify(mockSession));
         loadDocumentos();
       } else {
