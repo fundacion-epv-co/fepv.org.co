@@ -252,6 +252,10 @@ export default function Intranet() {
         setProfileCargo(res.cargo || "");
         setProfileDireccion(res.direccion || "");
         setProfileTelefono(res.telefono || "");
+        setProfileNombre(res.nombre || "");
+        setProfileCargo(res.cargo || "");
+        setProfileDireccion(res.direccion || "");
+        setProfileTelefono(res.telefono || "");
         sessionStorage.setItem("fepv_session", JSON.stringify(mockSession));
         loadDocumentos();
       } else {
@@ -279,6 +283,10 @@ export default function Intranet() {
         const newSession = { email, rol: res.rol ? res.rol.trim().toLowerCase() : "empleado", token: res.token, nombre: res.nombre, cargo: res.cargo, direccion: res.direccion, telefono: res.telefono };
         setSession(newSession);
         setConsEmail(email);
+        setProfileNombre(res.nombre || "");
+        setProfileCargo(res.cargo || "");
+        setProfileDireccion(res.direccion || "");
+        setProfileTelefono(res.telefono || "");
         sessionStorage.setItem("fepv_session", JSON.stringify(newSession));
         loadDocumentos();
       } else {
