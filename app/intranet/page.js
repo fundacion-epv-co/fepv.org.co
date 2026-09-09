@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { fetchGoogleSheetData, GOOGLE_SHEETS_INTRANET_CSV, GOOGLE_SHEETS_CONFIG_CSV, postToIntranetAPI, GOOGLE_APPS_SCRIPT_INTRANET_URL } from "../../lib/api";
 
-// Helper para hashear la contraseÃ±a en el cliente y no enviarla en texto plano
+// Helper para hashear la contraseña en el cliente y no enviarla en texto plano
 async function hashPassword(password) {
   const encoder = new TextEncoder();
   const data = encoder.encode(password);
@@ -71,16 +71,16 @@ export default function Intranet() {
   const [consObservaciones, setConsObservaciones] = useState("");
   const [generatedConsecutivo, setGeneratedConsecutivo] = useState("");
 
-  // Reloj y SesiÃ³n State
+  // Reloj y Sesión State
   const [currentTime, setCurrentTime] = useState("");
   const SESSION_TIMEOUT = 30 * 60; // 30 minutos
   const [timeLeft, setTimeLeft] = useState(SESSION_TIMEOUT);
 
-  // Estados para Modal de ConfirmaciÃ³n de Salida
+  // Estados para Modal de Confirmación de Salida
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [pendingNavigationUrl, setPendingNavigationUrl] = useState(null);
 
-  // Estado para registrar el Ãºltimo correo de envÃ­o de consecutivo
+  // Estado para registrar el último correo de envío de consecutivo
   const [lastSentEmail, setLastSentEmail] = useState("");
 
   const isPending = GOOGLE_APPS_SCRIPT_INTRANET_URL === "PENDIENTE_DE_URL_SCRIPT_INTRANET";
@@ -100,7 +100,7 @@ export default function Intranet() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Efecto para mantener sesiÃ³n
+  // Efecto para mantener sesión
   useEffect(() => {
     const savedSession = sessionStorage.getItem("fepv_session");
     if (savedSession) {
@@ -119,7 +119,7 @@ export default function Intranet() {
       const fechaStr = now.toLocaleDateString('es-ES', opcionesFecha);
       const horaStr = now.toLocaleTimeString('es-ES', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
       const fechaCapitalizada = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
-      setCurrentTime(`${fechaCapitalizada} â€” ${horaStr}`);
+      setCurrentTime(`${fechaCapitalizada} — ${horaStr}`);
     };
     
     updateTime();
@@ -127,7 +127,7 @@ export default function Intranet() {
     return () => clearInterval(interval);
   }, []);
 
-  // Temporizador de sesiÃ³n activa e inactividad
+  // Temporizador de sesión activa e inactividad
   useEffect(() => {
     if (!session) return;
 
@@ -136,7 +136,7 @@ export default function Intranet() {
         if (prev <= 1) {
           clearInterval(timer);
           handleLogout();
-          alert("Tu sesiÃ³n ha expirado por inactividad. Por favor, ingresa de nuevo.");
+          alert("Tu sesión ha expirado por inactividad. Por favor, ingresa de nuevo.");
           return SESSION_TIMEOUT;
         }
         return prev - 1;
@@ -156,7 +156,7 @@ export default function Intranet() {
     };
   }, [session]);
 
-  // Alerta al intentar salir de la Intranet con sesiÃ³n activa
+  // Alerta al intentar salir de la Intranet con sesión activa
   useEffect(() => {
     if (!session) return;
 
@@ -172,7 +172,7 @@ export default function Intranet() {
           // Si intenta navegar fuera de la intranet en la misma web
           if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
             
-            // Excepciones: si va al visualizador o se abre en nueva pestaÃ±a, dejarlo pasar
+            // Excepciones: si va al visualizador o se abre en nueva pestaña, dejarlo pasar
             if (target.target === "_blank" || url.pathname.includes('/visualizar')) {
               return;
             }
@@ -195,15 +195,15 @@ export default function Intranet() {
   const loadDocumentos = async () => {
     try {
       const data = await fetchGoogleSheetData(GOOGLE_SHEETS_INTRANET_CSV);
-      // Mapear los headers originales del CSV (TÃ­tulo, Tipo, Enlace Drive) a las claves que usa el cÃ³digo
+      // Mapear los headers originales del CSV (Título, Tipo, Enlace Drive) a las claves que usa el código
       const mappedData = data.map(item => ({
         id: item["ID"] || "",
-        titulo: item["TÃ­tulo"] || item["titulo"] || "",
+        titulo: item["Título"] || item["titulo"] || "",
         tipo: item["Tipo"] || item["tipo"] || "",
         enlace_drive: item["Enlace Drive"] || item["enlace_drive"] || "",
         clave_acceso: item["ID"] || "",
-        codigo: item["Nombre de Archivo"] || item["Nombre de archivo"] || item["CÃ³digo"] || item["codigo"] || "",
-        version: item["VersiÃ³n"] || item["version"] || "",
+        codigo: item["Nombre de Archivo"] || item["Nombre de archivo"] || item["Código"] || item["codigo"] || "",
+        version: item["Versión"] || item["version"] || "",
         dependencia: item["Dependencia responsable"] || item["Dependencia"] || item["dependencia"] || "",
         etiqueta: item["Etiqueta"] || item["etiqueta"] || ""
       }));
@@ -260,10 +260,10 @@ export default function Intranet() {
     try {
       const hashedPassword = await hashPassword(password);
       
-      // TRAMPA DE DEBUG: Vamos a imprimir en la consola (F12) exactamente quÃ© estÃ¡ pasando
+      // TRAMPA DE DEBUG: Vamos a imprimir en la consola (F12) exactamente qué está pasando
       console.log("=== INICIO DE LOGIN ===");
       console.log("1. Correo digitado:", email);
-      console.log("2. ContraseÃ±a original (oculta):", password.replace(/./g, '*'));
+      console.log("2. Contraseña original (oculta):", password.replace(/./g, '*'));
       console.log("3. Hash generado por la web:", hashedPassword);
       
       const res = await postToIntranetAPI("login", { email, password: hashedPassword });
@@ -315,7 +315,7 @@ export default function Intranet() {
         newTelefono: newUserTelefono
       });
       if (res.success) {
-        setSuccessMsg("Usuario agregado con Ã©xito");
+        setSuccessMsg("Usuario agregado con éxito");
         setNewUserEmail("");
         setNewUserPassword("");
         loadUsuarios();
@@ -323,14 +323,14 @@ export default function Intranet() {
         setError(res.message);
       }
     } catch (e) {
-      setError("Error de conexiÃ³n");
+      setError("Error de conexión");
     }
     setIsLoading(false);
   };
 
   const handleRemoveUser = async (userEmailToRemove) => {
     if (isPending) return;
-    if (!confirm(`Â¿Seguro que deseas eliminar a ${userEmailToRemove}?`)) return;
+    if (!confirm(`¿Seguro que deseas eliminar a ${userEmailToRemove}?`)) return;
     setIsLoading(true);
     setError("");
     
@@ -345,7 +345,7 @@ export default function Intranet() {
         setError(res.message);
       }
     } catch (e) {
-      setError("Error de conexiÃ³n");
+      setError("Error de conexión");
     }
     setIsLoading(false);
   };
@@ -374,7 +374,7 @@ export default function Intranet() {
       });
 
       if (res.success) {
-        setSuccessMsg("Â¡Tu perfil ha sido actualizado con Ã©xito!");
+        setSuccessMsg("¡Tu perfil ha sido actualizado con éxito!");
         setNewPasswordProfile("");
         // Update local session
         setSession({ ...session, nombre: profileNombre, cargo: profileCargo, direccion: profileDireccion, telefono: profileTelefono });
@@ -382,7 +382,7 @@ export default function Intranet() {
         setError(res.message);
       }
     } catch (err) {
-      setError("Error de conexiÃ³n al actualizar perfil");
+      setError("Error de conexión al actualizar perfil");
     } finally {
       setIsLoading(false);
     }
@@ -406,14 +406,14 @@ export default function Intranet() {
       });
 
       if (res.success) {
-        setSuccessMsg("Â¡Tu contraseÃ±a ha sido actualizada con Ã©xito!");
+        setSuccessMsg("¡Tu contraseña ha sido actualizada con éxito!");
         setOldPassword("");
         setNewPasswordProfile("");
       } else {
         setError(res.message);
       }
     } catch (err) {
-      setError("Error de conexiÃ³n");
+      setError("Error de conexión");
     }
     setIsLoading(false);
   };
@@ -431,14 +431,14 @@ export default function Intranet() {
         ...solicitudForm
       });
       if (res.success) {
-        setSuccessMsg("Â¡Tu solicitud de cambio ha sido enviada con Ã©xito!");
+        setSuccessMsg("¡Tu solicitud de cambio ha sido enviada con éxito!");
         setIsModalOpen(false);
         setSolicitudForm({ nombre: "", modificacion: "", mensaje: "" });
       } else {
         setError(res.message);
       }
     } catch (err) {
-      setError("Error de conexiÃ³n al enviar la solicitud.");
+      setError("Error de conexión al enviar la solicitud.");
     }
     setIsSubmittingSolicitud(false);
   };
@@ -472,14 +472,14 @@ export default function Intranet() {
       });
 
       if (res.success) {
-        setSuccessMsg(`Usuario ${editingUserEmail} actualizado con Ã©xito.`);
+        setSuccessMsg(`Usuario ${editingUserEmail} actualizado con éxito.`);
         cancelEditingUser();
         loadUsuarios();
       } else {
         setError(res.message);
       }
     } catch (err) {
-      setError("Error de conexiÃ³n al actualizar usuario");
+      setError("Error de conexión al actualizar usuario");
     }
     setIsLoading(false);
   };
@@ -505,7 +505,7 @@ export default function Intranet() {
       if (res.success) {
         setGeneratedConsecutivo(res.consecutivo);
         setLastSentEmail(consEmail);
-        setSuccessMsg(`Â¡Consecutivo generado con Ã©xito: ${res.consecutivo}! Se enviÃ³ una confirmaciÃ³n al correo.`);
+        setSuccessMsg(`¡Consecutivo generado con éxito: ${res.consecutivo}! Se envió una confirmación al correo.`);
         setConsNombre("");
         setConsResponsable("");
         setConsObservaciones("");
@@ -514,7 +514,7 @@ export default function Intranet() {
         setError(res.message);
       }
     } catch (err) {
-      setError("Error de conexiÃ³n al generar consecutivo");
+      setError("Error de conexión al generar consecutivo");
     }
     setIsLoading(false);
   };
@@ -545,7 +545,7 @@ export default function Intranet() {
         });
         
         if (res.success) {
-          setSuccessMsg("Archivo subido con Ã©xito y publicado en la Intranet");
+          setSuccessMsg("Archivo subido con éxito y publicado en la Intranet");
           setDocTitle("");
           setDocFile(null);
           // Recargar tabla en 3 segundos para dar tiempo a Sheets
@@ -571,7 +571,7 @@ export default function Intranet() {
       <div className="bg-fepv-darkblue text-white py-6 shadow-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3 w-full md:w-auto">
-            <span className="text-3xl select-none">ðŸ›¡ï¸</span>
+            <span className="text-3xl select-none">🛡️</span>
             <div>
               <h1 className="font-display font-bold text-xl leading-tight">Intranet FEPV</h1>
               {currentTime && <p className="text-xs text-white/60 font-medium font-sans mt-0.5">{currentTime}</p>}
@@ -582,7 +582,7 @@ export default function Intranet() {
             <div className="flex flex-wrap items-center justify-between md:justify-end gap-4 w-full md:w-auto">
               <div className="text-left md:text-right">
                 <p className="text-sm font-bold text-fepv-vividgreen">
-                  Â¡Hola, {getDisplayName(session.email)}! ðŸ‘‹
+                  ¡Hola, {getDisplayName(session.email)}! 👋
                 </p>
                 <p className="text-[11px] text-white/60 font-medium mt-0.5">
                   {session.email} ({session.rol.toUpperCase()})
@@ -592,13 +592,13 @@ export default function Intranet() {
               <div className="flex items-center gap-3">
                 <div 
                   className="bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold font-mono text-white/95 shadow-sm"
-                  title="Tu sesiÃ³n se cerrarÃ¡ automÃ¡ticamente por inactividad"
+                  title="Tu sesión se cerrará automáticamente por inactividad"
                 >
-                  <span className="animate-pulse">â±ï¸</span> {formatTimeLeft(timeLeft)}
+                  <span className="animate-pulse">⏱️</span> {formatTimeLeft(timeLeft)}
                 </div>
 
                 <button onClick={handleLogout} className="text-xs font-bold bg-white/15 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition-all duration-300 shadow-sm cursor-pointer">
-                  Cerrar SesiÃ³n
+                  Cerrar Sesión
                 </button>
               </div>
             </div>
@@ -612,12 +612,12 @@ export default function Intranet() {
           /* LOGIN */
           <div className="max-w-md mx-auto bg-white rounded-3xl p-8 sm:p-10 shadow-lg border border-gray-100 mt-10">
             <div className="text-center mb-8">
-              <h2 className="font-display font-bold text-2xl text-fepv-darkblue">Iniciar SesiÃ³n</h2>
+              <h2 className="font-display font-bold text-2xl text-fepv-darkblue">Iniciar Sesión</h2>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label className="block text-xs font-bold text-fepv-darkblue mb-2 uppercase tracking-wider">Correo ElectrÃ³nico</label>
+                <label className="block text-xs font-bold text-fepv-darkblue mb-2 uppercase tracking-wider">Correo Electrónico</label>
                 <input
                   type="email"
                   required
@@ -628,14 +628,14 @@ export default function Intranet() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-fepv-darkblue mb-2 uppercase tracking-wider">ContraseÃ±a</label>
+                <label className="block text-xs font-bold text-fepv-darkblue mb-2 uppercase tracking-wider">Contraseña</label>
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:border-fepv-green bg-gray-50 focus:bg-white text-sm"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="••••••••"
                 />
               </div>
 
@@ -679,7 +679,7 @@ export default function Intranet() {
                     onClick={() => setActiveTab("usuarios")}
                     className={`px-6 py-4 text-sm font-bold whitespace-nowrap transition-colors cursor-pointer ${activeTab === "usuarios" ? "text-fepv-green border-b-2 border-fepv-green bg-white" : "text-fepv-gray hover:text-fepv-darkblue"}`}
                   >
-                    GestiÃ³n de Usuarios
+                    Gestión de Usuarios
                   </button>
                   <button
                     onClick={() => setActiveTab("subir")}
@@ -710,7 +710,7 @@ export default function Intranet() {
                       <div className="relative w-full sm:w-72">
                         <input
                           type="text"
-                          placeholder="Buscar por nombre, cÃ³digo o tipo..."
+                          placeholder="Buscar por nombre, código o tipo..."
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
                           className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-fepv-green focus:border-transparent outline-none"
@@ -737,7 +737,7 @@ export default function Intranet() {
                       </div>
                     ) : filteredDocs.length === 0 ? (
                       <div className="text-center py-10 bg-gray-50 rounded-2xl border border-gray-100">
-                        <span className="text-4xl block mb-2">ðŸ“‚</span>
+                        <span className="text-4xl block mb-2">📂</span>
                         <p className="text-fepv-gray/70">No se encontraron documentos.</p>
                       </div>
                     ) : (
@@ -753,7 +753,7 @@ export default function Intranet() {
                               {/* Metadatos extra si existen */}
                               {(doc.codigo || doc.version || doc.dependencia) && (
                                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-fepv-gray/70 mt-2">
-                                  {doc.codigo && <span><b className="text-fepv-darkblue/70">CÃ³d:</b> {doc.codigo}</span>}
+                                  {doc.codigo && <span><b className="text-fepv-darkblue/70">Cód:</b> {doc.codigo}</span>}
                                   {doc.version && <span><b className="text-fepv-darkblue/70">Ver:</b> {doc.version}</span>}
                                   {doc.dependencia && <span><b className="text-fepv-darkblue/70">Dep:</b> {doc.dependencia}</span>}
                                   {doc.etiqueta && doc.etiqueta.toLowerCase().includes("protegido") && (
@@ -875,14 +875,14 @@ export default function Intranet() {
                     )}
                   </div>
                         <div className="bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
-                    <h3 className="font-bold text-lg text-fepv-darkblue mb-4">AÃ±adir Nuevo Usuario</h3>
+                    <h3 className="font-bold text-lg text-fepv-darkblue mb-4">Añadir Nuevo Usuario</h3>
                     <form onSubmit={handleAddUser} className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
                       <div className="sm:col-span-1">
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Email</label>
                         <input type="email" required value={newUserEmail} onChange={(e) => setNewUserEmail(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg text-sm" />
                       </div>
                       <div className="sm:col-span-1">
-                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">ContraseÃ±a</label>
+                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Contraseña</label>
                         <input type="password" required value={newUserPassword} onChange={(e) => setNewUserPassword(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg text-sm" />
                       </div>
                       <div className="sm:col-span-1">
@@ -906,7 +906,7 @@ export default function Intranet() {
               {activeTab === "perfil" && (
                 <div className="max-w-md">
                   <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Mi Perfil</h2>
-                  <p className="text-sm text-fepv-gray/70 mb-8">Actualiza tu informaciÃ³n personal y contraseÃ±a.</p>
+                  <p className="text-sm text-fepv-gray/70 mb-8">Actualiza tu información personal y contraseña.</p>
 
                   
                   <form onSubmit={handleUpdateProfile} className="space-y-4 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
@@ -917,23 +917,23 @@ export default function Intranet() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-fepv-darkblue mb-1">Cargo / Rol</label>
-                        <input type="text" value={profileCargo} onChange={(e) => setProfileCargo(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Ej. PsicÃ³loga" />
+                        <input type="text" value={profileCargo} onChange={(e) => setProfileCargo(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Ej. Psicóloga" />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">TelÃ©fono</label>
+                        <label className="block text-xs font-bold text-fepv-darkblue mb-1">Teléfono</label>
                         <input type="text" value={profileTelefono} onChange={(e) => setProfileTelefono(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Celular" />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">DirecciÃ³n</label>
-                      <input type="text" value={profileDireccion} onChange={(e) => setProfileDireccion(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="DirecciÃ³n" />
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Dirección</label>
+                      <input type="text" value={profileDireccion} onChange={(e) => setProfileDireccion(e.target.value)} className="w-full p-2 border border-gray-200 rounded-lg text-sm bg-white" placeholder="Dirección" />
                     </div>
                     
                     <hr className="my-4 border-gray-200" />
-                    <h3 className="text-sm font-bold text-fepv-darkblue">Cambio de ContraseÃ±a (Opcional)</h3>
+                    <h3 className="text-sm font-bold text-fepv-darkblue">Cambio de Contraseña (Opcional)</h3>
                     
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nueva ContraseÃ±a</label>
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-1">Nueva Contraseña</label>
                       <input 
                         type="password" 
                         value={newPasswordProfile} 
@@ -954,21 +954,21 @@ export default function Intranet() {
               {/* VISTA: GENERADOR DE CONSECUTIVOS */}
               {activeTab === "consecutivos" && (
                 <div className="max-w-2xl">
-                  <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Generar NÃºmero de Consecutivo</h2>
+                  <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Generar Número de Consecutivo</h2>
                   <p className="text-sm text-fepv-gray/70 mb-8">
-                    Crea un consecutivo oficial con nomenclatura para tus oficios. Al enviarlo se guardarÃ¡ en la base de datos y se notificarÃ¡ a tu correo electrÃ³nico.
+                    Crea un consecutivo oficial con nomenclatura para tus oficios. Al enviarlo se guardará en la base de datos y se notificará a tu correo electrónico.
                   </p>
 
-                  {/* Alerta de Ã‰xito de Consecutivo */}
+                  {/* Alerta de Éxito de Consecutivo */}
                   {generatedConsecutivo && (
                     <div className="mb-6 p-6 bg-green-50 border-2 border-green-200 rounded-2xl text-center space-y-4 animate-in zoom-in duration-300">
-                      <span className="text-4xl block">ðŸŽ‰</span>
-                      <h3 className="font-display font-bold text-lg text-fepv-darkblue">Â¡Consecutivo Generado Exitosamente!</h3>
+                      <span className="text-4xl block">🎉</span>
+                      <h3 className="font-display font-bold text-lg text-fepv-darkblue">¡Consecutivo Generado Exitosamente!</h3>
                       <div className="bg-white px-6 py-4 rounded-xl border border-green-100 inline-block font-mono text-xl font-bold tracking-wider text-green-700 select-all shadow-sm">
                         {generatedConsecutivo}
                       </div>
                       <p className="text-xs text-fepv-gray/80 max-w-md mx-auto">
-                        Copia este cÃ³digo y Ãºsalo en tu documento. Se ha enviado una copia detallada del registro a tu correo: <strong>{lastSentEmail || session.email}</strong>.
+                        Copia este código y úsalo en tu documento. Se ha enviado una copia detallada del registro a tu correo: <strong>{lastSentEmail || session.email}</strong>.
                       </p>
                       <button 
                         onClick={() => setGeneratedConsecutivo("")} 
@@ -990,7 +990,7 @@ export default function Intranet() {
                             value={consNombre} 
                             onChange={(e) => setConsNombre(e.target.value)} 
                             className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white" 
-                            placeholder="Ej. Solicitud de ViÃ¡ticos AgustÃ­n Codazzi" 
+                            placeholder="Ej. Solicitud de Viáticos Agustín Codazzi" 
                           />
                         </div>
 
@@ -1026,7 +1026,7 @@ export default function Intranet() {
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Correo del Solicitante (para envÃ­o)</label>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Correo del Solicitante (para envío)</label>
                           <input 
                             type="email" 
                             required 
@@ -1040,15 +1040,15 @@ export default function Intranet() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Modo de ConservaciÃ³n</label>
+                          <label className="block text-xs font-bold text-fepv-darkblue mb-2">Modo de Conservación</label>
                           <select 
                             value={consConservacion} 
                             onChange={(e) => setConsConservacion(e.target.value)} 
                             className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white cursor-pointer"
                           >
                             <option value="Digital">Digital</option>
-                            <option value="FÃ­sico">FÃ­sico</option>
-                            <option value="Ambos">Ambos (Digital y FÃ­sico)</option>
+                            <option value="Físico">Físico</option>
+                            <option value="Ambos">Ambos (Digital y Físico)</option>
                           </select>
                         </div>
                       </div>
@@ -1059,7 +1059,7 @@ export default function Intranet() {
                           value={consObservaciones} 
                           onChange={(e) => setConsObservaciones(e.target.value)} 
                           className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white h-24 focus:outline-none focus:border-fepv-green" 
-                          placeholder="Agrega cualquier detalle o nota del radicado aquÃ­..."
+                          placeholder="Agrega cualquier detalle o nota del radicado aquí..."
                         />
                       </div>
 
@@ -1075,16 +1075,16 @@ export default function Intranet() {
               {activeTab === "subir" && session.rol === "admin" && (
                 <div className="max-w-2xl">
                   <h2 className="font-display font-bold text-2xl text-fepv-darkblue mb-2">Cargar Documento</h2>
-                  <p className="text-sm text-fepv-gray/70 mb-8">El documento se guardarÃ¡ automÃ¡ticamente en Google Drive y aparecerÃ¡ disponible en la lista de formatos para todos los empleados.</p>
+                  <p className="text-sm text-fepv-gray/70 mb-8">El documento se guardará automáticamente en Google Drive y aparecerá disponible en la lista de formatos para todos los empleados.</p>
 
                   <form onSubmit={handleFileUpload} className="space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200">
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">TÃ­tulo del Documento</label>
-                      <input type="text" required value={docTitle} onChange={e=>setDocTitle(e.target.value)} className="w-full p-3 border border-gray-300 rounded-xl text-sm" placeholder="Ej. Plantilla de ViÃ¡ticos 2026" />
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Título del Documento</label>
+                      <input type="text" required value={docTitle} onChange={e=>setDocTitle(e.target.value)} className="w-full p-3 border border-gray-300 rounded-xl text-sm" placeholder="Ej. Plantilla de Viáticos 2026" />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Tipo / CategorÃ­a</label>
+                      <label className="block text-xs font-bold text-fepv-darkblue mb-2">Tipo / Categoría</label>
                       <select value={docType} onChange={e=>setDocType(e.target.value)} className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white cursor-pointer">
                         <option value="Plantilla">Plantilla</option>
                         <option value="Acta">Acta</option>
@@ -1102,7 +1102,7 @@ export default function Intranet() {
                         onChange={(e) => setDocFile(e.target.files[0])}
                         className="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-fepv-light/30 file:text-fepv-darkblue hover:file:bg-fepv-light/50 cursor-pointer file:cursor-pointer" 
                       />
-                      <p className="text-[10px] text-fepv-gray/50 mt-1">LÃ­mite recomendado: 10MB.</p>
+                      <p className="text-[10px] text-fepv-gray/50 mt-1">Límite recomendado: 10MB.</p>
                     </div>
 
                     <button type="submit" disabled={isLoading} className="fepv-btn fepv-btn-primary w-full py-3 cursor-pointer disabled:opacity-50">
@@ -1117,7 +1117,7 @@ export default function Intranet() {
         )}
       </div>
 
-      {/* MODAL PERSONALIZADO DE CONFIRMACIÃ“N DE SALIDA */}
+      {/* MODAL PERSONALIZADO DE CONFIRMACIÓN DE SALIDA */}
       {showLeaveModal && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-fepv-darkblue/75 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 transform scale-100 transition-all duration-300 animate-in zoom-in-95">
@@ -1130,23 +1130,23 @@ export default function Intranet() {
               </div>
 
               <h3 className="font-display font-extrabold text-base sm:text-lg text-fepv-darkblue mb-1 tracking-tight">
-                FUNDACIÃ“N ENCUENTROS PARA LA VIDA
+                FUNDACIÓN ENCUENTROS PARA LA VIDA
               </h3>
               <p className="text-[10px] font-bold text-fepv-green uppercase tracking-widest mb-6">
-                Control de Seguridad de SesiÃ³n
+                Control de Seguridad de Sesión
               </p>
               
               {/* Caja de alerta estilo corporativa */}
               <div className="bg-amber-50/60 border-l-4 border-amber-500 p-4 rounded-r-2xl mb-6 text-left shadow-sm">
                 <p className="text-[13px] text-gray-700 leading-relaxed font-medium">
-                  Detectamos una sesiÃ³n activa en la Intranet. Por polÃ­ticas de seguridad institucional, navegar fuera de este portal <strong className="text-amber-900 font-bold">cerrarÃ¡ tu sesiÃ³n</strong> de forma automÃ¡tica.
+                  Detectamos una sesión activa en la Intranet. Por políticas de seguridad institucional, navegar fuera de este portal <strong className="text-amber-900 font-bold">cerrará tu sesión</strong> de forma automática.
                 </p>
                 <p className="text-xs text-amber-800 font-semibold mt-3">
-                  Deseas cerrar la sesiÃ³n y continuar con la navegaciÃ³n?
+                  Deseas cerrar la sesión y continuar con la navegación?
                 </p>
               </div>
 
-              {/* Botones de acciÃ³n alineados y proporcionales */}
+              {/* Botones de acción alineados y proporcionales */}
               <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
                 <button
                   onClick={() => {
@@ -1167,7 +1167,7 @@ export default function Intranet() {
                   }}
                   className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-700 text-white shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer text-center"
                 >
-                  Cerrar SesiÃ³n y Salir
+                  Cerrar Sesión y Salir
                 </button>
               </div>
             </div>
@@ -1180,28 +1180,28 @@ export default function Intranet() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-fepv-darkblue/40 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-fade-in-up">
             <div className="bg-amber-500 p-4 flex justify-between items-center">
-              <h3 className="font-display font-bold text-white text-lg">Solicitar ModificaciÃ³n</h3>
+              <h3 className="font-display font-bold text-white text-lg">Solicitar Modificación</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-white hover:text-amber-100 cursor-pointer">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
             </div>
             <div className="p-6">
               <p className="text-sm text-fepv-gray/70 mb-4">
-                EstÃ¡s solicitando cambios para el documento: <strong className="text-fepv-darkblue block mt-1">{selectedDocForEdit?.titulo}</strong>
+                Estás solicitando cambios para el documento: <strong className="text-fepv-darkblue block mt-1">{selectedDocForEdit?.titulo}</strong>
               </p>
               
               <form onSubmit={handleSolicitarCambio} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Tu Nombre o Usuario</label>
-                  <input type="text" required value={solicitudForm.nombre} onChange={e=>setSolicitudForm({...solicitudForm, nombre: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm" placeholder="Ej. Juan PÃ©rez" />
+                  <input type="text" required value={solicitudForm.nombre} onChange={e=>setSolicitudForm({...solicitudForm, nombre: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm" placeholder="Ej. Juan Pérez" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">ModificaciÃ³n Propuesta</label>
+                  <label className="block text-xs font-bold text-fepv-darkblue mb-1">Modificación Propuesta</label>
                   <input type="text" required value={solicitudForm.modificacion} onChange={e=>setSolicitudForm({...solicitudForm, modificacion: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm" placeholder="Ej. Actualizar logo" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-fepv-darkblue mb-1">Mensaje / Detalle</label>
-                  <textarea required value={solicitudForm.mensaje} onChange={e=>setSolicitudForm({...solicitudForm, mensaje: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm h-24" placeholder="Explica detalladamente quÃ© cambiar..."></textarea>
+                  <textarea required value={solicitudForm.mensaje} onChange={e=>setSolicitudForm({...solicitudForm, mensaje: e.target.value})} className="w-full p-2 border border-gray-300 rounded-lg text-sm h-24" placeholder="Explica detalladamente qué cambiar..."></textarea>
                 </div>
 
                 <div className="pt-2 flex justify-end gap-3">

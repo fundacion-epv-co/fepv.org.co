@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import logoImg from "../public/logo.png";
 import { useGlobalConfig } from "./ConfigContext";
@@ -10,7 +10,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear() || 2026;
   const config = useGlobalConfig();
   const dynamicLogo = config?.logo_url_formatted || logoImg;
-  const foundationName = config?.nombre_fundacion || "FundaciÃ³n Encuentros Para la Vida";
+  const foundationName = config?.nombre_fundacion || "Fundación Encuentros Para la Vida";
 
   return (
     <footer className="bg-fepv-darkblue text-white/90 border-t border-fepv-darkblue/20">
@@ -30,7 +30,7 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="font-display font-bold text-lg text-white leading-none">
-                  {config?.nombre_fundacion || "FundaciÃ³n Encuentros"}
+                  {config?.nombre_fundacion || "Fundación Encuentros"}
                 </span>
                 <span className="font-sans text-xs font-semibold text-fepv-orange tracking-wider uppercase mt-0.5">
                   {config?.sigla || "Para la Vida"}
@@ -83,17 +83,17 @@ export default function Footer() {
           {/* Columna 2: Nosotros */}
           <div className="space-y-4">
             <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-orange">
-              FundaciÃ³n
+              Fundación
             </h3>
             <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/nosotros#quienes-somos" className="hover:text-white transition-colors">
-                  Â¿QuiÃ©nes Somos?
+                  ¿Quiénes Somos?
                 </Link>
               </li>
               <li>
                 <Link href="/nosotros#mision-vision" className="hover:text-white transition-colors">
-                  MisiÃ³n y VisiÃ³n
+                  Misión y Visión
                 </Link>
               </li>
               <li>
@@ -132,7 +132,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/programas/educacion" className="hover:text-white transition-colors">
-                  EducaciÃ³n
+                  Educación
                 </Link>
               </li>
               <li>
@@ -148,7 +148,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna 4: ParticipaciÃ³n */}
+          {/* Columna 4: Participación */}
           <div className="space-y-4">
             <h3 className="font-display font-bold text-sm tracking-wider uppercase text-fepv-orange">
               Participa
@@ -156,7 +156,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-white/80">
               <li>
                 <Link href="/donaciones" className="hover:text-white transition-colors">
-                  Realizar una DonaciÃ³n
+                  Realizar una Donación
                 </Link>
               </li>
               <li>
@@ -166,7 +166,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/participa?rol=aliado" className="hover:text-white transition-colors">
-                  Ser Aliado EstratÃ©gico
+                  Ser Aliado Estratégico
                 </Link>
               </li>
               <li>
@@ -184,10 +184,10 @@ export default function Footer() {
 
         </div>
 
-        {/* LÃ­nea Divisoria */}
+        {/* Línea Divisoria */}
         <hr className="border-fepv-green/20 my-10" />
 
-        {/* SecciÃ³n de Copyright y Enlaces Legales */}
+        {/* Sección de Copyright y Enlaces Legales */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
           <div className="flex flex-col items-center md:items-start gap-2">
             <span>&copy; {currentYear} {foundationName} ({config?.sigla || "FEPV"}). Todos los derechos reservados.</span>
@@ -202,13 +202,13 @@ export default function Footer() {
           </div>
           <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2">
             <Link href="/politica-privacidad" className="hover:text-white transition-colors">
-              PolÃ­tica de Privacidad
+              Política de Privacidad
             </Link>
             <Link href="/tratamiento-datos" className="hover:text-white transition-colors">
               Tratamiento de Datos Personales
             </Link>
             <Link href="/terminos-condiciones" className="hover:text-white transition-colors">
-              TÃ©rminos y Condiciones
+              Términos y Condiciones
             </Link>
             <Link href="/intranet" className="hover:text-white transition-colors flex items-center gap-1">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -217,6 +217,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-4 border-t border-white/10 mt-6 text-xs text-white/50 text-justify"><p><strong>Aviso de Privacidad y Tratamiento de Datos Personales (Ley 1581 de 2012):</strong> La Fundación Encuentros Para la Vida (NIT 902074412-0) informa que los datos personales obtenidos a través de este sitio web serán procesados exclusivamente con fines institucionales y de gestión de usuarios. El titular tiene derecho a conocer, actualizar y rectificar su información contactándonos a fundacion.epv.co@gmail.com.</p></div><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-4 border-t border-white/10 mt-6 text-xs text-white/50 text-justify"><p><strong>Aviso de Privacidad y Tratamiento de Datos Personales (Ley 1581 de 2012):</strong> La Fundación Encuentros Para la Vida (NIT 902074412-0) informa que los datos personales obtenidos a través de este sitio web serán procesados exclusivamente con fines institucionales y de gestión de usuarios. El titular tiene derecho a conocer, actualizar y rectificar su información contactándonos a fundacion.epv.co@gmail.com.</p></div></footer>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 pt-4 border-t border-white/10 mt-6 text-xs text-white/50 text-justify"><p><strong>Aviso de Privacidad y Tratamiento de Datos Personales (Ley 1581 de 2012):</strong> La Fundación Encuentros Para la Vida (NIT 902074412-0) informa que los datos personales obtenidos a través de este sitio web serán procesados exclusivamente con fines institucionales y de gestión de usuarios. El titular tiene derecho a conocer, actualizar y rectificar su información contactándonos a fundacion.epv.co@gmail.com.</p></div></footer>
   );
 }
