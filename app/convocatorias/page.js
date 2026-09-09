@@ -16,9 +16,14 @@ function OportunidadesClient() {
   const [isLoading, setIsLoading] = useState(true);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   // Filtros y Paginación
   const [filterCategoriaConv, setFilterCategoriaConv] = useState("");
   const [filterMunicipio, setFilterMunicipio] = useState("");
+=======
+  // Filtros y PaginaciÃ³n
+  const [filterCategoriaConv, setFilterCategoriaConv] = useState(""); const [filterMunicipio, setFilterMunicipio] = useState("");
+>>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
 =======
   // Filtros y PaginaciÃ³n
   const [filterCategoriaConv, setFilterCategoriaConv] = useState(""); const [filterMunicipio, setFilterMunicipio] = useState("");
@@ -742,7 +747,11 @@ function OportunidadesClient() {
 
                   {/* Filtro de Categorias */}
 <<<<<<< HEAD
+<<<<<<< HEAD
                   <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+=======
+                  <div className="mb-6 flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+>>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
 =======
                   <div className="mb-6 flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
 >>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
