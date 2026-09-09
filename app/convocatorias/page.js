@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
@@ -15,19 +15,9 @@ function OportunidadesClient() {
   const [agencias, setAgencias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   // Filtros y Paginación
   const [filterCategoriaConv, setFilterCategoriaConv] = useState("");
   const [filterMunicipio, setFilterMunicipio] = useState("");
-=======
-  // Filtros y PaginaciÃ³n
-  const [filterCategoriaConv, setFilterCategoriaConv] = useState(""); const [filterMunicipio, setFilterMunicipio] = useState("");
->>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
-=======
-  // Filtros y PaginaciÃ³n
-  const [filterCategoriaConv, setFilterCategoriaConv] = useState(""); const [filterMunicipio, setFilterMunicipio] = useState("");
->>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
   const [filterCargo, setFilterCargo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -121,7 +111,7 @@ function OportunidadesClient() {
   });
   const uniqueMunicipios = Object.keys(municipiosMap).sort();
 
-  // LÃ³gica de PaginaciÃ³n y Filtrado
+  // Lógica de Paginación y Filtrado
   const filteredOfertas = ofertas.filter(o => {
     const matchMun = filterMunicipio === "" || (o.municipio || "").toLowerCase().includes(filterMunicipio.toLowerCase());
     const matchCargo = filterCargo === "" || (o.titulo_vacante || o.cargo || "").toLowerCase().includes(filterCargo.toLowerCase());
@@ -157,7 +147,7 @@ function OportunidadesClient() {
         link.click();
       } catch (e) {
         console.error("Error al exportar imagen:", e);
-        alert("Hubo un error al generar la imagen. El diseÃ±o actual podrÃ­a tener estilos no soportados por el exportador.");
+        alert("Hubo un error al generar la imagen. El diseño actual podría tener estilos no soportados por el exportador.");
       }
       setIsExporting(false);
     }, 200);
@@ -180,7 +170,7 @@ function OportunidadesClient() {
         link.click();
       } catch (e) {
         console.error("Error al exportar resumen:", e);
-        alert("Hubo un error al generar el boletÃ­n.");
+        alert("Hubo un error al generar el boletín.");
       }
       setIsExporting(false);
     }, 200);
@@ -202,21 +192,21 @@ function OportunidadesClient() {
               </div>
             <div className="w-2/3 p-8 flex flex-col justify-center relative">
               <div className="absolute top-4 right-4 bg-[#8cc63f] text-white px-6 py-2 rounded-xl text-center">
-                 <div className="text-sm font-bold uppercase">PÃ¡gina</div>
+                 <div className="text-sm font-bold uppercase">Página</div>
                  <div className="text-xl font-black">{currentPage} DE {totalPages}</div>
               </div>
               <h1 className="text-5xl font-black uppercase tracking-tight leading-none mb-2">BUSCA<br/>OPORTUNIDADES <span className="text-[#8cc63f]">| {filterMunicipio || 'CESAR'}</span></h1>
               <div className="flex gap-4 mt-4">
-                 <div className="flex items-center gap-2 text-sm font-bold"><span className="w-5 h-5 bg-[#8cc63f] rounded-full flex items-center justify-center text-white text-xs">âœ“</span> InformaciÃ³n verificada</div>
-                 <div className="flex items-center gap-2 text-sm font-bold"><span className="w-5 h-5 bg-[#0065ff] rounded-full flex items-center justify-center text-white text-xs">â—</span> Gratuita</div>
-                 <div className="flex items-center gap-2 text-sm font-bold"><span className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs">â—</span> Para todos</div>
+                 <div className="flex items-center gap-2 text-sm font-bold"><span className="w-5 h-5 bg-[#8cc63f] rounded-full flex items-center justify-center text-white text-xs">✓</span> Información verificada</div>
+                 <div className="flex items-center gap-2 text-sm font-bold"><span className="w-5 h-5 bg-[#0065ff] rounded-full flex items-center justify-center text-white text-xs">●</span> Gratuita</div>
+                 <div className="flex items-center gap-2 text-sm font-bold"><span className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs">●</span> Para todos</div>
               </div>
             </div>
           </div>
 
           {/* Green Title Bar */}
           <div className="bg-[#2d7a2d] text-white text-center py-3 rounded-xl font-bold text-xl uppercase tracking-widest shadow-sm flex items-center justify-center gap-4">
-            <span className="text-3xl">ðŸ’¼</span> 
+            <span className="text-3xl">💼</span> 
             {filterCargo ? `RESULTADOS PARA: ${filterCargo}` : 'OFERTAS DE EMPLEO ACTIVAS'}
           </div>
 
@@ -226,7 +216,7 @@ function OportunidadesClient() {
               <thead>
                 <tr className="bg-[#002f6c] text-white text-xs uppercase tracking-wider">
                   <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">#</th>
-                  <th className="px-4 py-4 font-bold border-r border-[#001f4d]">CÃ³digo</th>
+                  <th className="px-4 py-4 font-bold border-r border-[#001f4d]">Código</th>
                   <th className="px-4 py-4 font-bold w-1/3 border-r border-[#001f4d]">Vacantes</th>
                   <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">Rango Salarial</th>
                   <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">Cantidad</th>
@@ -242,7 +232,7 @@ function OportunidadesClient() {
                     </td>
                     <td className="px-4 py-5 font-mono text-sm text-gray-700 border-r border-gray-200">{o.codigo_vacante || '-'}</td>
                     <td className="px-4 py-5 border-r border-gray-200">
-                      <div className="font-bold text-[#002f6c] text-base leading-tight">{o.titulo_vacante || o.cargo || 'Sin tÃ­tulo'}</div>
+                      <div className="font-bold text-[#002f6c] text-base leading-tight">{o.titulo_vacante || o.cargo || 'Sin título'}</div>
                       <div className="text-[11px] text-gray-500 mt-1 uppercase tracking-wider font-bold">{o.nombre_prestador || 'Agencia de Empleo'}</div>
                     </td>
                     <td className="px-4 py-5 text-center font-bold text-gray-700 border-r border-gray-200">{o.rango_salarial || 'A Convenir'}</td>
@@ -251,7 +241,7 @@ function OportunidadesClient() {
                     <td className="px-4 py-5 text-center text-gray-700 font-medium text-sm">{o.fecha_vencimiento || '-'}</td>
                   </tr>
                 ))}
-                {/* Rellenar filas vacÃ­as si hay menos de 10 */}
+                {/* Rellenar filas vacías si hay menos de 10 */}
                 {Array.from({ length: Math.max(0, itemsPerPage - currentOfertas.length) }).map((_, idx) => (
                   <tr key={`empty-${idx}`} className={currentOfertas.length % 2 === 0 ? (idx % 2 === 0 ? 'bg-gray-50' : 'bg-white') : (idx % 2 !== 0 ? 'bg-gray-50' : 'bg-white')}>
                     <td className="px-4 py-5 border-r border-gray-200 h-[72px]"></td><td className="px-4 py-5 border-r border-gray-200"></td><td className="px-4 py-5 border-r border-gray-200"></td><td className="px-4 py-5 border-r border-gray-200"></td><td className="px-4 py-5 border-r border-gray-200"></td><td className="px-4 py-5 border-r border-gray-200"></td><td className="px-4 py-5"></td>
@@ -264,26 +254,26 @@ function OportunidadesClient() {
           {/* Footer Info */}
           <div className="bg-[#002f6c] text-white rounded-2xl p-6 flex items-center justify-between shadow-sm">
              <div>
-                <h3 className="font-black text-2xl mb-1">FundaciÃ³n Encuentros Para La Vida</h3>
-                <p className="text-[#8cc63f] italic font-medium">Â¡Juntos transformamos vidas! ðŸƒ</p>
+                <h3 className="font-black text-2xl mb-1">Fundación Encuentros Para La Vida</h3>
+                <p className="text-[#8cc63f] italic font-medium">¡Juntos transformamos vidas! 🍃</p>
              </div>
              <div className="space-y-2 text-sm font-medium border-l border-white/20 pl-6">
-                <div className="flex items-center gap-3"><span>ðŸ“ž</span> {config?.telefono_contacto}</div>
-                <div className="flex items-center gap-3"><span>âœ‰ï¸</span> {config?.correo_contacto}</div>
-                <div className="flex items-center gap-3"><span>ðŸ“</span> {config?.direccion_fisica}</div>
+                <div className="flex items-center gap-3"><span>📞</span> {config?.telefono_contacto}</div>
+                <div className="flex items-center gap-3"><span>✉️</span> {config?.correo_contacto}</div>
+                <div className="flex items-center gap-3"><span>📍</span> {config?.direccion_fisica}</div>
              </div>
           </div>
           
           <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-4 flex items-center justify-between">
              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#2d7a2d] rounded-full flex items-center justify-center text-2xl text-white">ðŸ›¡ï¸</div>
+                <div className="w-12 h-12 bg-[#2d7a2d] rounded-full flex items-center justify-center text-2xl text-white">🛡️</div>
                 <div>
-                   <span className="font-bold text-[#002f6c] text-sm block">Recuerda: Busca el empleo de tu preferencia con el cÃ³digo en el portal oficial:</span>
+                   <span className="font-bold text-[#002f6c] text-sm block">Recuerda: Busca el empleo de tu preferencia con el código en el portal oficial:</span>
                    <span className="font-bold text-[#2d7a2d] text-base">https://www.buscadordeempleo.gov.co/#/home</span>
                 </div>
              </div>
              <div className="text-right text-xs font-bold text-gray-400 uppercase">
-                Comparta<br/>esta informaciÃ³n
+                Comparta<br/>esta información
              </div>
           </div>
           </div>
@@ -294,7 +284,7 @@ function OportunidadesClient() {
       {/* HEADER SECTION (IMAGEN COMPLETAMENTE VISIBLE SIN RECORTES) */}
       <section className="relative bg-fepv-darkblue overflow-hidden w-full">
         {bgImageUrl ? (
-          /* Si hay imagen configurada, se muestra como etiqueta <img> para que el contenedor adapte su altura automÃ¡ticamente y NUNCA se recorte */
+          /* Si hay imagen configurada, se muestra como etiqueta <img> para que el contenedor adapte su altura automáticamente y NUNCA se recorte */
           <img 
             src={bgImageUrl} 
             alt="Banner de Oportunidades" 
@@ -306,10 +296,10 @@ function OportunidadesClient() {
             <div className="max-w-7xl mx-auto text-center space-y-4 relative z-10 text-white">
               <span className="text-fepv-green font-bold tracking-wider uppercase text-sm drop-shadow-md">Portal de Oportunidades</span>
               <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-tight drop-shadow-lg">
-                Encuentra tu prÃ³ximo desafÃ­o
+                Encuentra tu próximo desafío
               </h1>
               <p className="text-gray-200 max-w-2xl mx-auto text-base sm:text-lg drop-shadow-md">
-                Explora las vacantes de empleo en el Cesar, oportunidades de voluntariado y convocatorias exclusivas de la FundaciÃ³n.
+                Explora las vacantes de empleo en el Cesar, oportunidades de voluntariado y convocatorias exclusivas de la Fundación.
               </p>
             </div>
           </div>
@@ -323,19 +313,19 @@ function OportunidadesClient() {
             onClick={() => setActiveTab("resumen")}
             className={`flex items-center gap-2 py-3 px-6 rounded-full font-bold text-sm sm:text-base transition-all shadow-sm ${activeTab === "resumen" ? "bg-fepv-green text-white shadow-md transform scale-105" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
           >
-            ðŸ“Š Resumen General
+            📊 Resumen General
           </button>
           <button
             onClick={() => setActiveTab("ofertas")}
             className={`flex items-center gap-2 py-3 px-6 rounded-full font-bold text-sm sm:text-base transition-all shadow-sm ${activeTab === "ofertas" ? "bg-fepv-blue text-white shadow-md transform scale-105" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
           >
-            ðŸ’¼ Ofertas de Empleo
+            💼 Ofertas de Empleo
           </button>
           <button
             onClick={() => setActiveTab("convocatorias")}
             className={`flex items-center gap-2 py-3 px-6 rounded-full font-bold text-sm sm:text-base transition-all shadow-sm ${activeTab === "convocatorias" ? "bg-fepv-orange text-white shadow-md transform scale-105" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
           >
-            ðŸ“¢ Convocatorias
+            📢 Convocatorias
           </button>
         </div>
       </div>
@@ -354,20 +344,20 @@ function OportunidadesClient() {
               {activeTab === "resumen" && (
                 <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
                   
-                  {/* BotÃ³n Exportar BoletÃ­n */}
+                  {/* Botón Exportar Boletín */}
                   <div className="flex justify-end mb-4">
                     <button 
                       onClick={handleExportResumen}
                       disabled={isExporting}
                       className="bg-[#2d7a2d] hover:bg-[#1e5c1e] text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-sm whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isExporting ? "Generando..." : "â¬‡ï¸ Exportar BoletÃ­n"}
+                      {isExporting ? "Generando..." : "⬇️ Exportar Boletín"}
                     </button>
                   </div>
 
                   <div ref={printRefResumen} className="bg-gray-50/50 p-6 sm:p-10 space-y-8 rounded-3xl" style={{ fontFamily: 'sans-serif' }}>
                     
-                    {/* Header Principal (DiseÃ±o Fiel al Original) */}
+                    {/* Header Principal (Diseño Fiel al Original) */}
                     <div className="bg-[#002f6c] rounded-3xl text-white relative shadow-[0_20px_50px_rgba(0,47,108,0.2)] overflow-hidden flex flex-col md:flex-row">
                       
                       {/* Caja Blanca del Logo (Izquierda) */}
@@ -392,7 +382,7 @@ function OportunidadesClient() {
 
                     </div>
 
-                    {/* Bento Box: MÃ©tricas */}
+                    {/* Bento Box: Métricas */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       
                       {/* Ofertas Disponibles */}
@@ -435,7 +425,7 @@ function OportunidadesClient() {
                             $ 1.5 a $4
                           </div>
                           <div className="text-xl font-bold text-gray-500 mb-2">millones</div>
-                          <div className="text-xs text-gray-400 font-medium bg-gray-100 px-3 py-1 rounded-full inline-block">(SegÃºn cargo y experiencia)</div>
+                          <div className="text-xs text-gray-400 font-medium bg-gray-100 px-3 py-1 rounded-full inline-block">(Según cargo y experiencia)</div>
                         </div>
                       </div>
                     </div>
@@ -532,10 +522,10 @@ function OportunidadesClient() {
                     {/* Features Inferiores */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[
-                        { icon: "âœ“", title: "InformaciÃ³n", sub: "Verificada", color: "text-[#2d7a2d]", bg: "bg-[#2d7a2d]/10" },
-                        { icon: "ðŸŽ", title: "Totalmente", sub: "Gratuita", color: "text-[#0065ff]", bg: "bg-[#0065ff]/10" },
-                        { icon: "ðŸ‘¥", title: "Disponible", sub: "Para todos", color: "text-orange-500", bg: "bg-orange-500/10" },
-                        { icon: "ðŸ¤", title: "Comprometidos", sub: "Con tu futuro", color: "text-[#2d7a2d]", bg: "bg-[#2d7a2d]/10" },
+                        { icon: "✓", title: "Información", sub: "Verificada", color: "text-[#2d7a2d]", bg: "bg-[#2d7a2d]/10" },
+                        { icon: "🎁", title: "Totalmente", sub: "Gratuita", color: "text-[#0065ff]", bg: "bg-[#0065ff]/10" },
+                        { icon: "👥", title: "Disponible", sub: "Para todos", color: "text-orange-500", bg: "bg-orange-500/10" },
+                        { icon: "🤝", title: "Comprometidos", sub: "Con tu futuro", color: "text-[#2d7a2d]", bg: "bg-[#2d7a2d]/10" },
                       ].map((feature, i) => (
                         <div key={i} className="bg-white rounded-2xl p-4 flex flex-col items-center text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                           <div className={`w-12 h-12 ${feature.bg} ${feature.color} rounded-full flex items-center justify-center text-xl mb-3`}>
@@ -549,7 +539,7 @@ function OportunidadesClient() {
                   
                   </div>
                   
-                  {/* BotÃ³n Ver Convocatorias */}
+                  {/* Botón Ver Convocatorias */}
                   <div className="pt-4">
                     <button 
                       onClick={() => setActiveTab("convocatorias")}
@@ -557,8 +547,8 @@ function OportunidadesClient() {
                     >
                       <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       <h3 className="font-display font-black text-3xl text-white mb-2 group-hover:text-[#8cc63f] transition-colors flex justify-center items-center gap-4">
-                        Ver Convocatorias de la FundaciÃ³n 
-                        <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-sm group-hover:bg-[#8cc63f] group-hover:text-[#002f6c] transition-all">âž”</div>
+                        Ver Convocatorias de la Fundación 
+                        <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-sm group-hover:bg-[#8cc63f] group-hover:text-[#002f6c] transition-all">➔</div>
                       </h3>
                       <p className="text-blue-100/80 font-medium">Participa en proyectos sociales, formaciones y becas exclusivas.</p>
                     </button>
@@ -578,11 +568,11 @@ function OportunidadesClient() {
                         <span className="text-fepv-blue font-bold text-sm tracking-widest uppercase mb-1 block">Buscador Oficial</span>
                         <h2 className="font-display font-bold text-3xl text-fepv-darkblue uppercase">Busca Oportunidades</h2>
                         <div className="flex flex-wrap gap-4 mt-2">
-                          <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-green text-lg">âœ“</span> Verificada</span>
-                          <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-blue text-lg">â—</span> Gratuita</span>
+                          <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-green text-lg">✓</span> Verificada</span>
+                          <span className="text-xs font-bold text-gray-600 flex items-center gap-1"><span className="text-fepv-blue text-lg">●</span> Gratuita</span>
                         </div>
                         <div className="mt-4 bg-blue-50/80 border-l-2 border-[#002f6c] p-3 rounded-r text-xs text-gray-600 max-w-2xl text-justify">
-                          <strong>Aviso Legal:</strong> La FEPV actÃºa exclusivamente como canal de difusiÃ³n de estas ofertas (SENA, Comfacesar, etc). No intervenimos en la selecciÃ³n ni garantizamos contrataciÃ³n. Toda postulaciÃ³n es bajo responsabilidad del usuario ante la entidad emisora.
+                          <strong>Aviso Legal:</strong> La FEPV actúa exclusivamente como canal de difusión de estas ofertas (SENA, Comfacesar, etc). No intervenimos en la selección ni garantizamos contratación. Toda postulación es bajo responsabilidad del usuario ante la entidad emisora.
                         </div>
                       </div>
                       
@@ -606,14 +596,14 @@ function OportunidadesClient() {
                             onChange={(e) => { setFilterCargo(e.target.value); setCurrentPage(1); }}
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-fepv-blue focus:border-fepv-blue block w-full p-3 pl-10 outline-none"
                           />
-                          <span className="absolute left-3 top-3 text-gray-400">ðŸ”</span>
+                          <span className="absolute left-3 top-3 text-gray-400">🔍</span>
                         </div>
                         <button 
                           onClick={handleExport}
                           disabled={isExporting || currentOfertas.length === 0}
                           className="bg-[#2d7a2d] hover:bg-[#1e5c1e] text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-sm whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isExporting ? "Generando..." : "â¬‡ï¸ Exportar Imagen"}
+                          {isExporting ? "Generando..." : "⬇️ Exportar Imagen"}
                         </button>
                       </div>
                     </div>
@@ -622,9 +612,9 @@ function OportunidadesClient() {
                   {/* Tabla */}
                   {filteredOfertas.length === 0 ? (
                     <div className="bg-white p-12 rounded-3xl border border-gray-200 text-center shadow-sm">
-                      <span className="text-6xl mb-4 block">ðŸ“­</span>
+                      <span className="text-6xl mb-4 block">📭</span>
                       <h3 className="text-xl font-bold text-gray-700">No se encontraron ofertas</h3>
-                      <p className="text-gray-500 mt-2">Intenta ajustar los filtros de bÃºsqueda.</p>
+                      <p className="text-gray-500 mt-2">Intenta ajustar los filtros de búsqueda.</p>
                       <button onClick={() => { setFilterCargo(""); setFilterMunicipio(""); }} className="mt-4 text-fepv-blue font-bold hover:underline">Limpiar Filtros</button>
                     </div>
                   ) : (
@@ -634,13 +624,13 @@ function OportunidadesClient() {
                           <thead>
                             <tr className="bg-[#002f6c] text-white text-xs uppercase tracking-wider">
                               <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">#</th>
-                              <th className="px-4 py-4 font-bold border-r border-[#001f4d]">CÃ³digo</th>
+                              <th className="px-4 py-4 font-bold border-r border-[#001f4d]">Código</th>
                               <th className="px-4 py-4 font-bold w-1/3 border-r border-[#001f4d]">Vacantes</th>
                               <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">Rango Salarial</th>
                               <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">Cantidad</th>
                               <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">Municipio</th>
                               <th className="px-4 py-4 font-bold text-center border-r border-[#001f4d]">Vencimiento</th>
-                              <th className="px-4 py-4 font-bold text-center">AcciÃ³n</th>
+                              <th className="px-4 py-4 font-bold text-center">Acción</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 text-sm">
@@ -661,7 +651,7 @@ function OportunidadesClient() {
                                         </div>
                                       )}
                                       <div>
-                                        <div className="font-bold text-[#002f6c] leading-tight">{o.titulo_vacante || o.cargo || 'Sin tÃ­tulo'}</div>
+                                        <div className="font-bold text-[#002f6c] leading-tight">{o.titulo_vacante || o.cargo || 'Sin título'}</div>
                                         <div className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-bold">{o.nombre_prestador || 'Agencia de Empleo'}</div>
                                         {isUrgent && <span className="inline-block mt-1 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded-sm">URGENTE</span>}
                                       </div>
@@ -692,7 +682,7 @@ function OportunidadesClient() {
                         </table>
                       </div>
 
-                      {/* Controles de PaginaciÃ³n */}
+                      {/* Controles de Paginación */}
                       <div className="bg-gray-50 p-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="text-sm text-gray-600 font-medium">
                           Mostrando <span className="font-bold">{(currentPage - 1) * itemsPerPage + 1}</span> a <span className="font-bold">{Math.min(currentPage * itemsPerPage, filteredOfertas.length)}</span> de <span className="font-bold">{filteredOfertas.length}</span> ofertas
@@ -734,11 +724,11 @@ function OportunidadesClient() {
                     {/* Descargo de Responsabilidad Legal */}
                     <div className="bg-blue-50/80 border-l-4 border-[#002f6c] p-5 rounded-r-xl shadow-sm">
                       <div className="flex gap-4">
-                        <span className="text-2xl mt-1">âš–ï¸</span>
+                        <span className="text-2xl mt-1">⚖️</span>
                         <div>
                            <p className="text-sm text-gray-700 font-medium leading-relaxed text-justify">
                              <strong className="text-[#002f6c] block mb-1">Aviso Legal y Descargo de Responsabilidad:</strong>
-                             La FundaciÃ³n Encuentros para la Vida (FEPV) actÃºa exclusivamente como un <strong>canal de difusiÃ³n y puente informativo</strong>. Las ofertas de empleo, programas o convocatorias pertenecientes a entidades de terceros (tales como el SENA, Comfacesar u otras empresas e instituciones) publicadas en este portal son de entera y exclusiva responsabilidad de las organizaciones emisoras. La FEPV no interviene en los procesos de selecciÃ³n, no actÃºa como bolsa de empleo directa para estos terceros y no garantiza vinculaciÃ³n laboral alguna, por lo que <strong>se exime expresamente de cualquier responsabilidad jurÃ­dica, laboral, civil o contractual</strong> derivada de la postulaciÃ³n, participaciÃ³n o resultados en dichas ofertas externas. Toda informaciÃ³n debe ser verificada en los canales oficiales de cada entidad ofertante.
+                             La Fundación Encuentros para la Vida (FEPV) actúa exclusivamente como un <strong>canal de difusión y puente informativo</strong>. Las ofertas de empleo, programas o convocatorias pertenecientes a entidades de terceros (tales como el SENA, Comfacesar u otras empresas e instituciones) publicadas en este portal son de entera y exclusiva responsabilidad de las organizaciones emisoras. La FEPV no interviene en los procesos de selección, no actúa como bolsa de empleo directa para estos terceros y no garantiza vinculación laboral alguna, por lo que <strong>se exime expresamente de cualquier responsabilidad jurídica, laboral, civil o contractual</strong> derivada de la postulación, participación o resultados en dichas ofertas externas. Toda información debe ser verificada en los canales oficiales de cada entidad ofertante.
                            </p>
                         </div>
                       </div>
@@ -746,15 +736,7 @@ function OportunidadesClient() {
                   </div>
 
                   {/* Filtro de Categorias */}
-<<<<<<< HEAD
-<<<<<<< HEAD
                   <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-=======
-                  <div className="mb-6 flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
->>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
-=======
-                  <div className="mb-6 flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
->>>>>>> 93cfd98c49bcf9a8b1c53f574dfbef6e3839e21f
                     <label className="text-sm font-bold text-gray-700">Filtrar por Categoría:</label>
                     <select 
                       value={filterCategoriaConv} 
@@ -769,9 +751,9 @@ function OportunidadesClient() {
                   </div>
                   {(filterCategoriaConv ? convocatorias.filter(c => (c.categoria || "").toLowerCase() === filterCategoriaConv.toLowerCase()) : convocatorias).length === 0 ? (
                     <div className="bg-white p-12 rounded-3xl border border-gray-200 text-center shadow-sm">
-                      <span className="text-6xl mb-4 block">ðŸ“£</span>
+                      <span className="text-6xl mb-4 block">📣</span>
                       <h3 className="text-xl font-bold text-gray-700">No hay convocatorias activas</h3>
-                      <p className="text-gray-500 mt-2">Pronto abriremos nuevos espacios de participaciÃ³n institucional.</p>
+                      <p className="text-gray-500 mt-2">Pronto abriremos nuevos espacios de participación institucional.</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -802,14 +784,14 @@ function OportunidadesClient() {
                             
                             <div className="space-y-3 mb-6 bg-gray-50 p-4 rounded-2xl">
                               <div className="flex items-center gap-3 text-xs text-gray-600">
-                                <span className="text-lg">ðŸ“…</span> 
+                                <span className="text-lg">📅</span> 
                                 <div>
                                   <div className="font-bold text-[10px] uppercase tracking-wider text-gray-400">Cierre</div>
                                   <strong className="text-gray-800">{c.cierre || c.fecha_cierre || 'No definido'}</strong>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3 text-xs text-gray-600">
-                                <span className="text-lg">ðŸ“</span> 
+                                <span className="text-lg">📍</span> 
                                 <div>
                                   <div className="font-bold text-[10px] uppercase tracking-wider text-gray-400">Lugar</div>
                                   <strong className="text-gray-800">{c.lugar || 'Por definir'}</strong>
@@ -843,7 +825,7 @@ function OportunidadesClient() {
 
                               return (
                                 <button disabled className="w-full text-center bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed text-sm">
-                                  PrÃ³ximamente
+                                  Próximamente
                                 </button>
                               );
                             })()}
