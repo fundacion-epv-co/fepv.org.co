@@ -16,6 +16,7 @@ function OportunidadesClient() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Filtros y Paginación
+  const [filterCategoriaConv, setFilterCategoriaConv] = useState("");
   const [filterMunicipio, setFilterMunicipio] = useState("");
   const [filterCargo, setFilterCargo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -734,7 +735,21 @@ function OportunidadesClient() {
                     </div>
                   </div>
 
-                  {convocatorias.length === 0 ? (
+                  {/* Filtro de Categorias */}
+                  <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <label className="text-sm font-bold text-gray-700">Filtrar por Categoría:</label>
+                    <select 
+                      value={filterCategoriaConv} 
+                      onChange={(e) => setFilterCategoriaConv(e.target.value)}
+                      className="p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-fepv-green min-w-[200px]"
+                    >
+                      <option value="">Todas las categorías</option>
+                      {Array.from(new Set(convocatorias.map(c => c.categoria).filter(Boolean))).map((cat, i) => (
+                        <option key={i} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {(filterCategoriaConv ? convocatorias.filter(c => (c.categoria || "").toLowerCase() === filterCategoriaConv.toLowerCase()) : convocatorias).length === 0 ? (
                     <div className="bg-white p-12 rounded-3xl border border-gray-200 text-center shadow-sm">
                       <span className="text-6xl mb-4 block">📣</span>
                       <h3 className="text-xl font-bold text-gray-700">No hay convocatorias activas</h3>
@@ -742,7 +757,7 @@ function OportunidadesClient() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {convocatorias.map((c, idx) => {
+                      {(filterCategoriaConv ? convocatorias.filter(c => (c.categoria || "").toLowerCase() === filterCategoriaConv.toLowerCase()) : convocatorias).map((c, idx) => {
                         const st = (c.estado || "").toUpperCase();
                         let bgStatus = "bg-gray-100 text-gray-600";
                         if (st.includes("ABIERTA") || st.includes("ACTIVA")) bgStatus = "bg-fepv-green text-white";
