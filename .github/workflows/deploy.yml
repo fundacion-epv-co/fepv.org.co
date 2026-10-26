@@ -40,3 +40,4 @@ jobs:
           publish_dir: ./out
           publish_branch: gh-pages
           force_orphan: true
+          cname: fepv.org

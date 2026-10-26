@@ -188,7 +188,7 @@ function OportunidadesClient() {
             <div className="flex bg-[#002f6c] text-white rounded-2xl overflow-hidden shadow-sm relative">
               <div className="w-1/3 bg-white p-6 flex items-center justify-center rounded-r-[50px] z-10 shadow-[5px_0_15px_rgba(0,0,0,0.2)]">
                  {/* Usamos directamente la ruta local con el basePath para evitar 404 en GitHub Pages */}
-                 <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '100px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
+                 <img src="/logo.png" alt="Logo FEPV" style={{ height: '100px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }} />
               </div>
             <div className="w-2/3 p-8 flex flex-col justify-center relative">
               <div className="absolute top-4 right-4 bg-[#8cc63f] text-white px-6 py-2 rounded-xl text-center">
@@ -362,7 +362,7 @@ function OportunidadesClient() {
                       
                       {/* Caja Blanca del Logo (Izquierda) */}
                       <div className="bg-white p-8 md:p-12 md:rounded-br-[80px] flex items-center justify-center shrink-0 w-full md:w-[35%] relative z-10 shadow-lg">
-                         <img src="/fepv.org.co/logo.png" alt="Logo FEPV" style={{ height: '120px', width: 'auto', objectFit: 'contain' }} />
+                         <img src="/logo.png" alt="Logo FEPV" style={{ height: '120px', width: 'auto', objectFit: 'contain' }} />
                       </div>
                       
                       {/* Textos y Pill (Derecha) */}

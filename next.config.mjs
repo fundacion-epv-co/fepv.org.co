@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  // Requerido para GitHub Pages con repositorio de proyecto (no usuario)
-  basePath: '/fepv.org.co',
-  assetPrefix: '/fepv.org.co/',
+  // Configuración para dominio raíz personalizado (fepv.org)
+  basePath: '',
+  assetPrefix: '',
   images: {
     unoptimized: true,
   },

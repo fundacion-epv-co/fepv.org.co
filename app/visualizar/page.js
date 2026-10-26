@@ -119,7 +119,7 @@ function VisualizarContent() {
               <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden flex flex-col justify-around items-center rotate-[-30deg]">
                 {/* Logo gigante de fondo */}
                 <img 
-                  src="/fepv.org.co/logo.png" 
+                  src="/logo.png" 
                   alt="Watermark Logo" 
                   className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] object-contain opacity-10 grayscale" 
                 />
